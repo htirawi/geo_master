@@ -1,0 +1,15 @@
+# Flutter Launcher Icons Configuration
+# Run: dart run flutter_launcher_icons
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/app_icon/app_icon.png"
+  min_sdk_android: 21
+
+  # iOS specific
+  remove_alpha_ios: true
+
+  # Android specific
+  adaptive_icon_background: "#1B263B"
+  adaptive_icon_foreground: "assets/app_icon/app_icon_foreground.png"

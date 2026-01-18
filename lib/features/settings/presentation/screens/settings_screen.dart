@@ -1,0 +1,600 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../app/routes/routes.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
+import '../../../../domain/entities/user.dart';
+import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/providers/auth_provider.dart';
+import '../../../../presentation/providers/onboarding_provider.dart';
+import '../../../../presentation/providers/theme_provider.dart';
+import '../../../../presentation/providers/user_provider.dart';
+
+/// Settings screen with all app preferences
+class SettingsScreen extends ConsumerStatefulWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final user = ref.watch(userDataProvider);
+    final preferences = ref.watch(userPreferencesProvider);
+    final themeMode = ref.watch(themeModeProvider);
+    final selectedLanguage = ref.watch(selectedLanguageProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.settings),
+      ),
+      body: ListView(
+        children: [
+          // Account Section
+          _buildSectionHeader(theme, l10n.account),
+          _AccountTile(user: user),
+          const Divider(height: 1),
+
+          // Appearance Section
+          _buildSectionHeader(theme, l10n.appearance),
+          _buildThemeTile(theme, l10n, themeMode),
+          const Divider(height: 1),
+          _buildLanguageTile(theme, l10n, selectedLanguage, isArabic),
+          const Divider(height: 1),
+
+          // Preferences Section
+          _buildSectionHeader(theme, l10n.preferences),
+          _buildSwitchTile(
+            theme: theme,
+            icon: Icons.volume_up,
+            title: l10n.soundEffects,
+            value: preferences.soundEnabled,
+            onChanged: (value) => _updatePreference(
+              preferences.copyWith(soundEnabled: value),
+            ),
+          ),
+          const Divider(height: 1),
+          _buildSwitchTile(
+            theme: theme,
+            icon: Icons.vibration,
+            title: l10n.haptics,
+            value: preferences.hapticsEnabled,
+            onChanged: (value) => _updatePreference(
+              preferences.copyWith(hapticsEnabled: value),
+            ),
+          ),
+          const Divider(height: 1),
+
+          // Notifications Section
+          _buildSectionHeader(theme, l10n.notifications),
+          _buildSwitchTile(
+            theme: theme,
+            icon: Icons.notifications,
+            title: l10n.notifications,
+            value: preferences.notificationsEnabled,
+            onChanged: (value) => _updatePreference(
+              preferences.copyWith(notificationsEnabled: value),
+            ),
+          ),
+          const Divider(height: 1),
+          _buildSwitchTile(
+            theme: theme,
+            icon: Icons.alarm,
+            title: l10n.dailyReminder,
+            value: preferences.dailyReminderEnabled,
+            onChanged: preferences.notificationsEnabled
+                ? (value) => _updatePreference(
+                      preferences.copyWith(dailyReminderEnabled: value),
+                    )
+                : null,
+          ),
+          const Divider(height: 1),
+          _buildDailyGoalTile(theme, l10n, preferences),
+          const Divider(height: 1),
+
+          // Premium Section
+          if (!(user?.isPremium ?? false)) ...[
+            _buildSectionHeader(theme, l10n.premium),
+            _buildPremiumTile(theme, l10n),
+            const Divider(height: 1),
+          ],
+
+          // About Section
+          _buildSectionHeader(theme, l10n.about),
+          _buildNavigationTile(
+            theme: theme,
+            icon: Icons.privacy_tip,
+            title: l10n.privacyPolicy,
+            onTap: () => _showInfoDialog(l10n.privacyPolicy),
+          ),
+          const Divider(height: 1),
+          _buildNavigationTile(
+            theme: theme,
+            icon: Icons.description,
+            title: l10n.termsOfService,
+            onTap: () => _showInfoDialog(l10n.termsOfService),
+          ),
+          const Divider(height: 1),
+          _buildNavigationTile(
+            theme: theme,
+            icon: Icons.star_rate,
+            title: l10n.rateApp,
+            onTap: () => _rateApp(),
+          ),
+          const Divider(height: 1),
+          _buildNavigationTile(
+            theme: theme,
+            icon: Icons.share,
+            title: l10n.shareApp,
+            onTap: () => _shareApp(),
+          ),
+          const Divider(height: 1),
+          _buildVersionTile(theme, l10n),
+          const Divider(height: 1),
+
+          // Sign Out
+          const SizedBox(height: AppDimensions.spacingMD),
+          _buildSignOutTile(theme, l10n),
+
+          // Delete Account
+          if (!(user?.isAnonymous ?? true)) ...[
+            const SizedBox(height: AppDimensions.spacingSM),
+            _buildDeleteAccountTile(theme, l10n),
+          ],
+
+          const SizedBox(height: AppDimensions.spacingXL),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(ThemeData theme, String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppDimensions.paddingMD,
+        AppDimensions.paddingLG,
+        AppDimensions.paddingMD,
+        AppDimensions.paddingSM,
+      ),
+      child: Text(
+        title.toUpperCase(),
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: theme.colorScheme.primary,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThemeTile(
+    ThemeData theme,
+    AppLocalizations l10n,
+    ThemeMode themeMode,
+  ) {
+    return ListTile(
+      leading: Icon(
+        themeMode == ThemeMode.dark ? Icons.dark_mode : Icons.light_mode,
+        color: theme.colorScheme.primary,
+      ),
+      title: Text(l10n.theme),
+      subtitle: Text(_getThemeName(l10n, themeMode)),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => _showThemeDialog(l10n, themeMode),
+    );
+  }
+
+  Widget _buildLanguageTile(
+    ThemeData theme,
+    AppLocalizations l10n,
+    String selectedLanguage,
+    bool isArabic,
+  ) {
+    return ListTile(
+      leading: Icon(Icons.language, color: theme.colorScheme.primary),
+      title: Text(l10n.language),
+      subtitle: Text(isArabic ? 'العربية' : 'English'),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => _showLanguageDialog(l10n, selectedLanguage),
+    );
+  }
+
+  Widget _buildSwitchTile({
+    required ThemeData theme,
+    required IconData icon,
+    required String title,
+    required bool value,
+    required ValueChanged<bool>? onChanged,
+  }) {
+    return SwitchListTile(
+      secondary: Icon(
+        icon,
+        color: onChanged != null
+            ? theme.colorScheme.primary
+            : theme.colorScheme.onSurfaceVariant,
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: onChanged != null
+              ? theme.colorScheme.onSurface
+              : theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      value: value,
+      onChanged: onChanged,
+    );
+  }
+
+  Widget _buildNavigationTile({
+    required ThemeData theme,
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: theme.colorScheme.primary),
+      title: Text(title),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildDailyGoalTile(
+    ThemeData theme,
+    AppLocalizations l10n,
+    UserPreferences preferences,
+  ) {
+    return ListTile(
+      leading: Icon(Icons.flag, color: theme.colorScheme.primary),
+      title: Text(l10n.dailyGoal),
+      subtitle: Text('${preferences.dailyGoalMinutes} ${l10n.minutesPerDay}'),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => _showDailyGoalDialog(l10n, preferences),
+    );
+  }
+
+  Widget _buildPremiumTile(ThemeData theme, AppLocalizations l10n) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [AppColors.primary, AppColors.secondary],
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Icon(Icons.star, color: Colors.white, size: 20),
+      ),
+      title: Text(
+        l10n.upgradeToPremium,
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+      subtitle: Text(l10n.unlockAllFeatures),
+      trailing: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+        ),
+        child: Text(
+          l10n.upgrade,
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      onTap: () => context.push(Routes.paywall),
+    );
+  }
+
+  Widget _buildVersionTile(ThemeData theme, AppLocalizations l10n) {
+    return ListTile(
+      leading: Icon(Icons.info_outline, color: theme.colorScheme.primary),
+      title: Text(l10n.version),
+      subtitle: const Text('1.0.0 (1)'),
+    );
+  }
+
+  Widget _buildSignOutTile(ThemeData theme, AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingMD),
+      child: OutlinedButton(
+        onPressed: () => _showSignOutDialog(l10n),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: theme.colorScheme.error,
+          side: BorderSide(color: theme.colorScheme.error),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.logout),
+            const SizedBox(width: AppDimensions.spacingSM),
+            Text(l10n.signOut),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDeleteAccountTile(ThemeData theme, AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingMD),
+      child: TextButton(
+        onPressed: () => _showDeleteAccountDialog(l10n),
+        style: TextButton.styleFrom(
+          foregroundColor: theme.colorScheme.error.withValues(alpha: 0.7),
+        ),
+        child: Text(l10n.deleteAccount),
+      ),
+    );
+  }
+
+  String _getThemeName(AppLocalizations l10n, ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.system:
+        return l10n.systemDefault;
+      case ThemeMode.light:
+        return l10n.lightMode;
+      case ThemeMode.dark:
+        return l10n.darkMode;
+    }
+  }
+
+  void _showThemeDialog(AppLocalizations l10n, ThemeMode currentMode) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.theme),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: ThemeMode.values.map((mode) {
+            return RadioListTile<ThemeMode>(
+              title: Text(_getThemeName(l10n, mode)),
+              value: mode,
+              groupValue: currentMode,
+              onChanged: (value) {
+                if (value != null) {
+                  ref.read(themeModeProvider.notifier).setThemeMode(value);
+                  Navigator.pop(context);
+                }
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageDialog(AppLocalizations l10n, String selectedLanguage) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.language),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<String>(
+              title: const Text('English'),
+              value: 'en',
+              groupValue: selectedLanguage,
+              onChanged: (value) {
+                if (value != null) {
+                  ref.read(onboardingStateProvider.notifier).setLanguage('en');
+                  Navigator.pop(context);
+                }
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('العربية'),
+              value: 'ar',
+              groupValue: selectedLanguage,
+              onChanged: (value) {
+                if (value != null) {
+                  ref.read(onboardingStateProvider.notifier).setLanguage('ar');
+                  Navigator.pop(context);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDailyGoalDialog(AppLocalizations l10n, UserPreferences preferences) {
+    final goals = [5, 10, 15, 30, 60];
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.dailyGoal),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: goals.map((minutes) {
+            return RadioListTile<int>(
+              title: Text('$minutes ${l10n.minutesPerDay}'),
+              value: minutes,
+              groupValue: preferences.dailyGoalMinutes,
+              onChanged: (value) {
+                if (value != null) {
+                  _updatePreference(
+                    preferences.copyWith(dailyGoalMinutes: value),
+                  );
+                  Navigator.pop(context);
+                }
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  void _showSignOutDialog(AppLocalizations l10n) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.signOut),
+        content: Text(l10n.signOutConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _signOut();
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: Text(l10n.signOut),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteAccountDialog(AppLocalizations l10n) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.deleteAccount),
+        content: const Text(
+          'Are you sure you want to delete your account? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // TODO: Implement account deletion
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Account deletion coming soon'),
+                ),
+              );
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showInfoDialog(String title) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: const Text(
+          'This information will be available soon.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(AppLocalizations.of(context).close),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _rateApp() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Opening App Store...')),
+    );
+  }
+
+  void _shareApp() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Share functionality coming soon')),
+    );
+  }
+
+  void _updatePreference(UserPreferences preferences) {
+    ref.read(userProfileProvider.notifier).updatePreferences(preferences);
+  }
+
+  void _signOut() async {
+    await ref.read(authStateProvider.notifier).signOut();
+    if (mounted) {
+      context.go(Routes.auth);
+    }
+  }
+}
+
+/// Account tile widget
+class _AccountTile extends StatelessWidget {
+  const _AccountTile({required this.user});
+
+  final User? user;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
+    return ListTile(
+      leading: CircleAvatar(
+        radius: 24,
+        backgroundColor: theme.colorScheme.primaryContainer,
+        backgroundImage: user?.photoUrl != null
+            ? NetworkImage(user!.photoUrl!)
+            : null,
+        child: user?.photoUrl == null
+            ? Icon(
+                Icons.person,
+                color: theme.colorScheme.primary,
+              )
+            : null,
+      ),
+      title: Text(
+        user?.displayName ?? l10n.guest,
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      subtitle: Text(
+        user?.email ?? (user?.isAnonymous == true ? 'Guest Account' : ''),
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      trailing: user?.isPremium == true
+          ? Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.primary, AppColors.secondary],
+                ),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+              ),
+              child: Text(
+                l10n.proBadge,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          : null,
+    );
+  }
+}

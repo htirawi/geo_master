@@ -1,0 +1,699 @@
+{
+  "@@locale": "en",
+  "appName": "GeoMaster",
+  "@appName": {
+    "description": "The app name"
+  },
+  "appTitle": "GeoMaster",
+  "appTagline": "Explore the World",
+  "@appTagline": {
+    "description": "The app tagline"
+  },
+
+  "welcomeMessage": "Welcome, {name}!",
+  "@welcomeMessage": {
+    "description": "Welcome message with user's name",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Hussein"
+      }
+    }
+  },
+  "welcomeBack": "Welcome back! Sign in to continue.",
+
+  "goodMorning": "Good morning",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+
+  "selectLanguage": "Select Language",
+  "english": "English",
+  "arabic": "العربية",
+  "continueText": "Continue",
+  "skip": "Skip",
+  "next": "Next",
+  "back": "Back",
+  "done": "Done",
+  "cancel": "Cancel",
+  "save": "Save",
+  "delete": "Delete",
+  "edit": "Edit",
+  "close": "Close",
+  "retry": "Retry",
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success",
+  "warning": "Warning",
+
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "signOut": "Sign Out",
+  "signingOut": "Signing out...",
+  "continueWithGoogle": "Continue with Google",
+  "continueWithApple": "Continue with Apple",
+  "continueWithEmail": "Continue with Email",
+  "continueAsGuest": "Continue as Guest",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "forgotPassword": "Forgot Password?",
+  "resetPassword": "Reset Password",
+  "createAccount": "Create Account",
+  "alreadyHaveAccount": "Already have an account?",
+  "dontHaveAccount": "Don't have an account?",
+  "or": "or",
+  "termsAgreement": "By continuing, you agree to our Terms of Service and Privacy Policy",
+  "termsCheckbox": "I agree to the",
+  "termsOfServiceLink": "Terms of Service",
+  "privacyPolicyLink": "Privacy Policy",
+  "andText": "and",
+  "pleaseAcceptTerms": "Please accept the Terms of Service and Privacy Policy to continue",
+  "guest": "Guest",
+  "guestModeDescription": "Try the app without signing in",
+
+  "onboardingTitle1": "Welcome to Your Journey",
+  "onboardingSubtitle1": "Learn geography the fun way!",
+  "onboardingTitle2": "Interactive Learning",
+  "onboardingSubtitle2": "Answer questions, earn rewards",
+  "onboardingTitle3": "Powered by AI",
+  "onboardingSubtitle3": "Your personal geography tutor",
+  "onboardingTitle4": "Track Your Progress",
+  "onboardingSubtitle4": "Watch yourself become a geography master",
+
+  "onboardingExploreTitle": "Explore the World",
+  "onboardingExploreDescription": "Discover fascinating facts about every country on Earth",
+  "onboardingQuizTitle": "Test Your Knowledge",
+  "onboardingQuizDescription": "Challenge yourself with fun quizzes on capitals, flags, and more",
+  "onboardingAiTitle": "AI-Powered Learning",
+  "onboardingAiDescription": "Get personalized help from your AI geography tutor",
+  "onboardingAchievementsTitle": "Earn Achievements",
+  "onboardingAchievementsDescription": "Unlock badges, climb leaderboards, and track your progress",
+  "getStarted": "Get Started",
+
+  "whatsYourName": "What's your name?",
+  "enterYourName": "Enter your name",
+  "geographyLevel": "What's your current geography level?",
+  "levelBeginner": "Beginner",
+  "levelBeginnerDescription": "0-20% world knowledge",
+  "levelIntermediate": "Intermediate",
+  "levelIntermediateDescription": "20-60% world knowledge",
+  "levelAdvanced": "Advanced",
+  "levelAdvancedDescription": "60%+ world knowledge",
+  "whatInterestsYou": "What interests you most?",
+  "interestHistory": "History & Culture",
+  "interestLanguages": "Languages",
+  "interestTravel": "Travel & Tourism",
+  "interestPolitics": "Politics & Economics",
+  "interestNature": "Nature & Climate",
+  "setLearningGoal": "Set your learning goal",
+  "minutes5PerDay": "5 minutes/day",
+  "minutes15PerDay": "15 minutes/day",
+  "minutes30PerDay": "30 minutes/day",
+  "customGoal": "Custom",
+
+  "personalizeExperience": "Personalize Your Experience",
+  "selectAtLeastOne": "Select at least one topic",
+  "interestCapitals": "Capitals",
+  "interestFlags": "Flags",
+  "interestGeography": "Geography",
+  "interestCulture": "Culture",
+  "chooseDifficulty": "Choose Your Difficulty",
+  "canChangeAnytime": "You can change this anytime in settings",
+  "difficultyEasy": "Easy",
+  "difficultyMedium": "Medium",
+  "difficultyHard": "Hard",
+  "difficultyEasyDescription": "Perfect for beginners",
+  "difficultyMediumDescription": "For intermediate learners",
+  "difficultyHardDescription": "For geography experts",
+  "setYourGoal": "Set Your Learning Goal",
+  "howMuchTimePerDay": "How much time do you want to spend learning each day?",
+  "goalCasual": "Casual",
+  "goalCasualDescription": "5 mins/day",
+  "goalRegular": "Regular",
+  "goalRegularDescription": "15 mins/day",
+  "goalSerious": "Serious",
+  "goalSeriousDescription": "30 mins/day",
+  "goalIntense": "Intense",
+  "goalIntenseDescription": "60 mins/day",
+  "letsGo": "Let's Go!",
+
+  "enableNotifications": "Enable notifications?",
+  "dailyReminder": "Daily reminder",
+  "achievementUnlocks": "Achievement unlocks",
+  "friendChallenges": "Friend challenges",
+  "letsStart": "Let's Start!",
+
+  "home": "Home",
+  "explore": "Explore",
+  "quiz": "Quiz",
+  "stats": "Stats",
+  "profile": "Profile",
+
+  "dailyChallenge": "Daily Challenge",
+  "dailyChallengeDescription": "Complete today's challenge to earn bonus XP!",
+  "startChallenge": "Start Challenge",
+  "quickActions": "Quick Actions",
+  "quickQuiz": "Quiz",
+  "countryOfTheDay": "Country of the Day",
+  "learnMore": "Learn More",
+  "recentProgress": "Recent Progress",
+  "dayStreak": "Day Streak",
+  "keepItUp": "Keep it up! You're on fire!",
+  "timeLeft": "Time left: {time}",
+  "@timeLeft": {
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "8h 23m"
+      }
+    }
+  },
+  "claimReward": "Claim Reward",
+
+  "streak": "Streak",
+  "dayStreak": "{count} Day Streak!",
+  "@dayStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "7"
+      }
+    }
+  },
+
+  "xp": "XP",
+  "xpAmount": "{amount} XP",
+  "@xpAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "int",
+        "example": "1247"
+      }
+    }
+  },
+  "level": "Level",
+  "levelNumber": "Level {number}",
+  "@levelNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+
+  "progress": "Progress",
+  "progressPercent": "{percent}% Complete",
+  "@progressPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int",
+        "example": "62"
+      }
+    }
+  },
+
+  "exploreWorld": "Explore World",
+  "worldMap": "World Map",
+  "continents": "Continents",
+  "countries": "Countries",
+
+  "africa": "Africa",
+  "asia": "Asia",
+  "europe": "Europe",
+  "northAmerica": "North America",
+  "southAmerica": "South America",
+  "oceania": "Oceania",
+  "antarctica": "Antarctica",
+
+  "countryOfTheDay": "Country of the Day",
+  "tapToExplore": "Tap to explore",
+
+  "capital": "Capital",
+  "population": "Population",
+  "area": "Area",
+  "region": "Region",
+  "subregion": "Subregion",
+  "languages": "Languages",
+  "currencies": "Currencies",
+  "timezones": "Timezones",
+  "borders": "Borders",
+  "flag": "Flag",
+  "coatOfArms": "Coat of Arms",
+  "location": "Location",
+  "details": "Details",
+  "continents": "Continents",
+  "coordinates": "Coordinates",
+  "officialName": "Official Name",
+  "countryCode": "Country Code",
+  "unMember": "UN Member",
+  "landlocked": "Landlocked",
+  "drivingSide": "Driving Side",
+  "left": "Left",
+  "right": "Right",
+  "yes": "Yes",
+  "no": "No",
+  "viewOnMap": "View on Map",
+  "learnMore": "Learn More",
+  "countryNotFound": "Country not found",
+
+  "weather": "Weather",
+  "currentWeather": "Current Weather",
+  "feelsLike": "Feels like",
+  "humidity": "Humidity",
+  "wind": "Wind",
+  "sunrise": "Sunrise",
+  "sunset": "Sunset",
+  "weatherUnavailable": "Weather data unavailable",
+  "clear": "Clear",
+  "clouds": "Cloudy",
+  "rain": "Rainy",
+  "drizzle": "Drizzle",
+  "thunderstorm": "Thunderstorm",
+  "snow": "Snow",
+  "mist": "Mist",
+  "haze": "Haze",
+
+  "searchCountries": "Search countries...",
+  "noCountriesFound": "No countries found",
+  "filterByRegion": "Filter by region",
+  "allRegions": "All Regions",
+  "listView": "List",
+  "mapView": "Map",
+
+  "learningModes": "Learning Modes",
+  "quickQuiz": "Quick Quiz",
+  "quickQuizDescription": "5 minutes",
+  "aiTutor": "AI Tutor",
+  "aiTutorDescription": "Chat with your tutor",
+  "challengeMode": "Challenge Mode",
+  "challengeModeDescription": "Test your skills",
+  "storyTime": "Story Time",
+  "storyTimeDescription": "Learn through stories",
+  "audioLearning": "Audio Learning",
+  "audioLearningDescription": "Listen and learn",
+
+  "quizModes": "Quiz Modes",
+  "capitalsQuiz": "Capitals",
+  "flagsQuiz": "Flags",
+  "mapsQuiz": "Maps",
+  "populationQuiz": "Population",
+  "currenciesQuiz": "Currencies",
+  "languagesQuiz": "Languages",
+  "mixedQuiz": "Mixed",
+
+  "selectQuizMode": "Select Quiz Mode",
+  "quizModeCapitals": "Capitals Quiz",
+  "quizModeCapitalsDescription": "Name the capitals of countries",
+  "quizModeFlags": "Flags Quiz",
+  "quizModeFlagsDescription": "Identify flags from around the world",
+  "quizModeMap": "Map Quiz",
+  "quizModeMapDescription": "Find countries on the map",
+  "quizModePopulation": "Population Quiz",
+  "quizModePopulationDescription": "Compare country populations",
+  "quizModeCurrency": "Currency Quiz",
+  "quizModeCurrencyDescription": "Match currencies to countries",
+  "questions": "questions",
+  "selectDifficulty": "Select Difficulty",
+
+  "difficulty": "Difficulty",
+  "easy": "Easy",
+  "medium": "Medium",
+  "hard": "Hard",
+
+  "startQuiz": "Start Quiz",
+  "question": "Question",
+  "questionNumber": "Question {current} of {total}",
+  "@questionNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int",
+        "example": "1"
+      },
+      "total": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+
+  "correct": "Correct!",
+  "incorrect": "Incorrect",
+  "theAnswerWas": "The answer was: {answer}",
+  "@theAnswerWas": {
+    "placeholders": {
+      "answer": {
+        "type": "String",
+        "example": "Paris"
+      }
+    }
+  },
+
+  "quizComplete": "Quiz Complete!",
+  "yourScore": "Your Score",
+  "scoreResult": "{correct} out of {total}",
+  "@scoreResult": {
+    "placeholders": {
+      "correct": {
+        "type": "int",
+        "example": "8"
+      },
+      "total": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+  "accuracy": "Accuracy",
+  "correctAnswers": "Correct",
+  "timeTaken": "Time Taken",
+  "xpEarned": "XP Earned",
+  "perfectScore": "Perfect Score!",
+  "playAgain": "Play Again",
+  "backToHome": "Back to Home",
+
+  "askAiTutor": "Ask AI Tutor",
+  "typeYourQuestion": "Type your question...",
+  "suggestedQuestions": "Suggested Questions",
+  "clearChat": "Clear Chat",
+  "aiThinking": "Thinking...",
+
+  "achievements": "Achievements",
+  "achievementUnlocked": "Achievement Unlocked!",
+  "viewAllAchievements": "View All",
+  "locked": "Locked",
+  "unlocked": "Unlocked",
+
+  "leaderboard": "Leaderboard",
+  "global": "Global",
+  "friends": "Friends",
+  "weekly": "Weekly",
+  "allTime": "All Time",
+  "yourRank": "Your Rank",
+  "rank": "Rank",
+
+  "weeklyStats": "Weekly Stats",
+  "countriesLearned": "Countries Learned",
+  "questionsAnswered": "Questions Answered",
+  "accuracyRate": "Accuracy Rate",
+  "quizzesCompleted": "Quizzes",
+  "countriesLearned": "Countries",
+  "earned": "Earned",
+  "geographyExplorer": "Geography Explorer",
+  "toNextLevel": "to next level",
+  "progressByRegion": "Progress by Region",
+
+  "settings": "Settings",
+  "account": "Account",
+  "notifications": "Notifications",
+  "appearance": "Appearance",
+  "darkMode": "Dark Mode",
+  "lightMode": "Light Mode",
+  "systemDefault": "System Default",
+  "theme": "Theme",
+  "language": "Language",
+  "preferences": "Preferences",
+  "learningPreferences": "Learning Preferences",
+  "dailyGoal": "Daily Goal",
+  "minutesPerDay": "minutes/day",
+  "helpAndSupport": "Help & Support",
+  "signOutConfirmation": "Are you sure you want to sign out?",
+  "upgradeToPremium": "Upgrade to Premium",
+  "unlockAllFeatures": "Unlock all features and remove ads",
+  "upgrade": "Upgrade",
+  "sound": "Sound",
+  "soundEffects": "Sound Effects",
+  "haptics": "Haptics",
+  "privacy": "Privacy",
+  "termsOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy",
+  "about": "About",
+  "version": "Version",
+  "rateApp": "Rate App",
+  "shareApp": "Share App",
+  "contactUs": "Contact Us",
+  "deleteAccount": "Delete Account",
+
+  "premium": "Premium",
+  "goPremium": "Go Premium",
+  "premiumFeatures": "Premium Features",
+  "unlimitedQuizzes": "Unlimited Quizzes",
+  "unlimitedAiChat": "Unlimited AI Chat",
+  "offlineAccess": "Offline Access",
+  "noAds": "No Ads",
+  "streakFreeze": "Streak Freeze",
+  "exclusiveAchievements": "Exclusive Achievements",
+  "subscribe": "Subscribe",
+  "restorePurchases": "Restore Purchases",
+  "subscriptionManagement": "Manage Subscription",
+  "perMonth": "/month",
+  "perYear": "/year",
+  "freeTrial": "Free Trial",
+  "bestValue": "Best Value",
+
+  "errorNoInternet": "No internet connection. Please check your network.",
+  "errorServer": "Server error. Please try again later.",
+  "errorUnknown": "An unexpected error occurred.",
+  "errorTimeout": "Connection timed out. Please try again.",
+  "errorAuthFailed": "Authentication failed. Please sign in again.",
+
+  "whatCapitalOf": "What is the capital of {country}?",
+  "@whatCapitalOf": {
+    "placeholders": {
+      "country": {
+        "type": "String",
+        "example": "France"
+      }
+    }
+  },
+  "whichFlagBelongsTo": "Which flag belongs to {country}?",
+  "@whichFlagBelongsTo": {
+    "placeholders": {
+      "country": {
+        "type": "String",
+        "example": "Japan"
+      }
+    }
+  },
+  "whereIsCountryLocated": "Where is {country} located?",
+  "@whereIsCountryLocated": {
+    "placeholders": {
+      "country": {
+        "type": "String",
+        "example": "Brazil"
+      }
+    }
+  },
+  "whichCountryHasLargerPopulation": "Which country has a larger population?",
+  "whichCurrencyUsedIn": "Which currency is used in {country}?",
+  "@whichCurrencyUsedIn": {
+    "placeholders": {
+      "country": {
+        "type": "String",
+        "example": "Germany"
+      }
+    }
+  },
+
+  "createYourAccount": "Create your account",
+  "enterDetailsToGetStarted": "Enter your details to get started",
+  "enterCredentialsToSignIn": "Enter your credentials to sign in",
+  "displayName": "Display Name",
+  "emailRequired": "Email is required",
+  "invalidEmail": "Please enter a valid email address",
+  "passwordRequired": "Password is required",
+  "passwordTooShort": "Password must be at least 6 characters",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "resetPasswordDescription": "Enter your email address and we'll send you a link to reset your password.",
+  "resetEmailSent": "Password reset email sent. Check your inbox.",
+  "failedToSendResetEmail": "Failed to send reset email. Please try again.",
+  "send": "Send",
+
+  "loadingJourney": "Loading your journey...",
+  "@loadingJourney": {
+    "description": "Shown on splash screen while loading"
+  },
+  "interactiveMap": "Interactive Map",
+  "@interactiveMap": {
+    "description": "Title for the interactive map feature"
+  },
+  "mapComingSoon": "Google Maps integration coming soon",
+  "@mapComingSoon": {
+    "description": "Placeholder text for map feature"
+  },
+  "proBadge": "PRO",
+  "@proBadge": {
+    "description": "Badge text for premium features"
+  },
+  "all": "All",
+  "@all": {
+    "description": "All option in filters"
+  },
+  "americas": "Americas",
+  "@americas": {
+    "description": "Americas continent name"
+  },
+  "continueInLanguage": "Continue in {language}",
+  "@continueInLanguage": {
+    "description": "Continue button text with language",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "example": "English"
+      }
+    }
+  },
+  "chooseYourLanguage": "Choose your preferred language",
+  "@chooseYourLanguage": {
+    "description": "Subtitle on language selection screen"
+  },
+  "quizzesLabel": "Quizzes",
+  "@quizzesLabel": {
+    "description": "Label for quizzes count"
+  },
+  "countriesLabel": "Countries",
+  "@countriesLabel": {
+    "description": "Label for countries count"
+  },
+  "xpLabel": "XP",
+  "@xpLabel": {
+    "description": "Label for XP points"
+  },
+  "explorer": "Explorer",
+  "@explorer": {
+    "description": "Default name for user"
+  },
+  "readyToExplore": "Ready to explore the world?",
+  "@readyToExplore": {
+    "description": "Motivational text on home screen"
+  },
+  "expeditionStreak": "Expedition Streak",
+  "@expeditionStreak": {
+    "description": "Title for streak section"
+  },
+  "startStreak": "Start your expedition today!",
+  "@startStreak": {
+    "description": "Message when streak is 0"
+  },
+  "days": "days",
+  "@days": {
+    "description": "Days label for streak"
+  },
+  "worldProgress": "World Progress",
+  "@worldProgress": {
+    "description": "Title for world progress section"
+  },
+  "viewAll": "View All",
+  "@viewAll": {
+    "description": "View all button text"
+  },
+  "mon": "M",
+  "tue": "T",
+  "wed": "W",
+  "thu": "T",
+  "fri": "F",
+  "sat": "S",
+  "sun": "S",
+  "challengeArena": "Challenge Arena",
+  "@challengeArena": {
+    "description": "Title for quiz screen"
+  },
+  "selectChallenge": "Select Your Challenge",
+  "@selectChallenge": {
+    "description": "Subtitle for quiz mode selection"
+  },
+  "yourStats": "Your Stats",
+  "@yourStats": {
+    "description": "Title for stats section"
+  },
+  "difficultyLevel": "Difficulty Level",
+  "@difficultyLevel": {
+    "description": "Title for difficulty section"
+  },
+  "worldAtlas": "World Atlas",
+  "@worldAtlas": {
+    "description": "Title for explore screen"
+  },
+  "discoverCountries": "Discover Countries",
+  "@discoverCountries": {
+    "description": "Subtitle for explore screen"
+  },
+  "explorerJournal": "Explorer's Journal",
+  "@explorerJournal": {
+    "description": "Title for stats screen"
+  },
+  "journeyProgress": "Journey Progress",
+  "@journeyProgress": {
+    "description": "Subtitle for stats screen"
+  },
+  "passportTitle": "My Passport",
+  "@passportTitle": {
+    "description": "Title for profile screen"
+  },
+  "travelerInfo": "Traveler Info",
+  "@travelerInfo": {
+    "description": "Section title in profile"
+  },
+  "totalCountries": "Total Countries",
+  "@totalCountries": {
+    "description": "Label for total countries stat"
+  },
+  "avgAccuracy": "Avg. Accuracy",
+  "@avgAccuracy": {
+    "description": "Label for average accuracy"
+  },
+  "bestStreak": "Best Streak",
+  "@bestStreak": {
+    "description": "Label for best streak"
+  },
+  "recentAchievements": "Recent Achievements",
+  "@recentAchievements": {
+    "description": "Section title for achievements"
+  },
+  "regions": "Regions",
+  "@regions": {
+    "description": "Regions tab/section"
+  },
+  "discoveredCountries": "Discovered Countries",
+  "@discoveredCountries": {
+    "description": "Section title for discovered countries"
+  },
+  "easyDescription": "Relaxed exploration",
+  "@easyDescription": {
+    "description": "Description for easy difficulty"
+  },
+  "mediumDescription": "Balanced challenge",
+  "@mediumDescription": {
+    "description": "Description for medium difficulty"
+  },
+  "hardDescription": "Expert expedition",
+  "@hardDescription": {
+    "description": "Description for hard difficulty"
+  },
+  "travelerIdSubtitle": "World Explorer ID",
+  "@travelerIdSubtitle": {
+    "description": "Subtitle for passport header"
+  },
+  "travelerName": "Traveler Name",
+  "@travelerName": {
+    "description": "Label for traveler name in passport"
+  },
+  "contactEmail": "Contact",
+  "@contactEmail": {
+    "description": "Label for contact email in passport"
+  },
+  "countriesVisited": "Countries",
+  "@countriesVisited": {
+    "description": "Label for countries visited count"
+  },
+  "journeyStats": "Journey Stats",
+  "@journeyStats": {
+    "description": "Title for journey stats card"
+  },
+  "dayStreakLabel": "Day Streak",
+  "@dayStreakLabel": {
+    "description": "Label for day streak count"
+  }
+}
