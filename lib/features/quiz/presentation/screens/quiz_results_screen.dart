@@ -8,6 +8,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/quiz.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/providers/auth_provider.dart';
 import '../../../../presentation/providers/quiz_provider.dart';
 
 /// Quiz results screen - shows score, XP earned, and allows review
@@ -115,12 +116,24 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
     );
   }
 
+  /// Get first name from user's display name
+  String _getFirstName(String? fullName, AppLocalizations l10n) {
+    if (fullName == null || fullName.isEmpty) {
+      return l10n.guest;
+    }
+    final parts = fullName.trim().split(' ');
+    return parts.first;
+  }
+
   Widget _buildResults(
     BuildContext context,
     QuizResult result,
     ThemeData theme,
     AppLocalizations l10n,
   ) {
+    final user = ref.watch(currentUserProvider);
+    final firstName = _getFirstName(user?.displayName, l10n);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppDimensions.paddingLG),
       child: Column(
@@ -138,6 +151,19 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
               fontWeight: FontWeight.bold,
             ),
           ),
+
+          // Motivational message with user's name
+          const SizedBox(height: AppDimensions.spacingSM),
+          Text(
+            result.accuracy >= 70
+                ? l10n.motivationalQuiz(firstName)
+                : l10n.motivationalProgress(firstName),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
           if (result.isPerfectScore) ...[
             const SizedBox(height: AppDimensions.spacingSM),
             Container(

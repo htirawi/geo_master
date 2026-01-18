@@ -437,5 +437,13 @@
   "contactEmail": "البريد الإلكتروني",
   "countriesVisited": "الدول",
   "journeyStats": "إحصائيات الرحلة",
-  "dayStreakLabel": "سلسلة الأيام"
+  "dayStreakLabel": "سلسلة الأيام",
+
+  "greetingWithName": "{greeting}، {name}",
+  "motivationalProgress": "تقدم رائع يا {name}! استمر!",
+  "motivationalStreak": "سلسلة مذهلة يا {name}! أنت متألق!",
+  "motivationalLearning": "واصل الاستكشاف يا {name}! العالم ينتظرك!",
+  "motivationalQuiz": "أصبحت أذكى يا {name}!",
+  "motivationalWelcome": "مرحباً بعودتك يا {name}! هل أنت مستعد للاستكشاف؟",
+  "motivationalAchievement": "أحسنت يا {name}! أنت نجم!"
 }

@@ -36,6 +36,7 @@ class HomeScreen extends ConsumerWidget {
           SliverToBoxAdapter(
             child: _ExplorerHeader(
               userName: user?.displayName,
+              isAnonymous: user?.isAnonymous ?? true,
               isArabic: isArabic,
             ),
           ),
@@ -86,15 +87,42 @@ class HomeScreen extends ConsumerWidget {
 
 /// Immersive explorer header with greeting and world visual
 class _ExplorerHeader extends StatelessWidget {
-  const _ExplorerHeader({this.userName, required this.isArabic});
+  const _ExplorerHeader({
+    this.userName,
+    this.isAnonymous = false,
+    required this.isArabic,
+  });
 
   final String? userName;
+  final bool isAnonymous;
   final bool isArabic;
+
+  /// Extract first name from full display name
+  String _getFirstName(String? fullName, AppLocalizations l10n) {
+    if (fullName == null || fullName.isEmpty || isAnonymous) {
+      return l10n.guest;
+    }
+    // Split by space and take first part
+    final parts = fullName.trim().split(' ');
+    return parts.first;
+  }
+
+  /// Get a random motivational message with user's name
+  String _getMotivationalMessage(String firstName, AppLocalizations l10n) {
+    final messages = [
+      l10n.motivationalProgress(firstName),
+      l10n.motivationalLearning(firstName),
+      l10n.motivationalWelcome(firstName),
+    ];
+    final index = DateTime.now().day % messages.length;
+    return messages[index];
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final hour = DateTime.now().hour;
+    final firstName = _getFirstName(userName, l10n);
 
     String greeting;
     IconData timeIcon;
@@ -108,6 +136,8 @@ class _ExplorerHeader extends StatelessWidget {
       greeting = l10n.goodEvening;
       timeIcon = Icons.nightlight_round;
     }
+
+    final motivationalMessage = _getMotivationalMessage(firstName, l10n);
 
     return Container(
       height: 270,
@@ -160,7 +190,7 @@ class _ExplorerHeader extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    greeting,
+                    '$greeting,',
                     style: GoogleFonts.poppins(
                       fontSize: 16,
                       color: Colors.white70,
@@ -169,7 +199,7 @@ class _ExplorerHeader extends StatelessWidget {
                   ).animate().fadeIn(duration: 400.ms),
                   const SizedBox(height: 4),
                   Text(
-                    userName ?? l10n.explorer,
+                    firstName,
                     style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
                       fontSize: 28,
                       color: Colors.white,
@@ -189,12 +219,15 @@ class _ExplorerHeader extends StatelessWidget {
                       children: [
                         const Icon(Icons.explore, color: AppColors.sunrise, size: 16),
                         const SizedBox(width: 6),
-                        Text(
-                          l10n.readyToExplore,
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: AppColors.sunrise,
-                            fontWeight: FontWeight.w500,
+                        Flexible(
+                          child: Text(
+                            motivationalMessage,
+                            style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
+                              fontSize: 12,
+                              color: AppColors.sunrise,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -681,11 +714,22 @@ class _DailyChallengeCard extends ConsumerWidget {
 class _ExpeditionProgressCard extends ConsumerWidget {
   const _ExpeditionProgressCard();
 
+  /// Get first name from user
+  String _getFirstName(String? fullName, AppLocalizations l10n) {
+    if (fullName == null || fullName.isEmpty) {
+      return l10n.guest;
+    }
+    final parts = fullName.trim().split(' ');
+    return parts.first;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final progress = ref.watch(userProgressProvider);
     final streak = progress.currentStreak;
+    final user = ref.watch(currentUserProvider);
+    final firstName = _getFirstName(user?.displayName, l10n);
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -729,11 +773,15 @@ class _ExpeditionProgressCard extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      streak > 0 ? l10n.keepItUp : l10n.startStreak,
+                      streak > 0
+                          ? l10n.motivationalStreak(firstName)
+                          : l10n.startStreak,
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: Theme.of(context).textTheme.bodySmall?.color,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

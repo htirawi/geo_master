@@ -2491,6 +2491,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Day Streak'**
   String get dayStreakLabel;
+
+  /// Greeting with user's first name
+  ///
+  /// In en, this message translates to:
+  /// **'{greeting}, {name}'**
+  String greetingWithName(String greeting, String name);
+
+  /// Motivational message for progress
+  ///
+  /// In en, this message translates to:
+  /// **'Great progress, {name}! Keep going!'**
+  String motivationalProgress(String name);
+
+  /// Motivational message for streak
+  ///
+  /// In en, this message translates to:
+  /// **'Amazing streak, {name}! You\'re on fire!'**
+  String motivationalStreak(String name);
+
+  /// Motivational message for learning
+  ///
+  /// In en, this message translates to:
+  /// **'Keep exploring, {name}! The world awaits!'**
+  String motivationalLearning(String name);
+
+  /// Motivational message after quiz
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re getting smarter, {name}!'**
+  String motivationalQuiz(String name);
+
+  /// Motivational welcome message
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back, {name}! Ready to explore?'**
+  String motivationalWelcome(String name);
+
+  /// Motivational message for achievements
+  ///
+  /// In en, this message translates to:
+  /// **'Well done, {name}! You\'re a star!'**
+  String motivationalAchievement(String name);
 }
 
 class _AppLocalizationsDelegate

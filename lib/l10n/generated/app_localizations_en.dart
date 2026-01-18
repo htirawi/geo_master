@@ -1244,4 +1244,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dayStreakLabel => 'Day Streak';
+
+  @override
+  String greetingWithName(String greeting, String name) {
+    return '$greeting, $name';
+  }
+
+  @override
+  String motivationalProgress(String name) {
+    return 'Great progress, $name! Keep going!';
+  }
+
+  @override
+  String motivationalStreak(String name) {
+    return 'Amazing streak, $name! You\'re on fire!';
+  }
+
+  @override
+  String motivationalLearning(String name) {
+    return 'Keep exploring, $name! The world awaits!';
+  }
+
+  @override
+  String motivationalQuiz(String name) {
+    return 'You\'re getting smarter, $name!';
+  }
+
+  @override
+  String motivationalWelcome(String name) {
+    return 'Welcome back, $name! Ready to explore?';
+  }
+
+  @override
+  String motivationalAchievement(String name) {
+    return 'Well done, $name! You\'re a star!';
+  }
 }

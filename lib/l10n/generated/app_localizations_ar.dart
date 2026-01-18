@@ -1242,4 +1242,39 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dayStreakLabel => 'سلسلة الأيام';
+
+  @override
+  String greetingWithName(String greeting, String name) {
+    return '$greeting، $name';
+  }
+
+  @override
+  String motivationalProgress(String name) {
+    return 'تقدم رائع يا $name! استمر!';
+  }
+
+  @override
+  String motivationalStreak(String name) {
+    return 'سلسلة مذهلة يا $name! أنت متألق!';
+  }
+
+  @override
+  String motivationalLearning(String name) {
+    return 'واصل الاستكشاف يا $name! العالم ينتظرك!';
+  }
+
+  @override
+  String motivationalQuiz(String name) {
+    return 'أصبحت أذكى يا $name!';
+  }
+
+  @override
+  String motivationalWelcome(String name) {
+    return 'مرحباً بعودتك يا $name! هل أنت مستعد للاستكشاف؟';
+  }
+
+  @override
+  String motivationalAchievement(String name) {
+    return 'أحسنت يا $name! أنت نجم!';
+  }
 }

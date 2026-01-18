@@ -695,5 +695,81 @@
   "dayStreakLabel": "Day Streak",
   "@dayStreakLabel": {
     "description": "Label for day streak count"
+  },
+
+  "greetingWithName": "{greeting}, {name}",
+  "@greetingWithName": {
+    "description": "Greeting with user's first name",
+    "placeholders": {
+      "greeting": {
+        "type": "String",
+        "example": "Good morning"
+      },
+      "name": {
+        "type": "String",
+        "example": "Hussein"
+      }
+    }
+  },
+
+  "motivationalProgress": "Great progress, {name}! Keep going!",
+  "@motivationalProgress": {
+    "description": "Motivational message for progress",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Hussein"
+      }
+    }
+  },
+  "motivationalStreak": "Amazing streak, {name}! You're on fire!",
+  "@motivationalStreak": {
+    "description": "Motivational message for streak",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Hussein"
+      }
+    }
+  },
+  "motivationalLearning": "Keep exploring, {name}! The world awaits!",
+  "@motivationalLearning": {
+    "description": "Motivational message for learning",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Hussein"
+      }
+    }
+  },
+  "motivationalQuiz": "You're getting smarter, {name}!",
+  "@motivationalQuiz": {
+    "description": "Motivational message after quiz",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Hussein"
+      }
+    }
+  },
+  "motivationalWelcome": "Welcome back, {name}! Ready to explore?",
+  "@motivationalWelcome": {
+    "description": "Motivational welcome message",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Hussein"
+      }
+    }
+  },
+  "motivationalAchievement": "Well done, {name}! You're a star!",
+  "@motivationalAchievement": {
+    "description": "Motivational message for achievements",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Hussein"
+      }
+    }
   }
 }
