@@ -320,7 +320,7 @@ class UserRepositoryImpl implements IUserRepository {
       final userResult = await getUserById(userId);
 
       return userResult.fold(
-        (failure) => Left(failure),
+        Left.new,
         (user) async {
           final progress = user.progress;
           final unlockedAchievements = <String>[];

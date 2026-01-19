@@ -393,6 +393,27 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
     String? displayName,
     String? photoUrl,
   }) async {
+    // Validate inputs before making API call
+    if (displayName != null) {
+      final nameValidation = Validators.validateDisplayName(displayName);
+      if (!nameValidation.isValid) {
+        throw AuthException(
+          message: nameValidation.errorMessage!,
+          code: 'invalid-name',
+        );
+      }
+    }
+
+    if (photoUrl != null) {
+      final urlValidation = Validators.validatePhotoUrl(photoUrl);
+      if (!urlValidation.isValid) {
+        throw AuthException(
+          message: urlValidation.errorMessage!,
+          code: 'invalid-photo-url',
+        );
+      }
+    }
+
     try {
       final user = _firebaseAuth.currentUser;
       if (user == null) {
@@ -403,9 +424,11 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
       }
 
       if (displayName != null) {
-        await user.updateDisplayName(displayName);
+        final sanitizedName = Validators.sanitizeDisplayName(displayName);
+        await user.updateDisplayName(sanitizedName);
       }
       if (photoUrl != null) {
+        // Only allow HTTPS URLs for photo
         await user.updatePhotoURL(photoUrl);
       }
     } on fb.FirebaseAuthException catch (e) {

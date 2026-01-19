@@ -1277,4 +1277,341 @@ class AppLocalizationsAr extends AppLocalizations {
   String motivationalAchievement(String name) {
     return 'أحسنت يا $name! أنت نجم!';
   }
+
+  @override
+  String get worldMapTitle => 'خريطة العالم';
+
+  @override
+  String get exploreTheWorld => 'استكشف العالم';
+
+  @override
+  String get searchCountriesPlaceholder => 'ابحث عن الدول...';
+
+  @override
+  String get randomCountry => 'عشوائي';
+
+  @override
+  String get findingLocation => 'جارٍ تحديد موقعك...';
+
+  @override
+  String get view3D => 'العرض ثلاثي الأبعاد';
+
+  @override
+  String get mapLegend => 'دليل الألوان';
+
+  @override
+  String get legendMastered => 'متقن';
+
+  @override
+  String get legendAdvanced => 'متقدم';
+
+  @override
+  String get legendIntermediate => 'متوسط';
+
+  @override
+  String get legendBeginner => 'مبتدئ';
+
+  @override
+  String get legendStarted => 'بدأ التعلم';
+
+  @override
+  String get legendNotStarted => 'لم يبدأ';
+
+  @override
+  String get mapFilterAll => 'الكل';
+
+  @override
+  String get mapFilterComplete => 'مكتمل';
+
+  @override
+  String get mapFilterInProgress => 'قيد التعلم';
+
+  @override
+  String get mapFilterNotStarted => 'لم يبدأ';
+
+  @override
+  String get mapFilterFavorites => 'المفضلة';
+
+  @override
+  String get mapStatsCountries => 'الدول';
+
+  @override
+  String get mapStatsExplored => 'مستكشفة';
+
+  @override
+  String get mapStatsFavorites => 'المفضلة';
+
+  @override
+  String get continentExplorer => 'مستكشف القارات';
+
+  @override
+  String get continentProgress => 'التقدم';
+
+  @override
+  String continentCountries(int count) {
+    return '$count دولة';
+  }
+
+  @override
+  String get continueExploring => 'تابع الاستكشاف';
+
+  @override
+  String get startExploring => 'ابدأ الاستكشاف';
+
+  @override
+  String get tabOverview => 'نظرة عامة';
+
+  @override
+  String get tabGeography => 'الجغرافيا';
+
+  @override
+  String get tabCulture => 'الثقافة';
+
+  @override
+  String get tabTravel => 'السفر';
+
+  @override
+  String get tabLearn => 'تعلم';
+
+  @override
+  String get liveInfo => 'معلومات حية';
+
+  @override
+  String get currentTime => 'الوقت الحالي';
+
+  @override
+  String get season => 'الفصل';
+
+  @override
+  String get timeDifference => 'فرق التوقيت';
+
+  @override
+  String get quickFacts => 'حقائق سريعة';
+
+  @override
+  String get flagMeaning => 'معنى العلم';
+
+  @override
+  String get flagHistory => 'تاريخ العلم';
+
+  @override
+  String get neighboringCountries => 'الدول المجاورة';
+
+  @override
+  String get noNeighbors => 'جزيرة - لا حدود برية';
+
+  @override
+  String get terrain => 'التضاريس';
+
+  @override
+  String get terrainBreakdown => 'توزيع التضاريس';
+
+  @override
+  String get climate => 'المناخ';
+
+  @override
+  String get climateZones => 'المناطق المناخية';
+
+  @override
+  String get naturalHazards => 'الكوارث الطبيعية';
+
+  @override
+  String get noHazards => 'لا توجد مخاطر طبيعية كبرى';
+
+  @override
+  String get administrativeRegions => 'التقسيمات الإدارية';
+
+  @override
+  String get traditionalFoods => 'الأطعمة التقليدية';
+
+  @override
+  String get traditionalArts => 'الفنون التقليدية';
+
+  @override
+  String get festivals => 'الأعياد والاحتفالات';
+
+  @override
+  String get unescoSites => 'مواقع التراث العالمي';
+
+  @override
+  String get famousPeople => 'مشاهير';
+
+  @override
+  String get funFacts => 'حقائق ممتعة';
+
+  @override
+  String get topPlacesToVisit => 'أفضل الأماكن للزيارة';
+
+  @override
+  String get travelEssentials => 'أساسيات السفر';
+
+  @override
+  String get visa => 'التأشيرة';
+
+  @override
+  String get visaRequired => 'مطلوبة';
+
+  @override
+  String get visaNotRequired => 'غير مطلوبة';
+
+  @override
+  String get currency => 'Currency';
+
+  @override
+  String get voltage => 'الجهد الكهربائي';
+
+  @override
+  String get plugType => 'نوع المقبس';
+
+  @override
+  String get essentialPhrases => 'عبارات أساسية';
+
+  @override
+  String get travelTips => 'نصائح السفر';
+
+  @override
+  String get yourProgress => 'تقدمك';
+
+  @override
+  String get quizzes => 'Quizzes';
+
+  @override
+  String get flashcards => 'البطاقات التعليمية';
+
+  @override
+  String get countryQuiz => 'اختبار الدولة';
+
+  @override
+  String get testYourKnowledge => 'اختبر معلوماتك';
+
+  @override
+  String get learningModules => 'وحدات التعلم';
+
+  @override
+  String get aiTutorChat => 'محادثة المعلم الذكي';
+
+  @override
+  String get chatAboutCountry => 'تحدث عن هذه الدولة';
+
+  @override
+  String get historicalTimeline => 'الخط الزمني التاريخي';
+
+  @override
+  String get compareWithOther => 'قارن مع دولة أخرى';
+
+  @override
+  String get bookmarkedFacts => 'الحقائق المحفوظة';
+
+  @override
+  String get noBookmarks => 'لا توجد حقائق محفوظة بعد';
+
+  @override
+  String get mediaGallery => 'معرض الوسائط';
+
+  @override
+  String get photos => 'صور';
+
+  @override
+  String get videos => 'فيديو';
+
+  @override
+  String get news => 'أخبار';
+
+  @override
+  String get placeTypeLandmark => 'معلم';
+
+  @override
+  String get placeTypeNature => 'طبيعة';
+
+  @override
+  String get placeTypeMuseum => 'متحف';
+
+  @override
+  String get placeTypeHistoric => 'تاريخي';
+
+  @override
+  String get placeTypeReligious => 'ديني';
+
+  @override
+  String get placeTypePark => 'حديقة';
+
+  @override
+  String get placeTypeBeach => 'شاطئ';
+
+  @override
+  String get placeTypeMountain => 'جبل';
+
+  @override
+  String get placeTypeLake => 'بحيرة';
+
+  @override
+  String get placeTypeWaterfall => 'شلال';
+
+  @override
+  String get placeTypeCastle => 'قلعة';
+
+  @override
+  String get placeTypePalace => 'قصر';
+
+  @override
+  String get placeTypeTemple => 'معبد';
+
+  @override
+  String get placeTypeMonument => 'نصب تذكاري';
+
+  @override
+  String get placeTypeBridge => 'جسر';
+
+  @override
+  String get placeTypeTower => 'برج';
+
+  @override
+  String get placeTypeMarket => 'سوق';
+
+  @override
+  String get placeTypeNeighborhood => 'حي';
+
+  @override
+  String get placeTypeOther => 'أخرى';
+
+  @override
+  String get progressNotStarted => 'لم يبدأ';
+
+  @override
+  String get progressStarted => 'بدأ';
+
+  @override
+  String get progressBeginner => 'مبتدئ';
+
+  @override
+  String get progressIntermediate => 'متوسط';
+
+  @override
+  String get progressAdvanced => 'متقدم';
+
+  @override
+  String get progressMastered => 'متقن';
+
+  @override
+  String get exploreCountry => 'استكشف';
+
+  @override
+  String get addToFavorites => 'إضافة للمفضلة';
+
+  @override
+  String get removeFromFavorites => 'إزالة من المفضلة';
+
+  @override
+  String get shareCountry => 'مشاركة';
+
+  @override
+  String percentExplored(int percent) {
+    return '$percent% مستكشف';
+  }
+
+  @override
+  String get noResultsFound => 'لم يتم العثور على نتائج';
+
+  @override
+  String get searchForCountry => 'ابحث عن أي دولة في العالم';
 }

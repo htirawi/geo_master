@@ -13,8 +13,8 @@ void main() async {
   final foreground = generateForegroundIcon(1024);
 
   // Save icons
-  final iconPath = 'assets/app_icon/app_icon.png';
-  final foregroundPath = 'assets/app_icon/app_icon_foreground.png';
+  const iconPath = 'assets/app_icon/app_icon.png';
+  const foregroundPath = 'assets/app_icon/app_icon_foreground.png';
 
   await File(iconPath).writeAsBytes(img.encodePng(icon));
   await File(foregroundPath).writeAsBytes(img.encodePng(foreground));
@@ -123,9 +123,9 @@ void _drawGlow(img.Image image, double cx, double cy, double radius, img.Color c
         if (intensity > 0) {
           final current = image.getPixel(x, y);
           final alpha = (glowColor.a * intensity).round().clamp(0, 255);
-          final newR = ((current.r.toInt() * (255 - alpha) + glowColor.r * alpha) ~/ 255);
-          final newG = ((current.g.toInt() * (255 - alpha) + glowColor.g * alpha) ~/ 255);
-          final newB = ((current.b.toInt() * (255 - alpha) + glowColor.b * alpha) ~/ 255);
+          final newR = (current.r.toInt() * (255 - alpha) + glowColor.r * alpha) ~/ 255;
+          final newG = (current.g.toInt() * (255 - alpha) + glowColor.g * alpha) ~/ 255;
+          final newB = (current.b.toInt() * (255 - alpha) + glowColor.b * alpha) ~/ 255;
           image.setPixelRgba(x, y, newR, newG, newB, 255);
         }
       }
@@ -147,9 +147,9 @@ void _drawFilledCircle(img.Image image, double cx, double cy, double radius, img
         if (dist > radius - 1) {
           final alpha = ((radius - dist) * c.a).round().clamp(0, 255);
           final current = image.getPixel(x, y);
-          final newR = ((current.r.toInt() * (255 - alpha) + c.r * alpha) ~/ 255);
-          final newG = ((current.g.toInt() * (255 - alpha) + c.g * alpha) ~/ 255);
-          final newB = ((current.b.toInt() * (255 - alpha) + c.b * alpha) ~/ 255);
+          final newR = (current.r.toInt() * (255 - alpha) + c.r * alpha) ~/ 255;
+          final newG = (current.g.toInt() * (255 - alpha) + c.g * alpha) ~/ 255;
+          final newB = (current.b.toInt() * (255 - alpha) + c.b * alpha) ~/ 255;
           image.setPixelRgba(x, y, newR, newG, newB, 255);
         } else {
           image.setPixelRgba(x, y, c.r, c.g, c.b, c.a);
@@ -277,8 +277,8 @@ void _drawLandmass(
       if (globeDist > radius - 2) continue;
 
       // Transform to landmass coordinates
-      var dx = (x - landCx) / (radius * scaleX);
-      var dy = (y - landCy) / (radius * scaleY);
+      final dx = (x - landCx) / (radius * scaleX);
+      final dy = (y - landCy) / (radius * scaleY);
 
       // Apply rotation
       final rotDx = dx * math.cos(rotation) - dy * math.sin(rotation);
@@ -305,9 +305,9 @@ void _drawLandmass(
           final edgeDist = baseDist - (0.9 + noise);
           final alpha = ((1.0 - edgeDist / 0.1) * 255).round().clamp(0, 255);
           final current = image.getPixel(x, y);
-          final newR = ((current.r.toInt() * (255 - alpha) + r * alpha) ~/ 255);
-          final newG = ((current.g.toInt() * (255 - alpha) + g * alpha) ~/ 255);
-          final newB = ((current.b.toInt() * (255 - alpha) + b * alpha) ~/ 255);
+          final newR = (current.r.toInt() * (255 - alpha) + r * alpha) ~/ 255;
+          final newG = (current.g.toInt() * (255 - alpha) + g * alpha) ~/ 255;
+          final newB = (current.b.toInt() * (255 - alpha) + b * alpha) ~/ 255;
           image.setPixelRgba(x, y, newR, newG, newB, 255);
         } else {
           image.setPixelRgba(x, y, r, g, b, 255);
@@ -418,9 +418,9 @@ void _drawGlobeRim(img.Image image, double cx, double cy, double radius) {
         }
 
         final current = image.getPixel(x, y);
-        final newR = ((current.r.toInt() * (255 - alpha) + r * alpha) ~/ 255);
-        final newG = ((current.g.toInt() * (255 - alpha) + g * alpha) ~/ 255);
-        final newB = ((current.b.toInt() * (255 - alpha) + b * alpha) ~/ 255);
+        final newR = (current.r.toInt() * (255 - alpha) + r * alpha) ~/ 255;
+        final newG = (current.g.toInt() * (255 - alpha) + g * alpha) ~/ 255;
+        final newB = (current.b.toInt() * (255 - alpha) + b * alpha) ~/ 255;
         image.setPixelRgba(x, y, newR, newG, newB, 255);
       }
     }
@@ -508,9 +508,9 @@ void _blendPixel(img.Image image, int x, int y, img.Color color) {
   final current = image.getPixel(x, y);
   final alpha = c.a;
 
-  final newR = ((current.r.toInt() * (255 - alpha) + c.r * alpha) ~/ 255);
-  final newG = ((current.g.toInt() * (255 - alpha) + c.g * alpha) ~/ 255);
-  final newB = ((current.b.toInt() * (255 - alpha) + c.b * alpha) ~/ 255);
+  final newR = (current.r.toInt() * (255 - alpha) + c.r * alpha) ~/ 255;
+  final newG = (current.g.toInt() * (255 - alpha) + c.g * alpha) ~/ 255;
+  final newB = (current.b.toInt() * (255 - alpha) + c.b * alpha) ~/ 255;
 
   image.setPixelRgba(x, y, newR, newG, newB, 255);
 }

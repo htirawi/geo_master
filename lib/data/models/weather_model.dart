@@ -20,22 +20,6 @@ class WeatherModel {
     required this.sunset,
   });
 
-  final double temperature; // Celsius
-  final double feelsLike;
-  final double tempMin;
-  final double tempMax;
-  final int humidity;
-  final int pressure;
-  final double windSpeed;
-  final int windDeg;
-  final String condition; // e.g., "Clear", "Clouds", "Rain"
-  final String conditionDescription;
-  final String icon;
-  final String cityName;
-  final String countryCode;
-  final DateTime sunrise;
-  final DateTime sunset;
-
   factory WeatherModel.fromJson(Map<String, dynamic> json) {
     final main = json['main'] as Map<String, dynamic>;
     final weather = (json['weather'] as List<dynamic>).first as Map<String, dynamic>;
@@ -64,6 +48,22 @@ class WeatherModel {
       ),
     );
   }
+
+  final double temperature; // Celsius
+  final double feelsLike;
+  final double tempMin;
+  final double tempMax;
+  final int humidity;
+  final int pressure;
+  final double windSpeed;
+  final int windDeg;
+  final String condition; // e.g., "Clear", "Clouds", "Rain"
+  final String conditionDescription;
+  final String icon;
+  final String cityName;
+  final String countryCode;
+  final DateTime sunrise;
+  final DateTime sunset;
 
   /// Convert to domain entity
   CountryWeather toEntity(String countryCode) {

@@ -305,15 +305,7 @@ class _ChallengePatternPainter extends CustomPainter {
 
   void _drawHexagon(Canvas canvas, Offset center, double radius, Paint paint) {
     final path = Path();
-    for (int i = 0; i < 6; i++) {
-      final angle = (i * 60 - 30) * 3.14159 / 180;
-      final x = center.dx + radius * 1.732 * 0.5 * (i == 0 ? 0 : (i < 3 ? 1 : -1));
-      final y = center.dy + radius * (i == 0 || i == 3 ? 1 : (i < 3 ? 0.5 : -0.5)) * (i == 0 ? -1 : 1);
-      if (i == 0) {
-        path.moveTo(center.dx, center.dy - radius);
-      }
-    }
-    // Simplified hexagon
+    // Draw simplified hexagon
     path.addPolygon([
       Offset(center.dx, center.dy - radius),
       Offset(center.dx + radius * 0.866, center.dy - radius * 0.5),

@@ -771,5 +771,143 @@
         "example": "Hussein"
       }
     }
-  }
+  },
+
+  "worldMapTitle": "World Map",
+  "exploreTheWorld": "Explore the World",
+  "searchCountriesPlaceholder": "Search countries...",
+  "randomCountry": "Random",
+  "findingLocation": "Finding your location...",
+  "view3D": "3D View Feature",
+
+  "mapLegend": "Legend",
+  "legendMastered": "Mastered",
+  "legendAdvanced": "Advanced",
+  "legendIntermediate": "Intermediate",
+  "legendBeginner": "Beginner",
+  "legendStarted": "Started",
+  "legendNotStarted": "Not Started",
+
+  "mapFilterAll": "All",
+  "mapFilterComplete": "Complete",
+  "mapFilterInProgress": "In Progress",
+  "mapFilterNotStarted": "Not Started",
+  "mapFilterFavorites": "Favorites",
+
+  "mapStatsCountries": "Countries",
+  "mapStatsExplored": "Explored",
+  "mapStatsFavorites": "Favorites",
+
+  "continentExplorer": "Continent Explorer",
+  "continentProgress": "Progress",
+  "continentCountries": "{count} Countries",
+  "@continentCountries": {
+    "placeholders": {
+      "count": {"type": "int", "example": "54"}
+    }
+  },
+  "continueExploring": "Continue Exploring",
+  "startExploring": "Start Exploring",
+
+  "tabOverview": "Overview",
+  "tabGeography": "Geography",
+  "tabCulture": "Culture",
+  "tabTravel": "Travel",
+  "tabLearn": "Learn",
+
+  "liveInfo": "Live Info",
+  "currentTime": "Current Time",
+  "currentWeather": "Current Weather",
+  "season": "Season",
+  "timeDifference": "Time Difference",
+
+  "quickFacts": "Quick Facts",
+  "flagMeaning": "Flag Meaning",
+  "flagHistory": "Flag History",
+  "neighboringCountries": "Neighboring Countries",
+  "noNeighbors": "Island nation - no land borders",
+
+  "terrain": "Terrain",
+  "terrainBreakdown": "Terrain Breakdown",
+  "climate": "Climate",
+  "climateZones": "Climate Zones",
+  "naturalHazards": "Natural Hazards",
+  "noHazards": "No major natural hazards",
+  "administrativeRegions": "Administrative Regions",
+
+  "traditionalFoods": "Traditional Foods",
+  "traditionalArts": "Traditional Arts",
+  "festivals": "Festivals & Celebrations",
+  "unescoSites": "UNESCO World Heritage Sites",
+  "famousPeople": "Famous People",
+  "funFacts": "Fun Facts",
+
+  "topPlacesToVisit": "Top Places to Visit",
+  "travelEssentials": "Travel Essentials",
+  "visa": "Visa",
+  "visaRequired": "Required",
+  "visaNotRequired": "Not Required",
+  "currency": "Currency",
+  "voltage": "Voltage",
+  "plugType": "Plug Type",
+  "essentialPhrases": "Essential Phrases",
+  "travelTips": "Travel Tips",
+
+  "yourProgress": "Your Progress",
+  "quizzes": "Quizzes",
+  "flashcards": "Flashcards",
+  "countryQuiz": "Country Quiz",
+  "testYourKnowledge": "Test your knowledge",
+  "learningModules": "Learning Modules",
+  "aiTutorChat": "AI Tutor Chat",
+  "chatAboutCountry": "Chat about this country",
+  "historicalTimeline": "Historical Timeline",
+  "compareWithOther": "Compare with Another Country",
+  "bookmarkedFacts": "Bookmarked Facts",
+  "noBookmarks": "No bookmarked facts yet",
+  "mediaGallery": "Media Gallery",
+  "photos": "Photos",
+  "videos": "Videos",
+  "news": "News",
+
+  "placeTypeLandmark": "Landmark",
+  "placeTypeNature": "Nature",
+  "placeTypeMuseum": "Museum",
+  "placeTypeHistoric": "Historic",
+  "placeTypeReligious": "Religious",
+  "placeTypePark": "Park",
+  "placeTypeBeach": "Beach",
+  "placeTypeMountain": "Mountain",
+  "placeTypeLake": "Lake",
+  "placeTypeWaterfall": "Waterfall",
+  "placeTypeCastle": "Castle",
+  "placeTypePalace": "Palace",
+  "placeTypeTemple": "Temple",
+  "placeTypeMonument": "Monument",
+  "placeTypeBridge": "Bridge",
+  "placeTypeTower": "Tower",
+  "placeTypeMarket": "Market",
+  "placeTypeNeighborhood": "District",
+  "placeTypeOther": "Other",
+
+  "progressNotStarted": "Not Started",
+  "progressStarted": "Started",
+  "progressBeginner": "Beginner",
+  "progressIntermediate": "Intermediate",
+  "progressAdvanced": "Advanced",
+  "progressMastered": "Mastered",
+
+  "exploreCountry": "Explore",
+  "addToFavorites": "Add to Favorites",
+  "removeFromFavorites": "Remove from Favorites",
+  "shareCountry": "Share",
+  "percentExplored": "{percent}% explored",
+  "@percentExplored": {
+    "placeholders": {
+      "percent": {"type": "int", "example": "75"}
+    }
+  },
+
+  "noResultsFound": "No results found",
+  "searchForCountry": "Search for any country in the world"
 }

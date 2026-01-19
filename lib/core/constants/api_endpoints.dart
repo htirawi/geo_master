@@ -10,6 +10,7 @@ abstract final class ApiEndpoints {
   // OpenWeatherMap API
   static const String weatherBaseUrl = 'https://api.openweathermap.org/data/2.5';
   static const String weatherCurrent = '$weatherBaseUrl/weather';
+  static const String weatherForecast = '$weatherBaseUrl/forecast';
 
   // Claude API (Anthropic)
   static const String claudeBaseUrl = 'https://api.anthropic.com/v1';
@@ -18,6 +19,51 @@ abstract final class ApiEndpoints {
   // Firebase Cloud Functions (placeholder - will be configured per project)
   static const String cloudFunctionsBaseUrl =
       'https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net';
+
+  // Wikipedia REST API (free, no key required)
+  static const String wikipediaBaseUrl = 'https://en.wikipedia.org/api/rest_v1';
+  static const String wikipediaSummary = '$wikipediaBaseUrl/page/summary';
+  static const String wikipediaMedia = '$wikipediaBaseUrl/page/media-list';
+  static const String wikipediaRelated = '$wikipediaBaseUrl/page/related';
+
+  // Arabic Wikipedia
+  static const String wikipediaArabicBaseUrl = 'https://ar.wikipedia.org/api/rest_v1';
+  static const String wikipediaArabicSummary = '$wikipediaArabicBaseUrl/page/summary';
+
+  // Unsplash API
+  static const String unsplashBaseUrl = 'https://api.unsplash.com';
+  static const String unsplashSearch = '$unsplashBaseUrl/search/photos';
+  static const String unsplashPhotos = '$unsplashBaseUrl/photos';
+  static const String unsplashRandom = '$unsplashBaseUrl/photos/random';
+
+  // YouTube Data API v3
+  static const String youtubeBaseUrl = 'https://www.googleapis.com/youtube/v3';
+  static const String youtubeSearch = '$youtubeBaseUrl/search';
+  static const String youtubeVideos = '$youtubeBaseUrl/videos';
+  static const String youtubeChannels = '$youtubeBaseUrl/channels';
+
+  // NewsAPI
+  static const String newsBaseUrl = 'https://newsapi.org/v2';
+  static const String newsEverything = '$newsBaseUrl/everything';
+  static const String newsTopHeadlines = '$newsBaseUrl/top-headlines';
+  static const String newsSources = '$newsBaseUrl/top-headlines/sources';
+
+  // Exchange Rate API (free tier)
+  static const String exchangeRateBaseUrl = 'https://api.exchangerate-api.com/v4';
+  static const String exchangeRateLatest = '$exchangeRateBaseUrl/latest';
+
+  // Open Exchange Rates API (alternative)
+  static const String openExchangeBaseUrl = 'https://openexchangerates.org/api';
+  static const String openExchangeLatest = '$openExchangeBaseUrl/latest.json';
+
+  // WorldTime API (free, no key required)
+  static const String worldTimeBaseUrl = 'https://worldtimeapi.org/api';
+  static const String worldTimeTimezone = '$worldTimeBaseUrl/timezone';
+  static const String worldTimeIp = '$worldTimeBaseUrl/ip';
+
+  // TimeZoneDB API (alternative)
+  static const String timezoneDbBaseUrl = 'https://api.timezonedb.com/v2.1';
+  static const String timezoneDbGetZone = '$timezoneDbBaseUrl/get-time-zone';
 
   // Request Fields for REST Countries
   static const String restCountriesFields =
@@ -33,4 +79,9 @@ abstract final class ApiEndpoints {
   // Retry Configuration
   static const int maxRetries = 3;
   static const Duration retryDelay = Duration(seconds: 1);
+
+  // Rate Limiting
+  static const int unsplashRateLimit = 50; // per hour for demo
+  static const int youtubeQuotaDaily = 10000; // units per day
+  static const int newsApiRequestsPerDay = 100; // free tier
 }

@@ -291,7 +291,7 @@ class SubscriptionRepositoryImpl implements ISubscriptionRepository {
       final tierResult = await getSubscriptionTier(userId);
 
       return tierResult.fold(
-        (failure) => Left(failure),
+        Left.new,
         (tier) {
           final hasAccess = tier.features.contains(feature);
           return Right(hasAccess);

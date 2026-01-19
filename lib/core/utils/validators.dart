@@ -135,6 +135,70 @@ class Validators {
   static String sanitizeDisplayName(String name) {
     return name.trim().replaceAll(RegExp(r'\s+'), ' ');
   }
+
+  /// Validate photo URL (must be HTTPS)
+  static ValidationResult validatePhotoUrl(String? url) {
+    if (url == null || url.trim().isEmpty) {
+      return ValidationResult.valid(); // Photo URL is optional
+    }
+
+    final trimmed = url.trim();
+
+    // Check URL length (reasonable max)
+    if (trimmed.length > 2048) {
+      return ValidationResult.invalid('URL is too long');
+    }
+
+    // Must be a valid HTTPS URL
+    final uri = Uri.tryParse(trimmed);
+    if (uri == null) {
+      return ValidationResult.invalid('Invalid URL format');
+    }
+
+    // Only allow HTTPS for security
+    if (uri.scheme != 'https') {
+      return ValidationResult.invalid('Photo URL must use HTTPS');
+    }
+
+    // Must have a valid host
+    if (uri.host.isEmpty) {
+      return ValidationResult.invalid('Invalid URL host');
+    }
+
+    // Check for common image hosting domains or file extensions
+    final isImageUrl = trimmed.contains(RegExp(
+      r'\.(jpg|jpeg|png|gif|webp|svg)(\?|$)',
+      caseSensitive: false,
+    ));
+    final isTrustedDomain = _isTrustedImageDomain(uri.host);
+
+    if (!isImageUrl && !isTrustedDomain) {
+      return ValidationResult.invalid(
+        'URL does not appear to be a valid image URL',
+      );
+    }
+
+    return ValidationResult.valid();
+  }
+
+  /// Check if domain is a trusted image hosting service
+  static bool _isTrustedImageDomain(String host) {
+    final trustedDomains = [
+      'lh3.googleusercontent.com', // Google profile photos
+      'googleusercontent.com',
+      'gravatar.com',
+      'firebasestorage.googleapis.com',
+      'storage.googleapis.com',
+      'cloudinary.com',
+      'res.cloudinary.com',
+      'imgur.com',
+      'i.imgur.com',
+      'cdn.discordapp.com',
+      'avatars.githubusercontent.com',
+    ];
+
+    return trustedDomains.any((domain) => host.endsWith(domain));
+  }
 }
 
 /// Result of a validation check

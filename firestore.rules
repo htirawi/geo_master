@@ -2,32 +2,126 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read/write access for development
-    // TODO: Tighten these rules for production
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    // ============================================
+    // SECURITY RULES FOR GEOMASTER APP
+    // ============================================
+
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
     }
 
-    // Allow anonymous access for development testing
+    // Helper function to check if user owns the resource
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Helper function to validate string length
+    function isValidString(field, minLen, maxLen) {
+      return field is string && field.size() >= minLen && field.size() <= maxLen;
+    }
+
+    // ============================================
+    // COUNTRIES - Public read-only access
+    // ============================================
     match /countries/{countryId} {
       allow read: if true;
+      allow write: if false; // Admin only via Firebase Console
     }
 
-    // User profiles - users can only read/write their own data
+    // ============================================
+    // USER PROFILES - Users can only access their own data
+    // ============================================
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      // Users can only read/write their own profile
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) &&
+        // Prevent changing immutable fields
+        request.resource.data.id == resource.data.id &&
+        request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isOwner(userId);
+
+      // Subcollection: Learned countries
+      match /learned_countries/{countryCode} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Subcollection: Quiz history
+      match /quiz_history/{quizId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Subcollection: Achievements
+      match /achievements/{achievementId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Subcollection: Chat history
+      match /chat_history/{chatId} {
+        allow read, write: if isOwner(userId);
+      }
     }
 
-    // Quiz results - users can read their own, write if authenticated
+    // ============================================
+    // QUIZ RESULTS - Users can only access their own results
+    // ============================================
     match /quizResults/{resultId} {
-      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
-      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      // Users can only read their own quiz results
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Users can only create results for themselves
+      allow create: if isAuthenticated() &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.completedAt is timestamp;
+      // No updates or deletes allowed (quiz results are immutable)
+      allow update, delete: if false;
     }
 
-    // Leaderboards - public read, authenticated write
+    // ============================================
+    // LEADERBOARDS - Public read, system write only
+    // ============================================
     match /leaderboards/{leaderboardId} {
+      // Anyone can read leaderboards
       allow read: if true;
-      allow write: if request.auth != null;
+      // Only the server/admin can write leaderboard entries
+      // Users update their scores through user profile which triggers leaderboard update
+      allow write: if false;
+    }
+
+    // ============================================
+    // LEADERBOARD ENTRIES - Derived from user XP
+    // ============================================
+    match /leaderboard_entries/{entryId} {
+      // Public read for displaying rankings
+      allow read: if true;
+      // Users can only create/update their own entry
+      allow create, update: if isAuthenticated() &&
+        request.resource.data.userId == request.auth.uid &&
+        isValidString(request.resource.data.displayName, 1, 50);
+      allow delete: if false;
+    }
+
+    // ============================================
+    // APP CONFIG - Read only for all authenticated users
+    // ============================================
+    match /config/{configId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Admin only
+    }
+
+    // ============================================
+    // DAILY CHALLENGES - System managed
+    // ============================================
+    match /daily_challenges/{challengeId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Admin/Cloud Functions only
+    }
+
+    // ============================================
+    // CATCH-ALL: Deny everything else
+    // ============================================
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

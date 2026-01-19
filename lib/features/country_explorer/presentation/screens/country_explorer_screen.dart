@@ -8,9 +8,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/error/failures.dart';
 import '../../../../domain/entities/country.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/country_provider.dart';
+import '../../../../presentation/widgets/error_widgets.dart';
 
 /// Country explorer screen - World Atlas Theme
 /// A beautifully designed explorer with an immersive geography experience
@@ -35,7 +37,6 @@ class _CountryExplorerScreenState extends ConsumerState<CountryExplorerScreen>
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final searchQuery = ref.watch(countrySearchQueryProvider);
     final selectedRegion = ref.watch(selectedRegionProvider);
@@ -297,7 +298,7 @@ class _RegionFilterSection extends ConsumerWidget {
             const SizedBox(width: 8),
             // Region filters
             ...regions.map((region) => Padding(
-                  padding: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsetsDirectional.only(end: 8),
                   child: _RegionChip(
                     label: _getLocalizedRegion(l10n, region),
                     icon: _getRegionIcon(region),
@@ -645,59 +646,20 @@ class _CountryListView extends ConsumerWidget {
     String error,
     AppLocalizations l10n,
   ) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(48),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: AppColors.error.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.error_outline,
-                size: 48,
-                color: AppColors.error,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              l10n.error,
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: () => ref.read(countryListProvider.notifier).loadCountries(
-                    forceRefresh: true,
-                  ),
-              icon: const Icon(Icons.refresh),
-              label: Text(l10n.retry),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.tertiary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
+    // Create a failure from the error string
+    final failure = NetworkFailure(
+      message: error,
+      code: 'unknown',
+    );
+
+    return ErrorStateWidget.fromFailure(
+      failure: failure,
+      isArabic: isArabic,
+      onRetry: () => ref.read(countryListProvider.notifier).loadCountries(
+            forceRefresh: true,
+          ),
     );
   }
 }
@@ -828,7 +790,7 @@ class _CountryListCard extends StatelessWidget {
               ),
               // Arrow
               Container(
-                margin: const EdgeInsets.only(right: 12),
+                margin: const EdgeInsetsDirectional.only(end: 12),
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: AppColors.tertiary.withValues(alpha: 0.1),

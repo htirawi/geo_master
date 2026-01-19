@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,9 +9,11 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/error/failures.dart';
 import '../../../../domain/entities/quiz.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/quiz_provider.dart';
+import '../../../../presentation/widgets/error_widgets.dart';
 
 /// Quiz game screen - displays questions and handles answers
 class QuizGameScreen extends ConsumerStatefulWidget {
@@ -359,12 +362,16 @@ class _QuizGameScreenState extends ConsumerState<QuizGameScreen>
               ],
             ),
             clipBehavior: Clip.antiAlias,
-            child: Image.network(
-              question.imageUrl!,
+            child: CachedNetworkImage(
+              imageUrl: question.imageUrl!,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stack) => Container(
+              errorWidget: (context, url, error) => Container(
                 color: theme.colorScheme.surfaceContainerHighest,
                 child: const Icon(Icons.flag, size: 48),
+              ),
+              placeholder: (context, url) => Container(
+                color: theme.colorScheme.surfaceContainerHighest,
+                child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
               ),
             ),
           ),
@@ -516,31 +523,20 @@ class _QuizGameScreenState extends ConsumerState<QuizGameScreen>
     Object error,
     AppLocalizations l10n,
   ) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDimensions.paddingXL),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: AppColors.error),
-            const SizedBox(height: AppDimensions.spacingMD),
-            Text(
-              l10n.error,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: AppDimensions.spacingSM),
-            Text(
-              error.toString(),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: AppDimensions.spacingXL),
-            FilledButton(
-              onPressed: _generateQuiz,
-              child: Text(l10n.retry),
-            ),
-          ],
-        ),
-      ),
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
+    // Convert error to Failure if possible
+    final failure = error is Failure
+        ? error
+        : QuizFailure(
+            message: error.toString(),
+            code: 'unknown',
+          );
+
+    return ErrorStateWidget.fromFailure(
+      failure: failure,
+      isArabic: isArabic,
+      onRetry: _generateQuiz,
     );
   }
 

@@ -72,6 +72,7 @@ class AiTutorRepositoryImpl implements IAiTutorRepository {
       await _chatLocalDataSource.incrementMessagesSentToday(userId);
 
       // Create stream controller for response
+      // ignore: close_sinks - closed in _streamResponse finally block
       final controller = StreamController<String>();
 
       // Start streaming response in background
@@ -326,7 +327,7 @@ class AiTutorRepositoryImpl implements IAiTutorRepository {
         stackTrace: stackTrace,
       );
       // Return defaults on error
-      return Right(SuggestedPrompt.defaults);
+      return const Right(SuggestedPrompt.defaults);
     }
   }
 

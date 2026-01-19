@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import '../error/exceptions.dart';
 import '../services/logger_service.dart';
 
 /// Configuration for retry behavior
@@ -127,22 +128,34 @@ class RetryHelper {
 
   /// Default logic for determining if an error should be retried
   static bool _defaultShouldRetry(Object error) {
-    final errorString = error.toString().toLowerCase();
+    // Always retry network exceptions (connection issues, timeouts)
+    if (error is NetworkException) {
+      return true;
+    }
 
-    // Retry network-related errors
+    // Retry server errors (5xx status codes)
+    if (error is ServerException) {
+      final statusCode = error.statusCode;
+      if (statusCode != null && statusCode >= 500 && statusCode < 600) {
+        return true;
+      }
+    }
+
+    // Retry API exceptions with 5xx status codes
+    if (error is ApiException) {
+      final statusCode = error.statusCode;
+      if (statusCode != null && statusCode >= 500 && statusCode < 600) {
+        return true;
+      }
+    }
+
+    // Fallback: check error string for network-related keywords
+    final errorString = error.toString().toLowerCase();
     if (errorString.contains('socket') ||
         errorString.contains('connection') ||
         errorString.contains('timeout') ||
         errorString.contains('network') ||
         errorString.contains('failed host lookup')) {
-      return true;
-    }
-
-    // Retry server errors (5xx)
-    if (errorString.contains('500') ||
-        errorString.contains('502') ||
-        errorString.contains('503') ||
-        errorString.contains('504')) {
       return true;
     }
 

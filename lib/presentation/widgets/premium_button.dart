@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -292,11 +293,11 @@ class SocialLoginButton extends StatefulWidget {
   }) {
     return SocialLoginButton(
       label: label,
-      icon: Image.network(
-        'https://www.google.com/favicon.ico',
+      icon: CachedNetworkImage(
+        imageUrl: 'https://www.google.com/favicon.ico',
         width: 24,
         height: 24,
-        errorBuilder: (_, __, ___) => const Icon(
+        errorWidget: (_, __, ___) => const Icon(
           Icons.g_mobiledata,
           size: 28,
           color: Colors.red,

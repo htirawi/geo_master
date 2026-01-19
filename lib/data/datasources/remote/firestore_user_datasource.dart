@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 import '../../../core/error/exceptions.dart';
+import '../../models/quiz_model.dart';
 import '../../models/user_model.dart';
 
 /// Firestore user data source interface
@@ -54,6 +55,19 @@ abstract class IFirestoreUserDataSource {
 
   /// Get user rank
   Future<int> getUserRank(String userId);
+
+  // ============================================
+  // QUIZ HISTORY SYNC METHODS
+  // ============================================
+
+  /// Save quiz result to Firestore for cloud backup
+  Future<void> saveQuizResult(String userId, QuizResultModel result);
+
+  /// Get quiz history from Firestore
+  Future<List<QuizResultModel>> getQuizHistory(String userId, {int limit = 50});
+
+  /// Sync local quiz history to Firestore (for migration/restore)
+  Future<void> syncQuizHistory(String userId, List<QuizResultModel> results);
 }
 
 /// Firestore user data source implementation
@@ -73,6 +87,10 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
   CollectionReference<Map<String, dynamic>> _learnedCountriesCollection(
           String userId) =>
       _usersCollection.doc(userId).collection('learned_countries');
+
+  CollectionReference<Map<String, dynamic>> _quizHistoryCollection(
+          String userId) =>
+      _usersCollection.doc(userId).collection('quiz_history');
 
   @override
   Future<UserModel?> getUserById(String userId) async {
@@ -158,7 +176,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       var progress = user.progress;
 
       // Add XP
-      var newTotalXp = progress.totalXp + xp;
+      final newTotalXp = progress.totalXp + xp;
       var newLevel = progress.level;
 
       // Check for level up
@@ -425,6 +443,108 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
     } catch (e) {
       if (e is ServerException) rethrow;
       throw ServerException(message: 'Unexpected error getting user rank: $e');
+    }
+  }
+
+  // ============================================
+  // QUIZ HISTORY SYNC IMPLEMENTATION
+  // ============================================
+
+  @override
+  Future<void> saveQuizResult(String userId, QuizResultModel result) async {
+    try {
+      // Use the result ID as the document ID for deduplication
+      await _quizHistoryCollection(userId).doc(result.id).set(
+            result.toJson()..remove('userId'), // userId is in the path
+            SetOptions(merge: true),
+          );
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        message: 'Failed to save quiz result: ${e.message}',
+      );
+    } catch (e) {
+      throw ServerException(
+        message: 'Unexpected error saving quiz result: $e',
+      );
+    }
+  }
+
+  @override
+  Future<List<QuizResultModel>> getQuizHistory(
+    String userId, {
+    int limit = 50,
+  }) async {
+    try {
+      final snapshot = await _quizHistoryCollection(userId)
+          .orderBy('completedAt', descending: true)
+          .limit(limit)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        // Add back userId since we removed it when saving
+        return QuizResultModel.fromJson({
+          ...data,
+          'id': doc.id,
+          'userId': userId,
+        });
+      }).toList();
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        message: 'Failed to get quiz history: ${e.message}',
+      );
+    } catch (e) {
+      throw ServerException(
+        message: 'Unexpected error getting quiz history: $e',
+      );
+    }
+  }
+
+  @override
+  Future<void> syncQuizHistory(
+    String userId,
+    List<QuizResultModel> results,
+  ) async {
+    try {
+      // Use batched writes for efficiency (max 500 operations per batch)
+      final batches = <WriteBatch>[];
+      var currentBatch = _firestore.batch();
+      var operationCount = 0;
+
+      for (final result in results) {
+        final docRef = _quizHistoryCollection(userId).doc(result.id);
+        currentBatch.set(
+          docRef,
+          result.toJson()..remove('userId'),
+          SetOptions(merge: true),
+        );
+        operationCount++;
+
+        // Firestore batch limit is 500 operations
+        if (operationCount >= 500) {
+          batches.add(currentBatch);
+          currentBatch = _firestore.batch();
+          operationCount = 0;
+        }
+      }
+
+      // Add the last batch if it has any operations
+      if (operationCount > 0) {
+        batches.add(currentBatch);
+      }
+
+      // Commit all batches
+      for (final batch in batches) {
+        await batch.commit();
+      }
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        message: 'Failed to sync quiz history: ${e.message}',
+      );
+    } catch (e) {
+      throw ServerException(
+        message: 'Unexpected error syncing quiz history: $e',
+      );
     }
   }
 

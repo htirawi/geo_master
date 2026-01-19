@@ -407,7 +407,7 @@ class CountryDetailScreen extends ConsumerWidget {
                 backgroundColor: AppColors.xpGold.withValues(alpha: 0.2),
                 child: Text(
                   currency.symbol,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.xpGold,
                     fontWeight: FontWeight.bold,
                   ),
@@ -439,7 +439,7 @@ class CountryDetailScreen extends ConsumerWidget {
               avatar: const Icon(Icons.flag, size: 18),
               label: Text(borderCode),
               onPressed: () {
-                context.push('${Routes.countryDetail.replaceFirst(':code', borderCode)}');
+                context.push(Routes.countryDetail.replaceFirst(':code', borderCode));
               },
             );
           }).toList(),

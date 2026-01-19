@@ -181,6 +181,7 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
   @override
   Stream<CustomerInfo> get customerInfoStream {
     // Create a stream from the CustomerInfo listener
+    // ignore: close_sinks - intentionally long-lived for subscription updates
     final controller = StreamController<CustomerInfo>.broadcast();
 
     void listener(CustomerInfo info) {

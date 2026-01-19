@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/error/exceptions.dart';
+import '../../../core/utils/input_sanitizer.dart';
 import '../../models/country_model.dart';
 
 /// REST Countries API data source interface
@@ -55,8 +56,18 @@ class RestCountriesDataSource implements IRestCountriesDataSource {
   @override
   Future<CountryModel> getCountryByCode(String code) async {
     try {
+      // Sanitize and URL-encode the country code
+      final sanitizedCode = InputSanitizer.sanitizeSearchQuery(code);
+      if (sanitizedCode.isEmpty) {
+        throw const ServerException(
+          message: 'Invalid country code',
+          statusCode: 400,
+        );
+      }
+      final encodedCode = InputSanitizer.urlEncode(sanitizedCode);
+
       final response = await _dio.get<List<dynamic>>(
-        '${ApiEndpoints.restCountriesByCode}/$code',
+        '${ApiEndpoints.restCountriesByCode}/$encodedCode',
         queryParameters: {
           'fields': _getFields(),
         },
@@ -89,8 +100,15 @@ class RestCountriesDataSource implements IRestCountriesDataSource {
   @override
   Future<List<CountryModel>> getCountriesByRegion(String region) async {
     try {
+      // Sanitize and URL-encode the region
+      final sanitizedRegion = InputSanitizer.sanitizeSearchQuery(region);
+      if (sanitizedRegion.isEmpty) {
+        return [];
+      }
+      final encodedRegion = InputSanitizer.urlEncode(sanitizedRegion);
+
       final response = await _dio.get<List<dynamic>>(
-        '${ApiEndpoints.restCountriesByRegion}/$region',
+        '${ApiEndpoints.restCountriesByRegion}/$encodedRegion',
         queryParameters: {
           'fields': _getFields(),
         },
@@ -116,8 +134,15 @@ class RestCountriesDataSource implements IRestCountriesDataSource {
   @override
   Future<List<CountryModel>> searchCountriesByName(String name) async {
     try {
+      // Sanitize and URL-encode the search query
+      final sanitizedName = InputSanitizer.sanitizeSearchQuery(name);
+      if (sanitizedName.isEmpty) {
+        return [];
+      }
+      final encodedName = InputSanitizer.urlEncode(sanitizedName);
+
       final response = await _dio.get<List<dynamic>>(
-        '${ApiEndpoints.restCountriesByName}/$name',
+        '${ApiEndpoints.restCountriesByName}/$encodedName',
         queryParameters: {
           'fields': _getFields(),
         },

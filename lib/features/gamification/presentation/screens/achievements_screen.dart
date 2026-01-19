@@ -58,7 +58,7 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
     final progress = ref.watch(userProgressProvider);
 
     final unlockedIds = progress.unlockedAchievements.toSet();
-    final allAchievements = Achievements.all;
+    const allAchievements = Achievements.all;
 
     // Filter by category
     final filteredAchievements = _selectedCategory == null
@@ -182,7 +182,7 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
                 ),
                 child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.check_circle,
                       color: AppColors.success,
                       size: 20,

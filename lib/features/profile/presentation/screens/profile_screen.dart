@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -90,9 +91,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           icon: Icons.notifications_active,
                           iconColor: AppColors.sunset,
                           title: l10n.notifications,
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                          },
+                          onTap: HapticFeedback.lightImpact,
                         ),
                       ],
                     )
@@ -111,18 +110,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           iconColor: AppColors.forest,
                           title: l10n.difficulty,
                           subtitle: l10n.difficultyMedium,
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                          },
+                          onTap: HapticFeedback.lightImpact,
                         ),
                         _PassportItem(
                           icon: Icons.flag,
                           iconColor: AppColors.secondary,
                           title: l10n.dailyGoal,
                           subtitle: '15 ${l10n.minutesPerDay}',
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                          },
+                          onTap: HapticFeedback.lightImpact,
                         ),
                       ],
                     )
@@ -141,33 +136,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             icon: Icons.person_add,
                             iconColor: AppColors.tertiary,
                             title: l10n.createAccount,
-                            onTap: () {
-                              HapticFeedback.lightImpact();
-                            },
+                            onTap: HapticFeedback.lightImpact,
                           ),
                         _PassportItem(
                           icon: Icons.privacy_tip,
                           iconColor: AppColors.info,
                           title: l10n.privacyPolicy,
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                          },
+                          onTap: HapticFeedback.lightImpact,
                         ),
                         _PassportItem(
                           icon: Icons.description,
                           iconColor: AppColors.earth,
                           title: l10n.termsOfService,
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                          },
+                          onTap: HapticFeedback.lightImpact,
                         ),
                         _PassportItem(
                           icon: Icons.help_center,
                           iconColor: AppColors.primary,
                           title: l10n.helpAndSupport,
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                          },
+                          onTap: HapticFeedback.lightImpact,
                         ),
                       ],
                     )
@@ -476,7 +463,7 @@ class _PassportHeader extends StatelessWidget {
                                 ),
                                 image: photoUrl != null
                                     ? DecorationImage(
-                                        image: NetworkImage(photoUrl!),
+                                        image: CachedNetworkImageProvider(photoUrl!),
                                         fit: BoxFit.cover,
                                       )
                                     : null,

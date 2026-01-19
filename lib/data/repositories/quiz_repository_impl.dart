@@ -11,6 +11,7 @@ import '../../domain/entities/quiz.dart';
 import '../../domain/repositories/i_country_repository.dart';
 import '../../domain/repositories/i_quiz_repository.dart';
 import '../datasources/local/quiz_local_datasource.dart';
+import '../datasources/remote/firestore_user_datasource.dart';
 import '../models/quiz_model.dart';
 
 /// Quiz repository implementation
@@ -18,11 +19,14 @@ class QuizRepositoryImpl implements IQuizRepository {
   QuizRepositoryImpl({
     required IQuizLocalDataSource localDataSource,
     required ICountryRepository countryRepository,
+    IFirestoreUserDataSource? firestoreDataSource,
   })  : _localDataSource = localDataSource,
-        _countryRepository = countryRepository;
+        _countryRepository = countryRepository,
+        _firestoreDataSource = firestoreDataSource;
 
   final IQuizLocalDataSource _localDataSource;
   final ICountryRepository _countryRepository;
+  final IFirestoreUserDataSource? _firestoreDataSource;
   final _uuid = const Uuid();
   final _random = Random();
 
@@ -37,7 +41,7 @@ class QuizRepositoryImpl implements IQuizRepository {
       // Get countries for quiz generation
       final countriesResult = await _countryRepository.getAllCountries();
       return countriesResult.fold(
-        (failure) => Left(failure),
+        Left.new,
         (allCountries) async {
           // Filter by region if specified
           var countries = allCountries;
@@ -293,14 +297,18 @@ class QuizRepositoryImpl implements IQuizRepository {
   }
 
   @override
-  Future<Either<Failure, QuizResult>> completeQuiz(Quiz quiz) async {
+  Future<Either<Failure, QuizResult>> completeQuiz(
+    Quiz quiz, {
+    String? userId,
+  }) async {
     try {
       // Calculate XP based on performance
       const baseXp = 10;
       final correctAnswersXp = quiz.score * 10;
       final difficultyMultiplier = quiz.difficulty.xpMultiplier;
       final perfectBonus = quiz.isPerfectScore ? 50 : 0;
-      final speedBonus = quiz.timeElapsed.inSeconds < (quiz.totalQuestions * 10) ? 25 : 0;
+      final speedBonus =
+          quiz.timeElapsed.inSeconds < (quiz.totalQuestions * 10) ? 25 : 0;
 
       final totalXp = ((baseXp + correctAnswersXp + perfectBonus + speedBonus) *
               difficultyMultiplier)
@@ -309,7 +317,7 @@ class QuizRepositoryImpl implements IQuizRepository {
       final result = QuizResult(
         id: _uuid.v4(),
         quizId: quiz.id,
-        userId: '', // Will be filled by the caller
+        userId: userId ?? '',
         mode: quiz.mode,
         difficulty: quiz.difficulty,
         score: quiz.score,
@@ -321,11 +329,31 @@ class QuizRepositoryImpl implements IQuizRepository {
         answers: quiz.answers,
       );
 
+      final resultModel = QuizResultModel.fromEntity(result);
+
       // Save result locally
-      await _localDataSource.saveQuizResult(QuizResultModel.fromEntity(result));
+      await _localDataSource.saveQuizResult(resultModel);
+
+      // Sync to Firestore if user is authenticated
+      final firestoreDs = _firestoreDataSource;
+      if (userId != null && userId.isNotEmpty && firestoreDs != null) {
+        try {
+          await firestoreDs.saveQuizResult(userId, resultModel);
+          logger.debug(
+            'Quiz result synced to Firestore',
+            tag: 'QuizRepo',
+          );
+        } catch (e) {
+          // Log but don't fail - local save succeeded
+          logger.warning(
+            'Failed to sync quiz result to Firestore: $e',
+            tag: 'QuizRepo',
+          );
+        }
+      }
 
       // Clear quiz progress
-      await _localDataSource.clearSavedQuizProgress('');
+      await _localDataSource.clearSavedQuizProgress(userId ?? '');
 
       logger.info(
         'Quiz completed: ${quiz.score}/${quiz.totalQuestions}, XP: $totalXp',
@@ -527,6 +555,89 @@ class QuizRepositoryImpl implements IQuizRepository {
       return Left(CacheFailure(message: e.message));
     } catch (e) {
       return Left(CacheFailure(message: 'Failed to clear quiz progress: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> syncQuizHistoryToCloud(String userId) async {
+    final firestoreDs = _firestoreDataSource;
+    if (firestoreDs == null) {
+      return const Right(null); // No Firestore configured
+    }
+
+    try {
+      // Get all local quiz history
+      final localResults = await _localDataSource.getQuizHistory(
+        userId,
+        limit: 1000, // Sync up to 1000 results
+      );
+
+      if (localResults.isEmpty) {
+        return const Right(null);
+      }
+
+      // Sync to Firestore
+      await firestoreDs.syncQuizHistory(userId, localResults);
+
+      logger.info(
+        'Synced ${localResults.length} quiz results to Firestore',
+        tag: 'QuizRepo',
+      );
+
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: 'Failed to sync quiz history: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<QuizResult>>> restoreQuizHistoryFromCloud(
+    String userId, {
+    int limit = 50,
+  }) async {
+    final firestoreDs = _firestoreDataSource;
+    if (firestoreDs == null) {
+      return const Right([]); // No Firestore configured
+    }
+
+    try {
+      // Get quiz history from Firestore
+      final cloudResults = await firestoreDs.getQuizHistory(
+        userId,
+        limit: limit,
+      );
+
+      if (cloudResults.isEmpty) {
+        return const Right([]);
+      }
+
+      // Save to local storage for offline access
+      for (final result in cloudResults) {
+        try {
+          await _localDataSource.saveQuizResult(result);
+        } catch (e) {
+          // Continue even if one fails
+          logger.warning(
+            'Failed to save restored quiz result locally: $e',
+            tag: 'QuizRepo',
+          );
+        }
+      }
+
+      logger.info(
+        'Restored ${cloudResults.length} quiz results from Firestore',
+        tag: 'QuizRepo',
+      );
+
+      return Right(cloudResults.map((r) => r.toEntity()).toList());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      return Left(
+        ServerFailure(message: 'Failed to restore quiz history: $e'),
+      );
     }
   }
 }

@@ -16,8 +16,14 @@ abstract final class Routes {
   static const String stats = '/stats';
   static const String profile = '/profile';
 
+  // World exploration routes
+  static const String worldMap = '/world-map';
+  static const String continentExplorer = '/continents';
+  static const String continentDetail = '/continents/:id';
+
   // Country routes
   static const String countryDetail = '/country/:code';
+  static const String countryDetailTabbed = '/country/:code/details';
   static const String countryMap = '/country/:code/map';
 
   // Quiz routes
@@ -50,8 +56,17 @@ abstract final class Routes {
   // Helper method to build country detail route
   static String countryDetailPath(String code) => '/country/$code';
 
+  // Helper method to build country detail tabbed route with optional initial tab
+  static String countryDetailTabbedPath(String code, {int? tab}) {
+    final path = '/country/$code/details';
+    return tab != null ? '$path?tab=$tab' : path;
+  }
+
   // Helper method to build country map route
   static String countryMapPath(String code) => '/country/$code/map';
+
+  // Helper method to build continent detail route
+  static String continentDetailPath(String id) => '/continents/$id';
 }
 
 /// Route names for named navigation
@@ -67,7 +82,11 @@ abstract final class RouteNames {
   static const String quiz = 'quiz';
   static const String stats = 'stats';
   static const String profile = 'profile';
+  static const String worldMap = 'worldMap';
+  static const String continentExplorer = 'continentExplorer';
+  static const String continentDetail = 'continentDetail';
   static const String countryDetail = 'countryDetail';
+  static const String countryDetailTabbed = 'countryDetailTabbed';
   static const String countryMap = 'countryMap';
   static const String quizModeSelection = 'quizModeSelection';
   static const String quizGame = 'quizGame';

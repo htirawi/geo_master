@@ -1279,4 +1279,341 @@ class AppLocalizationsEn extends AppLocalizations {
   String motivationalAchievement(String name) {
     return 'Well done, $name! You\'re a star!';
   }
+
+  @override
+  String get worldMapTitle => 'World Map';
+
+  @override
+  String get exploreTheWorld => 'Explore the World';
+
+  @override
+  String get searchCountriesPlaceholder => 'Search countries...';
+
+  @override
+  String get randomCountry => 'Random';
+
+  @override
+  String get findingLocation => 'Finding your location...';
+
+  @override
+  String get view3D => '3D View Feature';
+
+  @override
+  String get mapLegend => 'Legend';
+
+  @override
+  String get legendMastered => 'Mastered';
+
+  @override
+  String get legendAdvanced => 'Advanced';
+
+  @override
+  String get legendIntermediate => 'Intermediate';
+
+  @override
+  String get legendBeginner => 'Beginner';
+
+  @override
+  String get legendStarted => 'Started';
+
+  @override
+  String get legendNotStarted => 'Not Started';
+
+  @override
+  String get mapFilterAll => 'All';
+
+  @override
+  String get mapFilterComplete => 'Complete';
+
+  @override
+  String get mapFilterInProgress => 'In Progress';
+
+  @override
+  String get mapFilterNotStarted => 'Not Started';
+
+  @override
+  String get mapFilterFavorites => 'Favorites';
+
+  @override
+  String get mapStatsCountries => 'Countries';
+
+  @override
+  String get mapStatsExplored => 'Explored';
+
+  @override
+  String get mapStatsFavorites => 'Favorites';
+
+  @override
+  String get continentExplorer => 'Continent Explorer';
+
+  @override
+  String get continentProgress => 'Progress';
+
+  @override
+  String continentCountries(int count) {
+    return '$count Countries';
+  }
+
+  @override
+  String get continueExploring => 'Continue Exploring';
+
+  @override
+  String get startExploring => 'Start Exploring';
+
+  @override
+  String get tabOverview => 'Overview';
+
+  @override
+  String get tabGeography => 'Geography';
+
+  @override
+  String get tabCulture => 'Culture';
+
+  @override
+  String get tabTravel => 'Travel';
+
+  @override
+  String get tabLearn => 'Learn';
+
+  @override
+  String get liveInfo => 'Live Info';
+
+  @override
+  String get currentTime => 'Current Time';
+
+  @override
+  String get season => 'Season';
+
+  @override
+  String get timeDifference => 'Time Difference';
+
+  @override
+  String get quickFacts => 'Quick Facts';
+
+  @override
+  String get flagMeaning => 'Flag Meaning';
+
+  @override
+  String get flagHistory => 'Flag History';
+
+  @override
+  String get neighboringCountries => 'Neighboring Countries';
+
+  @override
+  String get noNeighbors => 'Island nation - no land borders';
+
+  @override
+  String get terrain => 'Terrain';
+
+  @override
+  String get terrainBreakdown => 'Terrain Breakdown';
+
+  @override
+  String get climate => 'Climate';
+
+  @override
+  String get climateZones => 'Climate Zones';
+
+  @override
+  String get naturalHazards => 'Natural Hazards';
+
+  @override
+  String get noHazards => 'No major natural hazards';
+
+  @override
+  String get administrativeRegions => 'Administrative Regions';
+
+  @override
+  String get traditionalFoods => 'Traditional Foods';
+
+  @override
+  String get traditionalArts => 'Traditional Arts';
+
+  @override
+  String get festivals => 'Festivals & Celebrations';
+
+  @override
+  String get unescoSites => 'UNESCO World Heritage Sites';
+
+  @override
+  String get famousPeople => 'Famous People';
+
+  @override
+  String get funFacts => 'Fun Facts';
+
+  @override
+  String get topPlacesToVisit => 'Top Places to Visit';
+
+  @override
+  String get travelEssentials => 'Travel Essentials';
+
+  @override
+  String get visa => 'Visa';
+
+  @override
+  String get visaRequired => 'Required';
+
+  @override
+  String get visaNotRequired => 'Not Required';
+
+  @override
+  String get currency => 'Currency';
+
+  @override
+  String get voltage => 'Voltage';
+
+  @override
+  String get plugType => 'Plug Type';
+
+  @override
+  String get essentialPhrases => 'Essential Phrases';
+
+  @override
+  String get travelTips => 'Travel Tips';
+
+  @override
+  String get yourProgress => 'Your Progress';
+
+  @override
+  String get quizzes => 'Quizzes';
+
+  @override
+  String get flashcards => 'Flashcards';
+
+  @override
+  String get countryQuiz => 'Country Quiz';
+
+  @override
+  String get testYourKnowledge => 'Test your knowledge';
+
+  @override
+  String get learningModules => 'Learning Modules';
+
+  @override
+  String get aiTutorChat => 'AI Tutor Chat';
+
+  @override
+  String get chatAboutCountry => 'Chat about this country';
+
+  @override
+  String get historicalTimeline => 'Historical Timeline';
+
+  @override
+  String get compareWithOther => 'Compare with Another Country';
+
+  @override
+  String get bookmarkedFacts => 'Bookmarked Facts';
+
+  @override
+  String get noBookmarks => 'No bookmarked facts yet';
+
+  @override
+  String get mediaGallery => 'Media Gallery';
+
+  @override
+  String get photos => 'Photos';
+
+  @override
+  String get videos => 'Videos';
+
+  @override
+  String get news => 'News';
+
+  @override
+  String get placeTypeLandmark => 'Landmark';
+
+  @override
+  String get placeTypeNature => 'Nature';
+
+  @override
+  String get placeTypeMuseum => 'Museum';
+
+  @override
+  String get placeTypeHistoric => 'Historic';
+
+  @override
+  String get placeTypeReligious => 'Religious';
+
+  @override
+  String get placeTypePark => 'Park';
+
+  @override
+  String get placeTypeBeach => 'Beach';
+
+  @override
+  String get placeTypeMountain => 'Mountain';
+
+  @override
+  String get placeTypeLake => 'Lake';
+
+  @override
+  String get placeTypeWaterfall => 'Waterfall';
+
+  @override
+  String get placeTypeCastle => 'Castle';
+
+  @override
+  String get placeTypePalace => 'Palace';
+
+  @override
+  String get placeTypeTemple => 'Temple';
+
+  @override
+  String get placeTypeMonument => 'Monument';
+
+  @override
+  String get placeTypeBridge => 'Bridge';
+
+  @override
+  String get placeTypeTower => 'Tower';
+
+  @override
+  String get placeTypeMarket => 'Market';
+
+  @override
+  String get placeTypeNeighborhood => 'District';
+
+  @override
+  String get placeTypeOther => 'Other';
+
+  @override
+  String get progressNotStarted => 'Not Started';
+
+  @override
+  String get progressStarted => 'Started';
+
+  @override
+  String get progressBeginner => 'Beginner';
+
+  @override
+  String get progressIntermediate => 'Intermediate';
+
+  @override
+  String get progressAdvanced => 'Advanced';
+
+  @override
+  String get progressMastered => 'Mastered';
+
+  @override
+  String get exploreCountry => 'Explore';
+
+  @override
+  String get addToFavorites => 'Add to Favorites';
+
+  @override
+  String get removeFromFavorites => 'Remove from Favorites';
+
+  @override
+  String get shareCountry => 'Share';
+
+  @override
+  String percentExplored(int percent) {
+    return '$percent% explored';
+  }
+
+  @override
+  String get noResultsFound => 'No results found';
+
+  @override
+  String get searchForCountry => 'Search for any country in the world';
 }

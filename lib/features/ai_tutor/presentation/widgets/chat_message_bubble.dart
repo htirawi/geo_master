@@ -225,7 +225,7 @@ class _StreamingCursorState extends State<StreamingCursor>
           child: Container(
             width: 2,
             height: 16,
-            margin: const EdgeInsets.only(left: 2),
+            margin: const EdgeInsetsDirectional.only(start: 2),
             color: theme.colorScheme.onSurface,
           ),
         );

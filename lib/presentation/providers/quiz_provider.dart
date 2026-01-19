@@ -69,10 +69,11 @@ class QuizError extends QuizState {
 
 /// Quiz state notifier
 class QuizStateNotifier extends StateNotifier<AsyncValue<QuizState>> {
-  QuizStateNotifier(this._quizRepository)
+  QuizStateNotifier(this._quizRepository, this._getUserId)
       : super(const AsyncValue.data(QuizInitial()));
 
   final IQuizRepository _quizRepository;
+  final String? Function() _getUserId;
   Quiz? _currentQuiz;
 
   /// Generate a new quiz
@@ -156,7 +157,11 @@ class QuizStateNotifier extends StateNotifier<AsyncValue<QuizState>> {
       completedAt: DateTime.now(),
     );
 
-    final result = await _quizRepository.completeQuiz(completedQuiz);
+    final userId = _getUserId();
+    final result = await _quizRepository.completeQuiz(
+      completedQuiz,
+      userId: userId,
+    );
 
     result.fold(
       (failure) => state = AsyncValue.data(QuizError(failure)),
@@ -203,7 +208,10 @@ class QuizStateNotifier extends StateNotifier<AsyncValue<QuizState>> {
 final quizStateProvider =
     StateNotifierProvider<QuizStateNotifier, AsyncValue<QuizState>>((ref) {
   final quizRepository = sl<IQuizRepository>();
-  return QuizStateNotifier(quizRepository);
+  return QuizStateNotifier(
+    quizRepository,
+    () => ref.read(currentUserProvider)?.id,
+  );
 });
 
 /// Current quiz provider
@@ -266,4 +274,24 @@ final isDailyChallengeCompletedProvider = FutureProvider<bool>((ref) async {
     (failure) => false,
     (isCompleted) => isCompleted,
   );
+});
+
+/// Quiz history restore provider
+/// Automatically restores quiz history from Firestore when user logs in
+final quizHistoryRestoreProvider = FutureProvider<void>((ref) async {
+  final quizRepository = sl<IQuizRepository>();
+  final user = ref.watch(currentUserProvider);
+
+  if (user == null || user.isAnonymous) return;
+
+  // Restore quiz history from cloud
+  await quizRepository.restoreQuizHistoryFromCloud(user.id);
+});
+
+/// Sync quiz history to cloud provider
+/// Call this to manually sync local quiz history to Firestore
+final syncQuizHistoryProvider =
+    FutureProvider.family<void, String>((ref, userId) async {
+  final quizRepository = sl<IQuizRepository>();
+  await quizRepository.syncQuizHistoryToCloud(userId);
 });

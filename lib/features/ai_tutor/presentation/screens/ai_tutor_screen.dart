@@ -105,7 +105,7 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.clearChat),
-        content: Text('Are you sure you want to clear the chat history?'),
+        content: const Text('Are you sure you want to clear the chat history?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),

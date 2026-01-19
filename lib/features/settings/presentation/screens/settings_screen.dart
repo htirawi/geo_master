@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -126,14 +127,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             theme: theme,
             icon: Icons.star_rate,
             title: l10n.rateApp,
-            onTap: () => _rateApp(),
+            onTap: _rateApp,
           ),
           const Divider(height: 1),
           _buildNavigationTile(
             theme: theme,
             icon: Icons.share,
             title: l10n.shareApp,
-            onTap: () => _shareApp(),
+            onTap: _shareApp,
           ),
           const Divider(height: 1),
           _buildVersionTile(theme, l10n),
@@ -355,21 +356,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.theme),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: ThemeMode.values.map((mode) {
-            return RadioListTile<ThemeMode>(
-              title: Text(_getThemeName(l10n, mode)),
-              value: mode,
-              groupValue: currentMode,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(themeModeProvider.notifier).setThemeMode(value);
-                  Navigator.pop(context);
-                }
-              },
-            );
-          }).toList(),
+        content: RadioGroup<ThemeMode>(
+          groupValue: currentMode,
+          onChanged: (value) {
+            if (value != null) {
+              ref.read(themeModeProvider.notifier).setThemeMode(value);
+              Navigator.pop(context);
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: ThemeMode.values.map((mode) {
+              return RadioListTile<ThemeMode>(
+                title: Text(_getThemeName(l10n, mode)),
+                value: mode,
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -380,32 +383,27 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.language),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile<String>(
-              title: const Text('English'),
-              value: 'en',
-              groupValue: selectedLanguage,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(onboardingStateProvider.notifier).setLanguage('en');
-                  Navigator.pop(context);
-                }
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('العربية'),
-              value: 'ar',
-              groupValue: selectedLanguage,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(onboardingStateProvider.notifier).setLanguage('ar');
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ],
+        content: RadioGroup<String>(
+          groupValue: selectedLanguage,
+          onChanged: (value) {
+            if (value != null) {
+              ref.read(onboardingStateProvider.notifier).setLanguage(value);
+              Navigator.pop(context);
+            }
+          },
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<String>(
+                title: Text('English'),
+                value: 'en',
+              ),
+              RadioListTile<String>(
+                title: Text('العربية'),
+                value: 'ar',
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -417,23 +415,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.dailyGoal),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: goals.map((minutes) {
-            return RadioListTile<int>(
-              title: Text('$minutes ${l10n.minutesPerDay}'),
-              value: minutes,
-              groupValue: preferences.dailyGoalMinutes,
-              onChanged: (value) {
-                if (value != null) {
-                  _updatePreference(
-                    preferences.copyWith(dailyGoalMinutes: value),
-                  );
-                  Navigator.pop(context);
-                }
-              },
-            );
-          }).toList(),
+        content: RadioGroup<int>(
+          groupValue: preferences.dailyGoalMinutes,
+          onChanged: (value) {
+            if (value != null) {
+              _updatePreference(
+                preferences.copyWith(dailyGoalMinutes: value),
+              );
+              Navigator.pop(context);
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: goals.map((minutes) {
+              return RadioListTile<int>(
+                title: Text('$minutes ${l10n.minutesPerDay}'),
+                value: minutes,
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -556,7 +556,7 @@ class _AccountTile extends StatelessWidget {
         radius: 24,
         backgroundColor: theme.colorScheme.primaryContainer,
         backgroundImage: user?.photoUrl != null
-            ? NetworkImage(user!.photoUrl!)
+            ? CachedNetworkImageProvider(user!.photoUrl!)
             : null,
         child: user?.photoUrl == null
             ? Icon(

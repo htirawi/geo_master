@@ -22,7 +22,16 @@ abstract class IQuizRepository {
   });
 
   /// Complete quiz and save result
-  Future<Either<Failure, QuizResult>> completeQuiz(Quiz quiz);
+  Future<Either<Failure, QuizResult>> completeQuiz(Quiz quiz, {String? userId});
+
+  /// Sync local quiz history to cloud (for restore after reinstall)
+  Future<Either<Failure, void>> syncQuizHistoryToCloud(String userId);
+
+  /// Restore quiz history from cloud
+  Future<Either<Failure, List<QuizResult>>> restoreQuizHistoryFromCloud(
+    String userId, {
+    int limit = 50,
+  });
 
   /// Get quiz history for user
   Future<Either<Failure, List<QuizResult>>> getQuizHistory({

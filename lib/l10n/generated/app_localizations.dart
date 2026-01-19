@@ -2533,6 +2533,672 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Well done, {name}! You\'re a star!'**
   String motivationalAchievement(String name);
+
+  /// No description provided for @worldMapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'World Map'**
+  String get worldMapTitle;
+
+  /// No description provided for @exploreTheWorld.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore the World'**
+  String get exploreTheWorld;
+
+  /// No description provided for @searchCountriesPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search countries...'**
+  String get searchCountriesPlaceholder;
+
+  /// No description provided for @randomCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Random'**
+  String get randomCountry;
+
+  /// No description provided for @findingLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding your location...'**
+  String get findingLocation;
+
+  /// No description provided for @view3D.
+  ///
+  /// In en, this message translates to:
+  /// **'3D View Feature'**
+  String get view3D;
+
+  /// No description provided for @mapLegend.
+  ///
+  /// In en, this message translates to:
+  /// **'Legend'**
+  String get mapLegend;
+
+  /// No description provided for @legendMastered.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastered'**
+  String get legendMastered;
+
+  /// No description provided for @legendAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get legendAdvanced;
+
+  /// No description provided for @legendIntermediate.
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get legendIntermediate;
+
+  /// No description provided for @legendBeginner.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get legendBeginner;
+
+  /// No description provided for @legendStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Started'**
+  String get legendStarted;
+
+  /// No description provided for @legendNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Started'**
+  String get legendNotStarted;
+
+  /// No description provided for @mapFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get mapFilterAll;
+
+  /// No description provided for @mapFilterComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get mapFilterComplete;
+
+  /// No description provided for @mapFilterInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get mapFilterInProgress;
+
+  /// No description provided for @mapFilterNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Started'**
+  String get mapFilterNotStarted;
+
+  /// No description provided for @mapFilterFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get mapFilterFavorites;
+
+  /// No description provided for @mapStatsCountries.
+  ///
+  /// In en, this message translates to:
+  /// **'Countries'**
+  String get mapStatsCountries;
+
+  /// No description provided for @mapStatsExplored.
+  ///
+  /// In en, this message translates to:
+  /// **'Explored'**
+  String get mapStatsExplored;
+
+  /// No description provided for @mapStatsFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get mapStatsFavorites;
+
+  /// No description provided for @continentExplorer.
+  ///
+  /// In en, this message translates to:
+  /// **'Continent Explorer'**
+  String get continentExplorer;
+
+  /// No description provided for @continentProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get continentProgress;
+
+  /// No description provided for @continentCountries.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Countries'**
+  String continentCountries(int count);
+
+  /// No description provided for @continueExploring.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Exploring'**
+  String get continueExploring;
+
+  /// No description provided for @startExploring.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Exploring'**
+  String get startExploring;
+
+  /// No description provided for @tabOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get tabOverview;
+
+  /// No description provided for @tabGeography.
+  ///
+  /// In en, this message translates to:
+  /// **'Geography'**
+  String get tabGeography;
+
+  /// No description provided for @tabCulture.
+  ///
+  /// In en, this message translates to:
+  /// **'Culture'**
+  String get tabCulture;
+
+  /// No description provided for @tabTravel.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get tabTravel;
+
+  /// No description provided for @tabLearn.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn'**
+  String get tabLearn;
+
+  /// No description provided for @liveInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Info'**
+  String get liveInfo;
+
+  /// No description provided for @currentTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Time'**
+  String get currentTime;
+
+  /// No description provided for @season.
+  ///
+  /// In en, this message translates to:
+  /// **'Season'**
+  String get season;
+
+  /// No description provided for @timeDifference.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Difference'**
+  String get timeDifference;
+
+  /// No description provided for @quickFacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Facts'**
+  String get quickFacts;
+
+  /// No description provided for @flagMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Flag Meaning'**
+  String get flagMeaning;
+
+  /// No description provided for @flagHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Flag History'**
+  String get flagHistory;
+
+  /// No description provided for @neighboringCountries.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighboring Countries'**
+  String get neighboringCountries;
+
+  /// No description provided for @noNeighbors.
+  ///
+  /// In en, this message translates to:
+  /// **'Island nation - no land borders'**
+  String get noNeighbors;
+
+  /// No description provided for @terrain.
+  ///
+  /// In en, this message translates to:
+  /// **'Terrain'**
+  String get terrain;
+
+  /// No description provided for @terrainBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Terrain Breakdown'**
+  String get terrainBreakdown;
+
+  /// No description provided for @climate.
+  ///
+  /// In en, this message translates to:
+  /// **'Climate'**
+  String get climate;
+
+  /// No description provided for @climateZones.
+  ///
+  /// In en, this message translates to:
+  /// **'Climate Zones'**
+  String get climateZones;
+
+  /// No description provided for @naturalHazards.
+  ///
+  /// In en, this message translates to:
+  /// **'Natural Hazards'**
+  String get naturalHazards;
+
+  /// No description provided for @noHazards.
+  ///
+  /// In en, this message translates to:
+  /// **'No major natural hazards'**
+  String get noHazards;
+
+  /// No description provided for @administrativeRegions.
+  ///
+  /// In en, this message translates to:
+  /// **'Administrative Regions'**
+  String get administrativeRegions;
+
+  /// No description provided for @traditionalFoods.
+  ///
+  /// In en, this message translates to:
+  /// **'Traditional Foods'**
+  String get traditionalFoods;
+
+  /// No description provided for @traditionalArts.
+  ///
+  /// In en, this message translates to:
+  /// **'Traditional Arts'**
+  String get traditionalArts;
+
+  /// No description provided for @festivals.
+  ///
+  /// In en, this message translates to:
+  /// **'Festivals & Celebrations'**
+  String get festivals;
+
+  /// No description provided for @unescoSites.
+  ///
+  /// In en, this message translates to:
+  /// **'UNESCO World Heritage Sites'**
+  String get unescoSites;
+
+  /// No description provided for @famousPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Famous People'**
+  String get famousPeople;
+
+  /// No description provided for @funFacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Fun Facts'**
+  String get funFacts;
+
+  /// No description provided for @topPlacesToVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Places to Visit'**
+  String get topPlacesToVisit;
+
+  /// No description provided for @travelEssentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel Essentials'**
+  String get travelEssentials;
+
+  /// No description provided for @visa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa'**
+  String get visa;
+
+  /// No description provided for @visaRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get visaRequired;
+
+  /// No description provided for @visaNotRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Required'**
+  String get visaNotRequired;
+
+  /// No description provided for @currency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get currency;
+
+  /// No description provided for @voltage.
+  ///
+  /// In en, this message translates to:
+  /// **'Voltage'**
+  String get voltage;
+
+  /// No description provided for @plugType.
+  ///
+  /// In en, this message translates to:
+  /// **'Plug Type'**
+  String get plugType;
+
+  /// No description provided for @essentialPhrases.
+  ///
+  /// In en, this message translates to:
+  /// **'Essential Phrases'**
+  String get essentialPhrases;
+
+  /// No description provided for @travelTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel Tips'**
+  String get travelTips;
+
+  /// No description provided for @yourProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Progress'**
+  String get yourProgress;
+
+  /// No description provided for @quizzes.
+  ///
+  /// In en, this message translates to:
+  /// **'Quizzes'**
+  String get quizzes;
+
+  /// No description provided for @flashcards.
+  ///
+  /// In en, this message translates to:
+  /// **'Flashcards'**
+  String get flashcards;
+
+  /// No description provided for @countryQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Country Quiz'**
+  String get countryQuiz;
+
+  /// No description provided for @testYourKnowledge.
+  ///
+  /// In en, this message translates to:
+  /// **'Test your knowledge'**
+  String get testYourKnowledge;
+
+  /// No description provided for @learningModules.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning Modules'**
+  String get learningModules;
+
+  /// No description provided for @aiTutorChat.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Tutor Chat'**
+  String get aiTutorChat;
+
+  /// No description provided for @chatAboutCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat about this country'**
+  String get chatAboutCountry;
+
+  /// No description provided for @historicalTimeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Historical Timeline'**
+  String get historicalTimeline;
+
+  /// No description provided for @compareWithOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare with Another Country'**
+  String get compareWithOther;
+
+  /// No description provided for @bookmarkedFacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmarked Facts'**
+  String get bookmarkedFacts;
+
+  /// No description provided for @noBookmarks.
+  ///
+  /// In en, this message translates to:
+  /// **'No bookmarked facts yet'**
+  String get noBookmarks;
+
+  /// No description provided for @mediaGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Media Gallery'**
+  String get mediaGallery;
+
+  /// No description provided for @photos.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get photos;
+
+  /// No description provided for @videos.
+  ///
+  /// In en, this message translates to:
+  /// **'Videos'**
+  String get videos;
+
+  /// No description provided for @news.
+  ///
+  /// In en, this message translates to:
+  /// **'News'**
+  String get news;
+
+  /// No description provided for @placeTypeLandmark.
+  ///
+  /// In en, this message translates to:
+  /// **'Landmark'**
+  String get placeTypeLandmark;
+
+  /// No description provided for @placeTypeNature.
+  ///
+  /// In en, this message translates to:
+  /// **'Nature'**
+  String get placeTypeNature;
+
+  /// No description provided for @placeTypeMuseum.
+  ///
+  /// In en, this message translates to:
+  /// **'Museum'**
+  String get placeTypeMuseum;
+
+  /// No description provided for @placeTypeHistoric.
+  ///
+  /// In en, this message translates to:
+  /// **'Historic'**
+  String get placeTypeHistoric;
+
+  /// No description provided for @placeTypeReligious.
+  ///
+  /// In en, this message translates to:
+  /// **'Religious'**
+  String get placeTypeReligious;
+
+  /// No description provided for @placeTypePark.
+  ///
+  /// In en, this message translates to:
+  /// **'Park'**
+  String get placeTypePark;
+
+  /// No description provided for @placeTypeBeach.
+  ///
+  /// In en, this message translates to:
+  /// **'Beach'**
+  String get placeTypeBeach;
+
+  /// No description provided for @placeTypeMountain.
+  ///
+  /// In en, this message translates to:
+  /// **'Mountain'**
+  String get placeTypeMountain;
+
+  /// No description provided for @placeTypeLake.
+  ///
+  /// In en, this message translates to:
+  /// **'Lake'**
+  String get placeTypeLake;
+
+  /// No description provided for @placeTypeWaterfall.
+  ///
+  /// In en, this message translates to:
+  /// **'Waterfall'**
+  String get placeTypeWaterfall;
+
+  /// No description provided for @placeTypeCastle.
+  ///
+  /// In en, this message translates to:
+  /// **'Castle'**
+  String get placeTypeCastle;
+
+  /// No description provided for @placeTypePalace.
+  ///
+  /// In en, this message translates to:
+  /// **'Palace'**
+  String get placeTypePalace;
+
+  /// No description provided for @placeTypeTemple.
+  ///
+  /// In en, this message translates to:
+  /// **'Temple'**
+  String get placeTypeTemple;
+
+  /// No description provided for @placeTypeMonument.
+  ///
+  /// In en, this message translates to:
+  /// **'Monument'**
+  String get placeTypeMonument;
+
+  /// No description provided for @placeTypeBridge.
+  ///
+  /// In en, this message translates to:
+  /// **'Bridge'**
+  String get placeTypeBridge;
+
+  /// No description provided for @placeTypeTower.
+  ///
+  /// In en, this message translates to:
+  /// **'Tower'**
+  String get placeTypeTower;
+
+  /// No description provided for @placeTypeMarket.
+  ///
+  /// In en, this message translates to:
+  /// **'Market'**
+  String get placeTypeMarket;
+
+  /// No description provided for @placeTypeNeighborhood.
+  ///
+  /// In en, this message translates to:
+  /// **'District'**
+  String get placeTypeNeighborhood;
+
+  /// No description provided for @placeTypeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get placeTypeOther;
+
+  /// No description provided for @progressNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Started'**
+  String get progressNotStarted;
+
+  /// No description provided for @progressStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Started'**
+  String get progressStarted;
+
+  /// No description provided for @progressBeginner.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get progressBeginner;
+
+  /// No description provided for @progressIntermediate.
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get progressIntermediate;
+
+  /// No description provided for @progressAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get progressAdvanced;
+
+  /// No description provided for @progressMastered.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastered'**
+  String get progressMastered;
+
+  /// No description provided for @exploreCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get exploreCountry;
+
+  /// No description provided for @addToFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Favorites'**
+  String get addToFavorites;
+
+  /// No description provided for @removeFromFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from Favorites'**
+  String get removeFromFavorites;
+
+  /// No description provided for @shareCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareCountry;
+
+  /// No description provided for @percentExplored.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% explored'**
+  String percentExplored(int percent);
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
+  /// No description provided for @searchForCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for any country in the world'**
+  String get searchForCountry;
 }
 
 class _AppLocalizationsDelegate

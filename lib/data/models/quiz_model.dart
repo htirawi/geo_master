@@ -52,10 +52,10 @@ class QuizModel {
       difficulty: entity.difficulty,
       region: entity.region,
       questions:
-          entity.questions.map((q) => QuizQuestionModel.fromEntity(q)).toList(),
+          entity.questions.map(QuizQuestionModel.fromEntity).toList(),
       currentQuestionIndex: entity.currentQuestionIndex,
       answers:
-          entity.answers.map((a) => QuizAnswerModel.fromEntity(a)).toList(),
+          entity.answers.map(QuizAnswerModel.fromEntity).toList(),
       startedAt: entity.startedAt,
       completedAt: entity.completedAt,
     );
@@ -305,7 +305,7 @@ class QuizResultModel {
       xpEarned: entity.xpEarned,
       completedAt: entity.completedAt,
       answers:
-          entity.answers.map((a) => QuizAnswerModel.fromEntity(a)).toList(),
+          entity.answers.map(QuizAnswerModel.fromEntity).toList(),
     );
   }
 

@@ -5,8 +5,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../domain/entities/quiz.dart';
+import '../../features/ai_tutor/presentation/screens/ai_tutor_screen.dart';
+import '../../features/continent_explorer/presentation/screens/continent_detail_screen.dart';
+import '../../features/continent_explorer/presentation/screens/continent_explorer_screen.dart';
+import '../../features/country_explorer/presentation/screens/country_detail_screen.dart';
+import '../../features/country_explorer/presentation/screens/country_detail_tabbed_screen.dart';
 import '../../features/country_explorer/presentation/screens/country_explorer_screen.dart';
+import '../../features/gamification/presentation/screens/achievements_screen.dart';
+import '../../features/gamification/presentation/screens/leaderboard_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/legal/presentation/screens/privacy_policy_screen.dart';
+import '../../features/legal/presentation/screens/terms_of_service_screen.dart';
 import '../../features/onboarding/presentation/screens/auth_screen.dart';
 import '../../features/onboarding/presentation/screens/email_auth_screen.dart';
 import '../../features/onboarding/presentation/screens/language_selection_screen.dart';
@@ -14,18 +23,13 @@ import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/onboarding/presentation/screens/personalization_screen.dart';
 import '../../features/onboarding/presentation/screens/splash_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
-import '../../features/ai_tutor/presentation/screens/ai_tutor_screen.dart';
-import '../../features/country_explorer/presentation/screens/country_detail_screen.dart';
-import '../../features/gamification/presentation/screens/achievements_screen.dart';
-import '../../features/gamification/presentation/screens/leaderboard_screen.dart';
-import '../../features/settings/presentation/screens/settings_screen.dart';
-import '../../features/subscription/presentation/screens/paywall_screen.dart';
-import '../../features/legal/presentation/screens/terms_of_service_screen.dart';
-import '../../features/legal/presentation/screens/privacy_policy_screen.dart';
 import '../../features/quiz/presentation/screens/quiz_game_screen.dart';
 import '../../features/quiz/presentation/screens/quiz_results_screen.dart';
 import '../../features/quiz/presentation/screens/quiz_screen.dart';
+import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../features/stats/presentation/screens/stats_screen.dart';
+import '../../features/subscription/presentation/screens/paywall_screen.dart';
+import '../../features/world_map/presentation/screens/world_map_screen.dart';
 import '../../presentation/navigation/main_scaffold.dart';
 import '../../presentation/providers/auth_provider.dart';
 import '../../presentation/providers/onboarding_provider.dart';
@@ -165,13 +169,55 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      // Country detail screen
+      // Country detail screen (simple version)
       GoRoute(
         path: Routes.countryDetail,
         name: RouteNames.countryDetail,
         builder: (context, state) {
           final code = state.pathParameters['code']!;
           return CountryDetailScreen(countryCode: code);
+        },
+      ),
+
+      // Country detail tabbed screen (enhanced 5-tab version)
+      GoRoute(
+        path: Routes.countryDetailTabbed,
+        name: RouteNames.countryDetailTabbed,
+        builder: (context, state) {
+          final code = state.pathParameters['code']!;
+          final tabString = state.uri.queryParameters['tab'];
+          final initialTab = tabString != null ? int.tryParse(tabString) ?? 0 : 0;
+          return CountryDetailTabbedScreen(
+            countryCode: code,
+            initialTab: initialTab,
+          );
+        },
+      ),
+
+      // World map screen (full screen for immersive experience)
+      GoRoute(
+        path: Routes.worldMap,
+        name: RouteNames.worldMap,
+        builder: (context, state) {
+          final continentFilter = state.uri.queryParameters['continent'];
+          return WorldMapScreen(initialContinent: continentFilter);
+        },
+      ),
+
+      // Continent explorer screen
+      GoRoute(
+        path: Routes.continentExplorer,
+        name: RouteNames.continentExplorer,
+        builder: (context, state) => const ContinentExplorerScreen(),
+      ),
+
+      // Continent detail screen
+      GoRoute(
+        path: Routes.continentDetail,
+        name: RouteNames.continentDetail,
+        builder: (context, state) {
+          final continentId = state.pathParameters['id']!;
+          return ContinentDetailScreen(continentId: continentId);
         },
       ),
 

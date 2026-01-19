@@ -189,7 +189,6 @@ class _JournalPatternPainter extends CustomPainter {
 
     // Cardinal lines
     for (int i = 0; i < 8; i++) {
-      final angle = i * 45 * 3.14159 / 180;
       final innerRadius = i % 2 == 0 ? radius * 0.3 : radius * 0.5;
       canvas.drawLine(
         Offset(center.dx + innerRadius * (i % 2 == 0 ? 1 : 0.7) * (i < 4 ? 1 : -1) * (i % 4 == 0 ? 0 : 1),
@@ -410,18 +409,7 @@ class _RankPatternPainter extends CustomPainter {
   }
 
   void _drawStar(Canvas canvas, Offset center, double radius, Paint paint) {
-    final path = Path();
-    for (int i = 0; i < 5; i++) {
-      final angle = (i * 72 - 90) * 3.14159 / 180;
-      final point = Offset(
-        center.dx + radius * (i % 2 == 0 ? 1 : 0.4) * (i == 0 ? 0 : (i < 3 ? 1 : -1)),
-        center.dy + radius * (i == 0 ? -1 : (i < 3 ? 0.3 : 0.3)) * (i == 4 ? -1 : 1),
-      );
-      if (i == 0) {
-        path.moveTo(center.dx, center.dy - radius);
-      }
-    }
-    path.close();
+    // Draw simplified star as a circle
     canvas.drawCircle(center, radius * 0.5, paint);
   }
 
@@ -576,7 +564,7 @@ class _AchievementsSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     // Sample achievements
-    final achievements = [
+    const achievements = [
       _Achievement('First Steps', Icons.directions_walk, true, AppColors.success),
       _Achievement('Quiz Master', Icons.emoji_events, true, AppColors.xpGold),
       _Achievement('Explorer', Icons.explore, true, AppColors.tertiary),

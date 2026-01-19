@@ -167,10 +167,15 @@ enum SubscriptionFeature {
   unlimitedAiChat,
   adsEnabled,
   noAds,
-  offlineAccess,
+  offlineMode,
+  offlineAccess, // Alias for offlineMode for backwards compatibility
   streakFreeze,
   exclusiveAchievements,
-  prioritySupport;
+  prioritySupport,
+  advancedStats,
+  customThemes,
+  terrain3D,
+  advancedLearning;
 
   String get displayName {
     switch (this) {
@@ -186,6 +191,7 @@ enum SubscriptionFeature {
         return 'Contains Ads';
       case SubscriptionFeature.noAds:
         return 'No Ads';
+      case SubscriptionFeature.offlineMode:
       case SubscriptionFeature.offlineAccess:
         return 'Offline Access';
       case SubscriptionFeature.streakFreeze:
@@ -194,6 +200,14 @@ enum SubscriptionFeature {
         return 'Exclusive Achievements';
       case SubscriptionFeature.prioritySupport:
         return 'Priority Support';
+      case SubscriptionFeature.advancedStats:
+        return 'Advanced Statistics';
+      case SubscriptionFeature.customThemes:
+        return 'Custom Themes';
+      case SubscriptionFeature.terrain3D:
+        return '3D Terrain View';
+      case SubscriptionFeature.advancedLearning:
+        return 'Advanced Learning';
     }
   }
 
@@ -211,6 +225,7 @@ enum SubscriptionFeature {
         return 'يحتوي على إعلانات';
       case SubscriptionFeature.noAds:
         return 'بدون إعلانات';
+      case SubscriptionFeature.offlineMode:
       case SubscriptionFeature.offlineAccess:
         return 'وصول بدون إنترنت';
       case SubscriptionFeature.streakFreeze:
@@ -219,6 +234,14 @@ enum SubscriptionFeature {
         return 'إنجازات حصرية';
       case SubscriptionFeature.prioritySupport:
         return 'دعم أولوي';
+      case SubscriptionFeature.advancedStats:
+        return 'إحصائيات متقدمة';
+      case SubscriptionFeature.customThemes:
+        return 'سمات مخصصة';
+      case SubscriptionFeature.terrain3D:
+        return 'تضاريس ثلاثية الأبعاد';
+      case SubscriptionFeature.advancedLearning:
+        return 'تعلم متقدم';
     }
   }
 
