@@ -17,6 +17,9 @@ Dio createDioClient() {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        // Security: Add headers to prevent MIME type sniffing and caching of sensitive data
+        'X-Content-Type-Options': 'nosniff',
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
       },
     ),
   );
@@ -69,28 +72,38 @@ void _configureCertificatePinning(Dio dio) {
       return client;
     },
     validateCertificate: (cert, host, port) {
-      // Security: Additional certificate validation
+      // Security: Strict certificate validation for all hosts
       if (cert == null) {
         logger.warning('No certificate provided for $host', tag: 'CertPin');
         return false;
       }
 
-      // Check if host is in our trusted list
-      final isTrusted = trustedHosts.any((trusted) => host.endsWith(trusted));
-      if (!isTrusted) {
-        // For untrusted hosts, allow but log
-        logger.debug('Allowing untrusted host: $host', tag: 'CertPin');
-        return true;
-      }
-
-      // For trusted hosts, perform additional validation
-      // Check certificate validity period
+      // Check certificate validity period first
       final now = DateTime.now();
       if (cert.endValidity.isBefore(now)) {
         logger.warning('Expired certificate for $host', tag: 'CertPin');
         return false;
       }
 
+      // Check if certificate is not yet valid
+      if (cert.startValidity.isAfter(now)) {
+        logger.warning('Certificate not yet valid for $host', tag: 'CertPin');
+        return false;
+      }
+
+      // Security: Only allow connections to explicitly trusted hosts
+      // This prevents connections to unknown/malicious servers
+      final isTrusted = trustedHosts.any((trusted) => host.endsWith(trusted));
+      if (!isTrusted) {
+        // Security: Reject untrusted hosts in production
+        logger.warning(
+          'Rejecting untrusted host: $host - not in allowlist',
+          tag: 'CertPin',
+        );
+        return false;
+      }
+
+      // For trusted hosts, certificate is valid
       return true;
     },
   );

@@ -100,12 +100,14 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
           encryptionCipher: cipher,
         );
       } catch (e) {
-        // Fallback to unencrypted box if encryption fails
-        logger.warning(
-          'Falling back to unencrypted progress box',
+        // Security: Do NOT fall back to unencrypted storage for user data
+        logger.error(
+          'SECURITY: Failed to open encrypted progress box - refusing unencrypted storage',
           tag: 'QuizLocalDS',
         );
-        return await _hive.openBox<String>(_progressBoxName);
+        throw CacheException(
+          message: 'Unable to securely store quiz progress. Please restart the app.',
+        );
       }
     }
     return _hive.box<String>(_progressBoxName);
@@ -120,12 +122,14 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
           encryptionCipher: cipher,
         );
       } catch (e) {
-        // Fallback to unencrypted box if encryption fails
-        logger.warning(
-          'Falling back to unencrypted history box',
+        // Security: Do NOT fall back to unencrypted storage for user data
+        logger.error(
+          'SECURITY: Failed to open encrypted history box - refusing unencrypted storage',
           tag: 'QuizLocalDS',
         );
-        return await _hive.openBox<String>(_historyBoxName);
+        throw CacheException(
+          message: 'Unable to securely store quiz history. Please restart the app.',
+        );
       }
     }
     return _hive.box<String>(_historyBoxName);
@@ -140,12 +144,14 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
           encryptionCipher: cipher,
         );
       } catch (e) {
-        // Fallback to unencrypted box if encryption fails
-        logger.warning(
-          'Falling back to unencrypted daily challenge box',
+        // Security: Do NOT fall back to unencrypted storage for user data
+        logger.error(
+          'SECURITY: Failed to open encrypted daily challenge box - refusing unencrypted storage',
           tag: 'QuizLocalDS',
         );
-        return await _hive.openBox<String>(_dailyChallengeBoxName);
+        throw CacheException(
+          message: 'Unable to securely store daily challenges. Please restart the app.',
+        );
       }
     }
     return _hive.box<String>(_dailyChallengeBoxName);

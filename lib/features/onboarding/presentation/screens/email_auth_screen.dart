@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/utils/input_sanitizer.dart';
+import '../../../../core/utils/validators.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/auth_provider.dart';
 import '../../../../presentation/widgets/premium_button.dart';
@@ -216,10 +218,13 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
           textInputAction: TextInputAction.next,
           autocorrect: false,
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return l10n.emailRequired;
-            }
-            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+            // Security: Use centralized validator for consistent email validation
+            final result = Validators.validateEmail(value);
+            if (!result.isValid) {
+              // Use localized messages where available
+              if (value == null || value.isEmpty) {
+                return l10n.emailRequired;
+              }
               return l10n.invalidEmail;
             }
             return null;
@@ -252,7 +257,8 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
             if (value == null || value.isEmpty) {
               return l10n.passwordRequired;
             }
-            if (value.length < 6) {
+            // Security: Use centralized password length requirement (8 chars minimum)
+            if (value.length < Validators.minPasswordLength) {
               return l10n.passwordTooShort;
             }
             return null;
@@ -363,12 +369,16 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
 
     try {
       if (_isSignUp) {
+        // Security: Sanitize display name to prevent XSS and injection attacks
+        final rawName = _nameController.text.trim();
+        final sanitizedName = rawName.isNotEmpty
+            ? InputSanitizer.sanitizeDisplayName(rawName)
+            : null;
+
         await ref.read(authStateProvider.notifier).signUpWithEmailAndPassword(
               email: _emailController.text.trim(),
               password: _passwordController.text,
-              displayName: _nameController.text.trim().isNotEmpty
-                  ? _nameController.text.trim()
-                  : null,
+              displayName: sanitizedName,
             );
       } else {
         await ref.read(authStateProvider.notifier).signInWithEmailAndPassword(

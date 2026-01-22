@@ -243,7 +243,8 @@ class ErrorStateWidget extends StatelessWidget {
         isArabic ? 'كلمة المرور غير صالحة' : 'Invalid password',
       ValidationFailure() =>
         isArabic ? 'البيانات المدخلة غير صالحة' : 'Invalid input',
-      _ => failure.message,
+      // Security: Use generic message to avoid exposing internal error details
+      _ => isArabic ? 'حدث خطأ غير متوقع' : 'An unexpected error occurred',
     };
   }
 

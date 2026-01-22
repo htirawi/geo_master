@@ -31,6 +31,20 @@ abstract class IChatLocalDataSource {
 
   /// Clear all chat cache
   Future<void> clearCache();
+
+  // Reaction methods
+
+  /// Add reaction to a message
+  Future<void> addReaction(String userId, String messageId, String emoji);
+
+  /// Remove reaction from a message
+  Future<void> removeReaction(String userId, String messageId, String emoji);
+
+  /// Get reactions for a message
+  Future<List<String>> getReactions(String userId, String messageId);
+
+  /// Clear all reactions for a user
+  Future<void> clearReactions(String userId);
 }
 
 /// Chat local data source implementation using Hive with encryption
@@ -101,12 +115,15 @@ class ChatLocalDataSource implements IChatLocalDataSource {
           encryptionCipher: cipher,
         );
       } catch (e) {
-        // Fallback to unencrypted box if encryption fails
-        logger.warning(
-          'Falling back to unencrypted chat box',
+        // Security: Do NOT fall back to unencrypted storage for sensitive data
+        // Log critical error and rethrow to prevent data exposure
+        logger.error(
+          'SECURITY: Failed to open encrypted chat box - refusing to store data unencrypted',
           tag: 'ChatLocalDS',
         );
-        return await _hive.openBox<String>(_chatBoxName);
+        throw CacheException(
+          message: 'Unable to securely store chat data. Please restart the app.',
+        );
       }
     }
     return _hive.box<String>(_chatBoxName);
@@ -248,5 +265,112 @@ class ChatLocalDataSource implements IChatLocalDataSource {
   String _getTodayString() {
     final now = DateTime.now();
     return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+  }
+
+  // Reaction methods
+
+  static const String _reactionsBoxName = 'reactions_secure';
+
+  Future<Box<String>> get _reactionsBox async {
+    if (!_hive.isBoxOpen(_reactionsBoxName)) {
+      try {
+        final cipher = await _getOrCreateCipher();
+        return await _hive.openBox<String>(
+          _reactionsBoxName,
+          encryptionCipher: cipher,
+        );
+      } catch (e) {
+        // Security: Do NOT fall back to unencrypted storage
+        logger.error(
+          'SECURITY: Failed to open encrypted reactions box - refusing unencrypted storage',
+          tag: 'ChatLocalDS',
+        );
+        throw CacheException(
+          message: 'Unable to securely store reactions. Please restart the app.',
+        );
+      }
+    }
+    return _hive.box<String>(_reactionsBoxName);
+  }
+
+  @override
+  Future<void> addReaction(
+    String userId,
+    String messageId,
+    String emoji,
+  ) async {
+    try {
+      final box = await _reactionsBox;
+      final key = 'reactions_${userId}_$messageId';
+
+      final existingData = box.get(key);
+      final reactions = <String>[];
+
+      if (existingData != null) {
+        final decoded = jsonDecode(existingData) as List<dynamic>;
+        reactions.addAll(decoded.cast<String>());
+      }
+
+      if (!reactions.contains(emoji)) {
+        reactions.add(emoji);
+        await box.put(key, jsonEncode(reactions));
+      }
+    } catch (e) {
+      throw CacheException(message: 'Failed to add reaction');
+    }
+  }
+
+  @override
+  Future<void> removeReaction(
+    String userId,
+    String messageId,
+    String emoji,
+  ) async {
+    try {
+      final box = await _reactionsBox;
+      final key = 'reactions_${userId}_$messageId';
+
+      final existingData = box.get(key);
+      if (existingData != null) {
+        final decoded = jsonDecode(existingData) as List<dynamic>;
+        final reactions = decoded.cast<String>().where((e) => e != emoji).toList();
+        await box.put(key, jsonEncode(reactions));
+      }
+    } catch (e) {
+      throw CacheException(message: 'Failed to remove reaction');
+    }
+  }
+
+  @override
+  Future<List<String>> getReactions(String userId, String messageId) async {
+    try {
+      final box = await _reactionsBox;
+      final key = 'reactions_${userId}_$messageId';
+
+      final existingData = box.get(key);
+      if (existingData != null) {
+        final decoded = jsonDecode(existingData) as List<dynamic>;
+        return decoded.cast<String>();
+      }
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  @override
+  Future<void> clearReactions(String userId) async {
+    try {
+      final box = await _reactionsBox;
+      final keysToDelete = box.keys
+          .where((key) => key.toString().startsWith('reactions_$userId'))
+          .toList();
+
+      for (final key in keysToDelete) {
+        await box.delete(key);
+      }
+    } catch (e) {
+      throw CacheException(message: 'Failed to clear reactions');
+    }
   }
 }
