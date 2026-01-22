@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../app/di/service_locator.dart';
 import '../../core/error/failures.dart';
+import '../../core/services/speech_service.dart';
+import '../../core/services/tts_service.dart';
+import '../../domain/entities/bookmark.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/repositories/i_ai_tutor_repository.dart';
 import 'auth_provider.dart';
@@ -45,12 +49,16 @@ class AiTutorLoaded extends AiTutorState {
     required this.messages,
     required this.remainingMessages,
     required this.suggestedPrompts,
+    this.bookmarkedMessageIds = const {},
+    this.messageReactions = const {},
   });
 
   @override
   final List<ChatMessage> messages;
   final int remainingMessages;
   final List<SuggestedPrompt> suggestedPrompts;
+  final Set<String> bookmarkedMessageIds;
+  final Map<String, List<String>> messageReactions;
 }
 
 class AiTutorStreaming extends AiTutorState {
@@ -80,9 +88,13 @@ class AiTutorNotifier extends StateNotifier<AsyncValue<AiTutorState>> {
   List<ChatMessage> _messages = [];
   int _remainingMessages = 0;
   List<SuggestedPrompt> _suggestedPrompts = [];
+  Set<String> _bookmarkedMessageIds = {};
+  Map<String, List<String>> _messageReactions = {};
+  String? _currentUserId;
 
   /// Initialize chat - load history and suggested prompts
   Future<void> initialize(String userId) async {
+    _currentUserId = userId;
     state = const AsyncValue.loading();
 
     // Load chat history
@@ -106,10 +118,37 @@ class AiTutorNotifier extends StateNotifier<AsyncValue<AiTutorState>> {
       (prompts) => _suggestedPrompts = prompts,
     );
 
+    // Load bookmarks
+    final bookmarksResult = await _aiTutorRepository.getBookmarks(userId);
+    bookmarksResult.fold(
+      (failure) {},
+      (bookmarks) {
+        _bookmarkedMessageIds = bookmarks.map((b) => b.messageId).toSet();
+      },
+    );
+
+    // Load reactions for each message
+    for (final message in _messages) {
+      final reactionsResult = await _aiTutorRepository.getReactions(
+        userId,
+        message.id,
+      );
+      reactionsResult.fold(
+        (failure) {},
+        (reactions) {
+          if (reactions.isNotEmpty) {
+            _messageReactions[message.id] = reactions;
+          }
+        },
+      );
+    }
+
     state = AsyncValue.data(AiTutorLoaded(
       messages: _messages,
       remainingMessages: _remainingMessages,
       suggestedPrompts: _suggestedPrompts,
+      bookmarkedMessageIds: _bookmarkedMessageIds,
+      messageReactions: _messageReactions,
     ));
   }
 
@@ -118,6 +157,8 @@ class AiTutorNotifier extends StateNotifier<AsyncValue<AiTutorState>> {
     required String userId,
     required String message,
     required TutorContext context,
+    Uint8List? imageData,
+    String? imageMimeType,
   }) async {
     // Check if can send message
     final canSendResult = await _aiTutorRepository.canSendMessage(userId);
@@ -137,6 +178,8 @@ class AiTutorNotifier extends StateNotifier<AsyncValue<AiTutorState>> {
       content: message,
       role: MessageRole.user,
       createdAt: DateTime.now(),
+      imageData: imageData,
+      imageMimeType: imageMimeType,
     );
     _messages = [..._messages, userMessage];
 
@@ -157,11 +200,19 @@ class AiTutorNotifier extends StateNotifier<AsyncValue<AiTutorState>> {
     ));
 
     // Send message and stream response
-    final result = await _aiTutorRepository.sendMessage(
-      userId: userId,
-      message: message,
-      context: context,
-    );
+    final result = imageData != null
+        ? await _aiTutorRepository.sendMessageWithImage(
+            userId: userId,
+            message: message,
+            context: context,
+            imageData: imageData,
+            mimeType: imageMimeType ?? 'image/jpeg',
+          )
+        : await _aiTutorRepository.sendMessage(
+            userId: userId,
+            message: message,
+            context: context,
+          );
 
     result.fold(
       (failure) {
@@ -205,6 +256,8 @@ class AiTutorNotifier extends StateNotifier<AsyncValue<AiTutorState>> {
               messages: _messages,
               remainingMessages: _remainingMessages,
               suggestedPrompts: _suggestedPrompts,
+              bookmarkedMessageIds: _bookmarkedMessageIds,
+              messageReactions: _messageReactions,
             ));
           },
           onError: (Object error) {
@@ -220,6 +273,132 @@ class AiTutorNotifier extends StateNotifier<AsyncValue<AiTutorState>> {
     );
   }
 
+  /// Toggle bookmark for a message
+  Future<void> toggleBookmark(ChatMessage message) async {
+    if (_currentUserId == null) return;
+
+    final result = await _aiTutorRepository.toggleBookmark(
+      _currentUserId!,
+      message,
+    );
+
+    result.fold(
+      (failure) {},
+      (isBookmarked) {
+        if (isBookmarked) {
+          _bookmarkedMessageIds = {..._bookmarkedMessageIds, message.id};
+        } else {
+          _bookmarkedMessageIds = _bookmarkedMessageIds
+              .where((id) => id != message.id)
+              .toSet();
+        }
+
+        _updateLoadedState();
+      },
+    );
+  }
+
+  /// Remove a bookmark by ID
+  Future<void> removeBookmark(String bookmarkId) async {
+    if (_currentUserId == null) return;
+
+    final result = await _aiTutorRepository.deleteBookmark(
+      _currentUserId!,
+      bookmarkId,
+    );
+
+    result.fold(
+      (failure) {},
+      (_) {
+        // Refresh bookmarks
+        _aiTutorRepository.getBookmarks(_currentUserId!).then((result) {
+          result.fold(
+            (failure) {},
+            (bookmarks) {
+              _bookmarkedMessageIds = bookmarks.map((b) => b.messageId).toSet();
+              _updateLoadedState();
+            },
+          );
+        });
+      },
+    );
+  }
+
+  /// Clear all bookmarks
+  Future<void> clearBookmarks() async {
+    if (_currentUserId == null) return;
+
+    final bookmarksResult = await _aiTutorRepository.getBookmarks(_currentUserId!);
+    bookmarksResult.fold(
+      (failure) {},
+      (bookmarks) async {
+        for (final bookmark in bookmarks) {
+          await _aiTutorRepository.deleteBookmark(_currentUserId!, bookmark.id);
+        }
+        _bookmarkedMessageIds = {};
+        _updateLoadedState();
+      },
+    );
+  }
+
+  /// Add reaction to a message
+  Future<void> addReaction(String messageId, String emoji) async {
+    if (_currentUserId == null) return;
+
+    final result = await _aiTutorRepository.addReaction(
+      _currentUserId!,
+      messageId,
+      emoji,
+    );
+
+    result.fold(
+      (failure) {},
+      (_) {
+        final reactions = _messageReactions[messageId] ?? [];
+        if (!reactions.contains(emoji)) {
+          _messageReactions = {
+            ..._messageReactions,
+            messageId: [...reactions, emoji],
+          };
+          _updateLoadedState();
+        }
+      },
+    );
+  }
+
+  /// Remove reaction from a message
+  Future<void> removeReaction(String messageId, String emoji) async {
+    if (_currentUserId == null) return;
+
+    final result = await _aiTutorRepository.removeReaction(
+      _currentUserId!,
+      messageId,
+      emoji,
+    );
+
+    result.fold(
+      (failure) {},
+      (_) {
+        final reactions = _messageReactions[messageId] ?? [];
+        _messageReactions = {
+          ..._messageReactions,
+          messageId: reactions.where((e) => e != emoji).toList(),
+        };
+        _updateLoadedState();
+      },
+    );
+  }
+
+  /// Toggle a reaction on a message
+  Future<void> toggleReaction(String messageId, String emoji) async {
+    final reactions = _messageReactions[messageId] ?? [];
+    if (reactions.contains(emoji)) {
+      await removeReaction(messageId, emoji);
+    } else {
+      await addReaction(messageId, emoji);
+    }
+  }
+
   /// Clear chat history
   Future<void> clearHistory(String userId) async {
     state = const AsyncValue.loading();
@@ -230,10 +409,13 @@ class AiTutorNotifier extends StateNotifier<AsyncValue<AiTutorState>> {
       (failure) => state = AsyncValue.data(AiTutorError(failure)),
       (_) {
         _messages = [];
+        _messageReactions = {};
         state = AsyncValue.data(AiTutorLoaded(
           messages: _messages,
           remainingMessages: _remainingMessages,
           suggestedPrompts: _suggestedPrompts,
+          bookmarkedMessageIds: _bookmarkedMessageIds,
+          messageReactions: _messageReactions,
         ));
       },
     );
@@ -253,15 +435,21 @@ class AiTutorNotifier extends StateNotifier<AsyncValue<AiTutorState>> {
       (failure) {},
       (prompts) {
         _suggestedPrompts = prompts;
-        if (state.valueOrNull is AiTutorLoaded) {
-          state = AsyncValue.data(AiTutorLoaded(
-            messages: _messages,
-            remainingMessages: _remainingMessages,
-            suggestedPrompts: _suggestedPrompts,
-          ));
-        }
+        _updateLoadedState();
       },
     );
+  }
+
+  void _updateLoadedState() {
+    if (state.valueOrNull is AiTutorLoaded || state.valueOrNull is AiTutorInitial) {
+      state = AsyncValue.data(AiTutorLoaded(
+        messages: _messages,
+        remainingMessages: _remainingMessages,
+        suggestedPrompts: _suggestedPrompts,
+        bookmarkedMessageIds: _bookmarkedMessageIds,
+        messageReactions: _messageReactions,
+      ));
+    }
   }
 
   /// Reset state
@@ -270,6 +458,9 @@ class AiTutorNotifier extends StateNotifier<AsyncValue<AiTutorState>> {
     _messages = [];
     _remainingMessages = 0;
     _suggestedPrompts = [];
+    _bookmarkedMessageIds = {};
+    _messageReactions = {};
+    _currentUserId = null;
     state = const AsyncValue.data(AiTutorInitial());
   }
 
@@ -329,6 +520,40 @@ final suggestedPromptsProvider = Provider<List<SuggestedPrompt>>((ref) {
   return SuggestedPrompt.defaults;
 });
 
+/// Bookmarked message IDs provider
+final bookmarkedMessageIdsProvider = Provider<Set<String>>((ref) {
+  final aiTutorState = ref.watch(aiTutorProvider);
+  final state = aiTutorState.valueOrNull;
+  if (state is AiTutorLoaded) {
+    return state.bookmarkedMessageIds;
+  }
+  return {};
+});
+
+/// Message reactions provider
+final messageReactionsProvider = Provider<Map<String, List<String>>>((ref) {
+  final aiTutorState = ref.watch(aiTutorProvider);
+  final state = aiTutorState.valueOrNull;
+  if (state is AiTutorLoaded) {
+    return state.messageReactions;
+  }
+  return {};
+});
+
+/// Bookmarks provider
+final bookmarksProvider = FutureProvider<List<Bookmark>>((ref) async {
+  final aiTutorRepository = sl<IAiTutorRepository>();
+  final user = ref.watch(currentUserProvider);
+
+  if (user == null) return [];
+
+  final result = await aiTutorRepository.getBookmarks(user.id);
+  return result.fold(
+    (failure) => [],
+    (bookmarks) => bookmarks,
+  );
+});
+
 /// Current tutor context provider
 final tutorContextProvider = Provider<TutorContext>((ref) {
   final selectedCountry = ref.watch(selectedCountryProvider);
@@ -357,4 +582,48 @@ final canSendMessageProvider = FutureProvider<bool>((ref) async {
     (failure) => false,
     (canSend) => canSend,
   );
+});
+
+/// Speech service provider
+final speechServiceProvider = Provider<SpeechService>((ref) {
+  final service = SpeechService();
+  ref.onDispose(() => service.dispose());
+  return service;
+});
+
+/// TTS service provider
+final ttsServiceProvider = Provider<TTSService>((ref) {
+  final service = TTSService();
+  ref.onDispose(() => service.dispose());
+  return service;
+});
+
+/// Speech status provider
+final speechStatusProvider = StreamProvider<SpeechStatus>((ref) {
+  final speechService = ref.watch(speechServiceProvider);
+  return speechService.statusStream;
+});
+
+/// Speech result provider
+final speechResultProvider = StreamProvider<SpeechResult>((ref) {
+  final speechService = ref.watch(speechServiceProvider);
+  return speechService.resultStream;
+});
+
+/// TTS status provider
+final ttsStatusProvider = StreamProvider<TTSStatus>((ref) {
+  final ttsService = ref.watch(ttsServiceProvider);
+  return ttsService.statusStream;
+});
+
+/// Is listening provider
+final isListeningProvider = Provider<bool>((ref) {
+  final speechService = ref.watch(speechServiceProvider);
+  return speechService.isListening;
+});
+
+/// Is speaking provider (TTS)
+final isSpeakingProvider = Provider<bool>((ref) {
+  final ttsService = ref.watch(ttsServiceProvider);
+  return ttsService.isSpeaking;
 });

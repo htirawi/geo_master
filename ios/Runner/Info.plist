@@ -62,5 +62,17 @@
 	<!-- Google Sign-In Client ID -->
 	<key>GIDClientID</key>
 	<string>785682493330-nod84g7bc34k2av9l59f991pecq8da13.apps.googleusercontent.com</string>
+	<!-- Microphone Permission for Voice Input -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>GeoMaster needs microphone access for voice input to the AI tutor</string>
+	<!-- Speech Recognition Permission -->
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>GeoMaster uses speech recognition for voice input</string>
+	<!-- Camera Permission for Image Analysis -->
+	<key>NSCameraUsageDescription</key>
+	<string>GeoMaster needs camera access to capture images for geography analysis</string>
+	<!-- Photo Library Permission -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>GeoMaster needs photo library access to select images for geography analysis</string>
 </dict>
 </plist>

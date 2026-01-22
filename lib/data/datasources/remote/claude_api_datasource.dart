@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 
@@ -23,6 +24,38 @@ abstract class IClaudeApiDataSource {
     required String message,
     required TutorContextModel context,
     required List<ChatMessageModel> conversationHistory,
+  });
+
+  /// Send message with image for vision analysis (streaming)
+  Stream<String> sendMessageWithImage({
+    required String message,
+    required TutorContextModel context,
+    required List<ChatMessageModel> conversationHistory,
+    required Uint8List imageData,
+    required String mimeType,
+  });
+
+  /// Generate quiz questions based on topic and difficulty
+  Future<String> generateQuiz({
+    required String topic,
+    required String difficulty,
+    required int questionCount,
+    required TutorContextModel context,
+  });
+
+  /// Generate study plan based on user goals
+  Future<String> generateStudyPlan({
+    required String goal,
+    required String duration,
+    required int hoursPerDay,
+    required TutorContextModel context,
+  });
+
+  /// Get essay feedback
+  Future<String> getEssayFeedback({
+    required String title,
+    required String content,
+    required TutorContextModel context,
   });
 }
 
@@ -434,5 +467,474 @@ Guidelines:
     });
 
     return messages;
+  }
+
+  @override
+  Stream<String> sendMessageWithImage({
+    required String message,
+    required TutorContextModel context,
+    required List<ChatMessageModel> conversationHistory,
+    required Uint8List imageData,
+    required String mimeType,
+  }) async* {
+    // Security: Verify API key is available
+    if (!isAvailable) {
+      throw const ServerException(
+        message: 'AI tutor is not configured. Please contact support.',
+      );
+    }
+
+    // Security: Enforce rate limiting
+    await _enforceRateLimit();
+
+    // Validate image size (max 5MB for Claude vision)
+    if (imageData.length > 5 * 1024 * 1024) {
+      throw const ServerException(
+        message: 'Image is too large. Maximum size is 5MB.',
+      );
+    }
+
+    // Validate mime type
+    final validMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!validMimeTypes.contains(mimeType)) {
+      throw const ServerException(
+        message: 'Invalid image format. Supported formats: JPEG, PNG, GIF, WebP.',
+      );
+    }
+
+    try {
+      final systemPrompt = _buildSystemPrompt(context);
+
+      // Build messages with image content
+      final messages = <Map<String, dynamic>>[];
+
+      // Add conversation history
+      final recentHistory = conversationHistory.length > 10
+          ? conversationHistory.sublist(conversationHistory.length - 10)
+          : conversationHistory;
+
+      for (final msg in recentHistory) {
+        final sanitizedContent = InputSanitizer.sanitizeMessage(msg.content);
+        messages.add({
+          'role': msg.role == MessageRole.user ? 'user' : 'assistant',
+          'content': sanitizedContent,
+        });
+      }
+
+      // Add user message with image
+      var sanitizedMessage = InputSanitizer.sanitizeMessage(message);
+      sanitizedMessage = _validateUserMessage(sanitizedMessage);
+
+      final base64Image = base64Encode(imageData);
+      messages.add({
+        'role': 'user',
+        'content': [
+          {
+            'type': 'image',
+            'source': {
+              'type': 'base64',
+              'media_type': mimeType,
+              'data': base64Image,
+            },
+          },
+          {
+            'type': 'text',
+            'text': sanitizedMessage.isEmpty
+                ? 'Please analyze this image and describe what you see related to geography.'
+                : sanitizedMessage,
+          },
+        ],
+      });
+
+      final response = await _dio.post<ResponseBody>(
+        _baseUrl,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': _apiKey,
+            'anthropic-version': '2023-06-01',
+          },
+          responseType: ResponseType.stream,
+        ),
+        data: jsonEncode({
+          'model': _model,
+          'max_tokens': _maxTokens,
+          'system': systemPrompt,
+          'messages': messages,
+          'stream': true,
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        logger.error(
+          'Claude API error: ${response.statusCode}',
+          tag: 'ClaudeAPI',
+        );
+        throw ServerException(
+          message: 'Claude API error: ${response.statusCode}',
+        );
+      }
+
+      // Process streaming response
+      final stream = response.data!.stream;
+      final utf8Stream = utf8.decoder.bind(stream);
+
+      await for (final String chunk in utf8Stream) {
+        final lines = chunk.split('\n');
+        for (final String line in lines) {
+          if (line.startsWith('data: ')) {
+            final data = line.substring(6);
+            if (data == '[DONE]') {
+              return;
+            }
+
+            try {
+              final json = jsonDecode(data) as Map<String, dynamic>;
+              final type = json['type'] as String?;
+
+              if (type == 'content_block_delta') {
+                final delta = json['delta'] as Map<String, dynamic>?;
+                final text = delta?['text'] as String?;
+                if (text != null && text.isNotEmpty) {
+                  yield text;
+                }
+              }
+            } catch (e) {
+              continue;
+            }
+          }
+        }
+      }
+    } on ServerException {
+      rethrow;
+    } catch (e, stackTrace) {
+      logger.error(
+        'Error sending image message to Claude',
+        tag: 'ClaudeAPI',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      throw ServerException(message: 'Failed to analyze image');
+    }
+  }
+
+  @override
+  Future<String> generateQuiz({
+    required String topic,
+    required String difficulty,
+    required int questionCount,
+    required TutorContextModel context,
+  }) async {
+    if (!isAvailable) {
+      throw const ServerException(
+        message: 'AI tutor is not configured. Please contact support.',
+      );
+    }
+
+    await _enforceRateLimit();
+
+    try {
+      final sanitizedTopic = _sanitizeContextData(topic);
+      final sanitizedDifficulty = _sanitizeContextData(difficulty);
+      final clampedCount = questionCount.clamp(3, 20);
+
+      final systemPrompt = '''
+You are a geography quiz generator. Create exactly $clampedCount multiple-choice questions about "$sanitizedTopic" at $sanitizedDifficulty difficulty level.
+
+IMPORTANT: Return ONLY valid JSON, no markdown or explanation.
+
+Format your response as a JSON object with this exact structure:
+{
+  "title": "Quiz title",
+  "topic": "$sanitizedTopic",
+  "difficulty": "$sanitizedDifficulty",
+  "questions": [
+    {
+      "question": "Question text",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "correctIndex": 0,
+      "explanation": "Brief explanation of the correct answer"
+    }
+  ]
+}
+
+Guidelines:
+- Each question must have exactly 4 options
+- correctIndex is 0-based (0=first option, 3=last option)
+- Questions should be educational and accurate
+- Include interesting geography facts in explanations
+- User level: ${context.userLevel}
+- Preferred language: ${context.preferredLanguage == 'ar' ? 'Arabic' : 'English'}
+''';
+
+      final response = await _dio.post<Map<String, dynamic>>(
+        _baseUrl,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': _apiKey,
+            'anthropic-version': '2023-06-01',
+          },
+        ),
+        data: {
+          'model': _model,
+          'max_tokens': 2048,
+          'system': systemPrompt,
+          'messages': [
+            {
+              'role': 'user',
+              'content': 'Generate the quiz now.',
+            },
+          ],
+        },
+      );
+
+      if (response.statusCode != 200) {
+        throw ServerException(
+          message: 'Claude API error: ${response.statusCode}',
+        );
+      }
+
+      final content = response.data?['content'] as List<dynamic>?;
+      if (content == null || content.isEmpty) {
+        throw const ServerException(message: 'Empty response from Claude');
+      }
+
+      final textBlock = content.first as Map<String, dynamic>;
+      return textBlock['text'] as String? ?? '';
+    } catch (e, stackTrace) {
+      logger.error(
+        'Error generating quiz',
+        tag: 'ClaudeAPI',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      throw ServerException(message: 'Failed to generate quiz');
+    }
+  }
+
+  @override
+  Future<String> generateStudyPlan({
+    required String goal,
+    required String duration,
+    required int hoursPerDay,
+    required TutorContextModel context,
+  }) async {
+    if (!isAvailable) {
+      throw const ServerException(
+        message: 'AI tutor is not configured. Please contact support.',
+      );
+    }
+
+    await _enforceRateLimit();
+
+    try {
+      final sanitizedGoal = _sanitizeContextData(goal);
+      final sanitizedDuration = _sanitizeContextData(duration);
+      final clampedHours = hoursPerDay.clamp(1, 8);
+
+      final systemPrompt = '''
+You are a geography learning expert. Create a personalized study plan for the following goal:
+"$sanitizedGoal"
+
+Duration: $sanitizedDuration
+Daily study time: $clampedHours hours
+
+IMPORTANT: Return ONLY valid JSON, no markdown or explanation.
+
+Format your response as a JSON object with this exact structure:
+{
+  "title": "Study Plan Title",
+  "goal": "$sanitizedGoal",
+  "duration": "$sanitizedDuration",
+  "hoursPerDay": $clampedHours,
+  "milestones": [
+    {
+      "week": 1,
+      "title": "Milestone title",
+      "objectives": ["Objective 1", "Objective 2"],
+      "topics": ["Topic 1", "Topic 2"],
+      "activities": ["Activity 1", "Activity 2"]
+    }
+  ],
+  "dailyRoutine": [
+    {
+      "time": "Morning",
+      "duration": 30,
+      "activity": "Activity description"
+    }
+  ],
+  "resources": ["Resource 1", "Resource 2"],
+  "tips": ["Tip 1", "Tip 2"]
+}
+
+Guidelines:
+- Create realistic, achievable milestones
+- Include varied activities (reading, quizzes, exploration)
+- Consider user level: ${context.userLevel}
+- Preferred language: ${context.preferredLanguage == 'ar' ? 'Arabic' : 'English'}
+- User interests: ${context.userInterests.join(', ')}
+''';
+
+      final response = await _dio.post<Map<String, dynamic>>(
+        _baseUrl,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': _apiKey,
+            'anthropic-version': '2023-06-01',
+          },
+        ),
+        data: {
+          'model': _model,
+          'max_tokens': 2048,
+          'system': systemPrompt,
+          'messages': [
+            {
+              'role': 'user',
+              'content': 'Generate the study plan now.',
+            },
+          ],
+        },
+      );
+
+      if (response.statusCode != 200) {
+        throw ServerException(
+          message: 'Claude API error: ${response.statusCode}',
+        );
+      }
+
+      final content = response.data?['content'] as List<dynamic>?;
+      if (content == null || content.isEmpty) {
+        throw const ServerException(message: 'Empty response from Claude');
+      }
+
+      final textBlock = content.first as Map<String, dynamic>;
+      return textBlock['text'] as String? ?? '';
+    } catch (e, stackTrace) {
+      logger.error(
+        'Error generating study plan',
+        tag: 'ClaudeAPI',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      throw ServerException(message: 'Failed to generate study plan');
+    }
+  }
+
+  @override
+  Future<String> getEssayFeedback({
+    required String title,
+    required String content,
+    required TutorContextModel context,
+  }) async {
+    if (!isAvailable) {
+      throw const ServerException(
+        message: 'AI tutor is not configured. Please contact support.',
+      );
+    }
+
+    await _enforceRateLimit();
+
+    try {
+      final sanitizedTitle = _sanitizeContextData(title);
+      // Allow longer content for essays but limit to 5000 chars
+      final sanitizedContent = content.length > 5000
+          ? content.substring(0, 5000)
+          : content;
+
+      final systemPrompt = '''
+You are a geography essay evaluator and tutor. Provide detailed, constructive feedback on the following geography essay.
+
+IMPORTANT: Return ONLY valid JSON, no markdown or explanation.
+
+Format your response as a JSON object with this exact structure:
+{
+  "overallScore": 85,
+  "summary": "Brief overall assessment",
+  "sections": {
+    "accuracy": {
+      "score": 90,
+      "feedback": "Feedback on geographical accuracy",
+      "suggestions": ["Suggestion 1"]
+    },
+    "structure": {
+      "score": 80,
+      "feedback": "Feedback on essay structure",
+      "suggestions": ["Suggestion 1"]
+    },
+    "depth": {
+      "score": 85,
+      "feedback": "Feedback on depth of analysis",
+      "suggestions": ["Suggestion 1"]
+    },
+    "clarity": {
+      "score": 85,
+      "feedback": "Feedback on clarity and writing",
+      "suggestions": ["Suggestion 1"]
+    }
+  },
+  "strengths": ["Strength 1", "Strength 2"],
+  "areasForImprovement": ["Area 1", "Area 2"],
+  "additionalResources": ["Resource 1"]
+}
+
+Guidelines:
+- Be encouraging but honest
+- Provide specific, actionable feedback
+- Score each section from 0-100
+- Consider user level: ${context.userLevel}
+- Preferred language: ${context.preferredLanguage == 'ar' ? 'Arabic' : 'English'}
+''';
+
+      final response = await _dio.post<Map<String, dynamic>>(
+        _baseUrl,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': _apiKey,
+            'anthropic-version': '2023-06-01',
+          },
+        ),
+        data: {
+          'model': _model,
+          'max_tokens': 2048,
+          'system': systemPrompt,
+          'messages': [
+            {
+              'role': 'user',
+              'content': '''
+Essay Title: $sanitizedTitle
+
+Essay Content:
+$sanitizedContent
+''',
+            },
+          ],
+        },
+      );
+
+      if (response.statusCode != 200) {
+        throw ServerException(
+          message: 'Claude API error: ${response.statusCode}',
+        );
+      }
+
+      final responseContent = response.data?['content'] as List<dynamic>?;
+      if (responseContent == null || responseContent.isEmpty) {
+        throw const ServerException(message: 'Empty response from Claude');
+      }
+
+      final textBlock = responseContent.first as Map<String, dynamic>;
+      return textBlock['text'] as String? ?? '';
+    } catch (e, stackTrace) {
+      logger.error(
+        'Error getting essay feedback',
+        tag: 'ClaudeAPI',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      throw ServerException(message: 'Failed to get essay feedback');
+    }
   }
 }

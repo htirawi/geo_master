@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../domain/entities/quiz.dart';
+import '../../../../domain/repositories/i_quiz_repository.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/quiz_provider.dart';
 import '../../../../presentation/providers/subscription_provider.dart';

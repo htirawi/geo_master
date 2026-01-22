@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
 import 'package:uuid/uuid.dart';
@@ -6,10 +7,13 @@ import 'package:uuid/uuid.dart';
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../core/services/logger_service.dart';
+import '../../domain/entities/bookmark.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/repositories/i_ai_tutor_repository.dart';
+import '../datasources/local/bookmarks_local_datasource.dart';
 import '../datasources/local/chat_local_datasource.dart';
 import '../datasources/remote/claude_api_datasource.dart';
+import '../models/bookmark_model.dart';
 import '../models/chat_message_model.dart';
 import '../models/subscription_model.dart';
 
@@ -18,13 +22,16 @@ class AiTutorRepositoryImpl implements IAiTutorRepository {
   AiTutorRepositoryImpl({
     required IClaudeApiDataSource claudeDataSource,
     required IChatLocalDataSource chatLocalDataSource,
+    required IBookmarksLocalDataSource bookmarksLocalDataSource,
     required SubscriptionTier Function() getCurrentTier,
   })  : _claudeDataSource = claudeDataSource,
         _chatLocalDataSource = chatLocalDataSource,
+        _bookmarksLocalDataSource = bookmarksLocalDataSource,
         _getCurrentTier = getCurrentTier;
 
   final IClaudeApiDataSource _claudeDataSource;
   final IChatLocalDataSource _chatLocalDataSource;
+  final IBookmarksLocalDataSource _bookmarksLocalDataSource;
   final SubscriptionTier Function() _getCurrentTier;
   final _uuid = const Uuid();
 
@@ -339,6 +346,364 @@ class AiTutorRepositoryImpl implements IAiTutorRepository {
         return _proTierDailyLimit;
       case SubscriptionTier.premium:
         return _premiumTierDailyLimit;
+    }
+  }
+
+  // Vision methods
+
+  @override
+  Future<Either<Failure, Stream<String>>> sendMessageWithImage({
+    required String userId,
+    required String message,
+    required TutorContext context,
+    required Uint8List imageData,
+    required String mimeType,
+  }) async {
+    try {
+      // Check if user can send messages
+      final canSendResult = await canSendMessage(userId);
+      final canSend = canSendResult.fold(
+        (failure) => false,
+        (can) => can,
+      );
+
+      if (!canSend) {
+        return Left(AiTutorFailure.messageLimitReached());
+      }
+
+      // Get conversation history
+      final history = await _chatLocalDataSource.getChatHistory(userId);
+      final contextModel = TutorContextModel.fromEntity(context);
+
+      // Save user message with image
+      final userMessage = ChatMessageModel(
+        id: _uuid.v4(),
+        content: message,
+        role: MessageRole.user,
+        createdAt: DateTime.now(),
+        imageData: imageData,
+        imageMimeType: mimeType,
+      );
+      await _chatLocalDataSource.saveMessage(userId, userMessage);
+
+      // Increment message count
+      await _chatLocalDataSource.incrementMessagesSentToday(userId);
+
+      // Create stream controller for response
+      // ignore: close_sinks - closed in _streamImageResponse finally block
+      final controller = StreamController<String>();
+
+      // Start streaming response in background
+      _streamImageResponse(
+        userId: userId,
+        message: message,
+        context: contextModel,
+        history: history,
+        imageData: imageData,
+        mimeType: mimeType,
+        controller: controller,
+      );
+
+      logger.debug('Sending image message to AI tutor', tag: 'AiTutorRepo');
+      return Right(controller.stream);
+    } on CacheException catch (e) {
+      logger.error('Cache error sending image message', tag: 'AiTutorRepo', error: e);
+      return Left(CacheFailure(message: e.message));
+    } catch (e, stackTrace) {
+      logger.error(
+        'Error sending image message to AI tutor',
+        tag: 'AiTutorRepo',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return const Left(AiTutorFailure(message: 'Failed to send image message'));
+    }
+  }
+
+  Future<void> _streamImageResponse({
+    required String userId,
+    required String message,
+    required TutorContextModel context,
+    required List<ChatMessageModel> history,
+    required Uint8List imageData,
+    required String mimeType,
+    required StreamController<String> controller,
+  }) async {
+    final responseBuffer = StringBuffer();
+
+    try {
+      final stream = _claudeDataSource.sendMessageWithImage(
+        message: message,
+        context: context,
+        conversationHistory: history,
+        imageData: imageData,
+        mimeType: mimeType,
+      );
+
+      await for (final chunk in stream) {
+        responseBuffer.write(chunk);
+        controller.add(chunk);
+      }
+
+      // Save complete assistant message
+      final assistantMessage = ChatMessageModel(
+        id: _uuid.v4(),
+        content: responseBuffer.toString(),
+        role: MessageRole.assistant,
+        createdAt: DateTime.now(),
+      );
+      await _chatLocalDataSource.saveMessage(userId, assistantMessage);
+
+      logger.debug('AI image response completed', tag: 'AiTutorRepo');
+    } catch (e) {
+      logger.error('Error streaming image response', tag: 'AiTutorRepo', error: e);
+      controller.addError(e);
+    } finally {
+      await controller.close();
+    }
+  }
+
+  // Bookmark methods
+
+  @override
+  Future<Either<Failure, void>> saveBookmark(
+    String userId,
+    Bookmark bookmark,
+  ) async {
+    try {
+      await _bookmarksLocalDataSource.saveBookmark(
+        userId,
+        BookmarkModel.fromEntity(bookmark),
+      );
+      logger.debug('Bookmark saved for: $userId', tag: 'AiTutorRepo');
+      return const Right(null);
+    } on CacheException catch (e) {
+      logger.error('Error saving bookmark', tag: 'AiTutorRepo', error: e);
+      return Left(CacheFailure(message: e.message));
+    } catch (e, stackTrace) {
+      logger.error(
+        'Unexpected error saving bookmark',
+        tag: 'AiTutorRepo',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return const Left(CacheFailure(message: 'Failed to save bookmark'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Bookmark>>> getBookmarks(String userId) async {
+    try {
+      final bookmarks = await _bookmarksLocalDataSource.getBookmarks(userId);
+      return Right(bookmarks.map((b) => b.toEntity()).toList());
+    } on CacheException catch (e) {
+      logger.error('Error getting bookmarks', tag: 'AiTutorRepo', error: e);
+      return Left(CacheFailure(message: e.message));
+    } catch (e, stackTrace) {
+      logger.error(
+        'Unexpected error getting bookmarks',
+        tag: 'AiTutorRepo',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return const Left(CacheFailure(message: 'Failed to get bookmarks'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteBookmark(
+    String userId,
+    String bookmarkId,
+  ) async {
+    try {
+      await _bookmarksLocalDataSource.deleteBookmark(userId, bookmarkId);
+      logger.debug('Bookmark deleted: $bookmarkId', tag: 'AiTutorRepo');
+      return const Right(null);
+    } on CacheException catch (e) {
+      logger.error('Error deleting bookmark', tag: 'AiTutorRepo', error: e);
+      return Left(CacheFailure(message: e.message));
+    } catch (e, stackTrace) {
+      logger.error(
+        'Unexpected error deleting bookmark',
+        tag: 'AiTutorRepo',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return const Left(CacheFailure(message: 'Failed to delete bookmark'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> isMessageBookmarked(
+    String userId,
+    String messageId,
+  ) async {
+    try {
+      final isBookmarked = await _bookmarksLocalDataSource.isMessageBookmarked(
+        userId,
+        messageId,
+      );
+      return Right(isBookmarked);
+    } on CacheException catch (e) {
+      logger.error('Error checking bookmark', tag: 'AiTutorRepo', error: e);
+      return Left(CacheFailure(message: e.message));
+    } catch (e, stackTrace) {
+      logger.error(
+        'Unexpected error checking bookmark',
+        tag: 'AiTutorRepo',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return const Left(CacheFailure(message: 'Failed to check bookmark'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> toggleBookmark(
+    String userId,
+    ChatMessage message,
+  ) async {
+    try {
+      final isBookmarked = await _bookmarksLocalDataSource.isMessageBookmarked(
+        userId,
+        message.id,
+      );
+
+      if (isBookmarked) {
+        // Find and delete the bookmark
+        final bookmark = await _bookmarksLocalDataSource.getBookmarkByMessageId(
+          userId,
+          message.id,
+        );
+        if (bookmark != null) {
+          await _bookmarksLocalDataSource.deleteBookmark(userId, bookmark.id);
+        }
+        logger.debug('Bookmark removed for message: ${message.id}', tag: 'AiTutorRepo');
+        return const Right(false);
+      } else {
+        // Create new bookmark
+        final bookmark = BookmarkModel(
+          id: _uuid.v4(),
+          messageId: message.id,
+          content: message.content,
+          createdAt: DateTime.now(),
+          tags: const [],
+        );
+        await _bookmarksLocalDataSource.saveBookmark(userId, bookmark);
+        logger.debug('Bookmark added for message: ${message.id}', tag: 'AiTutorRepo');
+        return const Right(true);
+      }
+    } on CacheException catch (e) {
+      logger.error('Error toggling bookmark', tag: 'AiTutorRepo', error: e);
+      return Left(CacheFailure(message: e.message));
+    } catch (e, stackTrace) {
+      logger.error(
+        'Unexpected error toggling bookmark',
+        tag: 'AiTutorRepo',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return const Left(CacheFailure(message: 'Failed to toggle bookmark'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Bookmark>>> searchBookmarks(
+    String userId,
+    String query,
+  ) async {
+    try {
+      final bookmarks = await _bookmarksLocalDataSource.searchBookmarks(
+        userId,
+        query,
+      );
+      return Right(bookmarks.map((b) => b.toEntity()).toList());
+    } on CacheException catch (e) {
+      logger.error('Error searching bookmarks', tag: 'AiTutorRepo', error: e);
+      return Left(CacheFailure(message: e.message));
+    } catch (e, stackTrace) {
+      logger.error(
+        'Unexpected error searching bookmarks',
+        tag: 'AiTutorRepo',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return const Left(CacheFailure(message: 'Failed to search bookmarks'));
+    }
+  }
+
+  // Reaction methods
+
+  @override
+  Future<Either<Failure, void>> addReaction(
+    String userId,
+    String messageId,
+    String emoji,
+  ) async {
+    try {
+      await _chatLocalDataSource.addReaction(userId, messageId, emoji);
+      logger.debug('Reaction added: $emoji to message: $messageId', tag: 'AiTutorRepo');
+      return const Right(null);
+    } on CacheException catch (e) {
+      logger.error('Error adding reaction', tag: 'AiTutorRepo', error: e);
+      return Left(CacheFailure(message: e.message));
+    } catch (e, stackTrace) {
+      logger.error(
+        'Unexpected error adding reaction',
+        tag: 'AiTutorRepo',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return const Left(CacheFailure(message: 'Failed to add reaction'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> removeReaction(
+    String userId,
+    String messageId,
+    String emoji,
+  ) async {
+    try {
+      await _chatLocalDataSource.removeReaction(userId, messageId, emoji);
+      logger.debug('Reaction removed: $emoji from message: $messageId', tag: 'AiTutorRepo');
+      return const Right(null);
+    } on CacheException catch (e) {
+      logger.error('Error removing reaction', tag: 'AiTutorRepo', error: e);
+      return Left(CacheFailure(message: e.message));
+    } catch (e, stackTrace) {
+      logger.error(
+        'Unexpected error removing reaction',
+        tag: 'AiTutorRepo',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return const Left(CacheFailure(message: 'Failed to remove reaction'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<String>>> getReactions(
+    String userId,
+    String messageId,
+  ) async {
+    try {
+      final reactions = await _chatLocalDataSource.getReactions(
+        userId,
+        messageId,
+      );
+      return Right(reactions);
+    } on CacheException catch (e) {
+      logger.error('Error getting reactions', tag: 'AiTutorRepo', error: e);
+      return Left(CacheFailure(message: e.message));
+    } catch (e, stackTrace) {
+      logger.error(
+        'Unexpected error getting reactions',
+        tag: 'AiTutorRepo',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return const Left(CacheFailure(message: 'Failed to get reactions'));
     }
   }
 }

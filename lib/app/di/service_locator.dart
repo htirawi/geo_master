@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/network/api_client.dart';
 import '../../core/services/cache_service.dart';
 import '../../core/services/translation_service.dart';
+import '../../data/datasources/local/bookmarks_local_datasource.dart';
 import '../../data/datasources/local/chat_local_datasource.dart';
 import '../../data/datasources/local/quiz_local_datasource.dart';
 import '../../data/datasources/remote/claude_api_datasource.dart';
@@ -289,6 +290,13 @@ void _initDataSources() {
       sharedPreferences: sl<SharedPreferences>(),
     ),
   );
+
+  // Bookmarks Local Storage
+  sl.registerLazySingleton<IBookmarksLocalDataSource>(
+    () => BookmarksLocalDataSource(
+      hive: sl<HiveInterface>(),
+    ),
+  );
 }
 
 /// Initialize repositories
@@ -327,6 +335,7 @@ void _initRepositories() {
     () => AiTutorRepositoryImpl(
       claudeDataSource: sl<IClaudeApiDataSource>(),
       chatLocalDataSource: sl<IChatLocalDataSource>(),
+      bookmarksLocalDataSource: sl<IBookmarksLocalDataSource>(),
       getCurrentTier: _getCurrentSubscriptionTier,
     ),
   );

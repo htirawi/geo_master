@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/foundation.dart';
 
 /// Chat message entity for AI tutor
@@ -9,6 +11,9 @@ class ChatMessage {
     required this.role,
     required this.createdAt,
     this.isStreaming = false,
+    this.imageData,
+    this.imageMimeType,
+    this.reactions = const [],
   });
 
   final String id;
@@ -16,6 +21,9 @@ class ChatMessage {
   final MessageRole role;
   final DateTime createdAt;
   final bool isStreaming;
+  final Uint8List? imageData;
+  final String? imageMimeType;
+  final List<String> reactions;
 
   /// Check if message is from user
   bool get isUser => role == MessageRole.user;
@@ -23,12 +31,18 @@ class ChatMessage {
   /// Check if message is from assistant
   bool get isAssistant => role == MessageRole.assistant;
 
+  /// Check if message has an image attachment
+  bool get hasImage => imageData != null && imageData!.isNotEmpty;
+
   ChatMessage copyWith({
     String? id,
     String? content,
     MessageRole? role,
     DateTime? createdAt,
     bool? isStreaming,
+    Uint8List? imageData,
+    String? imageMimeType,
+    List<String>? reactions,
   }) {
     return ChatMessage(
       id: id ?? this.id,
@@ -36,6 +50,9 @@ class ChatMessage {
       role: role ?? this.role,
       createdAt: createdAt ?? this.createdAt,
       isStreaming: isStreaming ?? this.isStreaming,
+      imageData: imageData ?? this.imageData,
+      imageMimeType: imageMimeType ?? this.imageMimeType,
+      reactions: reactions ?? this.reactions,
     );
   }
 

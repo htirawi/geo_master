@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import '../../domain/entities/chat_message.dart';
 
 /// Chat message data model for local storage
@@ -8,9 +11,21 @@ class ChatMessageModel {
     required this.role,
     required this.createdAt,
     this.isStreaming = false,
+    this.imageData,
+    this.imageMimeType,
+    this.reactions = const [],
   });
 
   factory ChatMessageModel.fromJson(Map<String, dynamic> json) {
+    Uint8List? imageData;
+    if (json['imageData'] != null) {
+      try {
+        imageData = base64Decode(json['imageData'] as String);
+      } catch (_) {
+        // Ignore decode errors
+      }
+    }
+
     return ChatMessageModel(
       id: json['id'] as String? ?? '',
       content: json['content'] as String? ?? '',
@@ -19,6 +34,12 @@ class ChatMessageModel {
           ? DateTime.parse(json['createdAt'] as String)
           : DateTime.now(),
       isStreaming: json['isStreaming'] as bool? ?? false,
+      imageData: imageData,
+      imageMimeType: json['imageMimeType'] as String?,
+      reactions: (json['reactions'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
     );
   }
 
@@ -29,6 +50,9 @@ class ChatMessageModel {
       role: entity.role,
       createdAt: entity.createdAt,
       isStreaming: entity.isStreaming,
+      imageData: entity.imageData,
+      imageMimeType: entity.imageMimeType,
+      reactions: entity.reactions,
     );
   }
 
@@ -37,6 +61,9 @@ class ChatMessageModel {
   final MessageRole role;
   final DateTime createdAt;
   final bool isStreaming;
+  final Uint8List? imageData;
+  final String? imageMimeType;
+  final List<String> reactions;
 
   Map<String, dynamic> toJson() {
     return {
@@ -45,6 +72,9 @@ class ChatMessageModel {
       'role': role.value,
       'createdAt': createdAt.toIso8601String(),
       'isStreaming': isStreaming,
+      if (imageData != null) 'imageData': base64Encode(imageData!),
+      if (imageMimeType != null) 'imageMimeType': imageMimeType,
+      if (reactions.isNotEmpty) 'reactions': reactions,
     };
   }
 
@@ -55,6 +85,9 @@ class ChatMessageModel {
       role: role,
       createdAt: createdAt,
       isStreaming: isStreaming,
+      imageData: imageData,
+      imageMimeType: imageMimeType,
+      reactions: reactions,
     );
   }
 }
