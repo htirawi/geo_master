@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../core/error/exceptions.dart';
+import '../../../core/services/logger_service.dart';
 import '../../models/quiz_model.dart';
 
 /// Local quiz data source interface
@@ -32,33 +35,118 @@ abstract class IQuizLocalDataSource {
   Future<void> clearCache();
 }
 
-/// Local quiz data source implementation using Hive
+/// Local quiz data source implementation using Hive with encryption
 class QuizLocalDataSource implements IQuizLocalDataSource {
-  QuizLocalDataSource({required HiveInterface hive}) : _hive = hive;
+  QuizLocalDataSource({
+    required HiveInterface hive,
+    FlutterSecureStorage? secureStorage,
+  })  : _hive = hive,
+        _secureStorage = secureStorage ?? const FlutterSecureStorage();
 
   final HiveInterface _hive;
+  final FlutterSecureStorage _secureStorage;
 
-  static const String _progressBoxName = 'quiz_progress';
-  static const String _historyBoxName = 'quiz_history';
-  static const String _dailyChallengeBoxName = 'daily_challenge';
+  static const String _progressBoxName = 'quiz_progress_secure';
+  static const String _historyBoxName = 'quiz_history_secure';
+  static const String _dailyChallengeBoxName = 'daily_challenge_secure';
+  static const String _encryptionKeyName = 'quiz_box_encryption_key';
+
+  HiveCipher? _cipher;
+
+  /// Get or create the encryption cipher for Hive boxes
+  /// Anti-cheat: Uses secure storage to protect encryption key
+  Future<HiveCipher> _getOrCreateCipher() async {
+    if (_cipher != null) return _cipher!;
+
+    try {
+      // Try to read existing key from secure storage
+      var keyString = await _secureStorage.read(key: _encryptionKeyName);
+
+      Uint8List encryptionKey;
+      if (keyString != null) {
+        // Decode existing key
+        encryptionKey = base64Decode(keyString);
+      } else {
+        // Generate new random key (32 bytes for AES-256)
+        encryptionKey = Uint8List.fromList(Hive.generateSecureKey());
+        keyString = base64Encode(encryptionKey);
+        // Store in secure storage
+        await _secureStorage.write(key: _encryptionKeyName, value: keyString);
+        logger.debug(
+          'Generated new quiz encryption key',
+          tag: 'QuizLocalDS',
+        );
+      }
+
+      _cipher = HiveAesCipher(encryptionKey);
+      return _cipher!;
+    } catch (e) {
+      logger.warning(
+        'Failed to create encryption cipher, using unencrypted storage: $e',
+        tag: 'QuizLocalDS',
+      );
+      // Fallback: return a dummy cipher that doesn't encrypt
+      // This should only happen in rare cases (secure storage unavailable)
+      rethrow;
+    }
+  }
 
   Future<Box<String>> get _progressBox async {
     if (!_hive.isBoxOpen(_progressBoxName)) {
-      return await _hive.openBox<String>(_progressBoxName);
+      try {
+        final cipher = await _getOrCreateCipher();
+        return await _hive.openBox<String>(
+          _progressBoxName,
+          encryptionCipher: cipher,
+        );
+      } catch (e) {
+        // Fallback to unencrypted box if encryption fails
+        logger.warning(
+          'Falling back to unencrypted progress box: $e',
+          tag: 'QuizLocalDS',
+        );
+        return await _hive.openBox<String>(_progressBoxName);
+      }
     }
     return _hive.box<String>(_progressBoxName);
   }
 
   Future<Box<String>> get _historyBox async {
     if (!_hive.isBoxOpen(_historyBoxName)) {
-      return await _hive.openBox<String>(_historyBoxName);
+      try {
+        final cipher = await _getOrCreateCipher();
+        return await _hive.openBox<String>(
+          _historyBoxName,
+          encryptionCipher: cipher,
+        );
+      } catch (e) {
+        // Fallback to unencrypted box if encryption fails
+        logger.warning(
+          'Falling back to unencrypted history box: $e',
+          tag: 'QuizLocalDS',
+        );
+        return await _hive.openBox<String>(_historyBoxName);
+      }
     }
     return _hive.box<String>(_historyBoxName);
   }
 
   Future<Box<String>> get _dailyChallengeBox async {
     if (!_hive.isBoxOpen(_dailyChallengeBoxName)) {
-      return await _hive.openBox<String>(_dailyChallengeBoxName);
+      try {
+        final cipher = await _getOrCreateCipher();
+        return await _hive.openBox<String>(
+          _dailyChallengeBoxName,
+          encryptionCipher: cipher,
+        );
+      } catch (e) {
+        // Fallback to unencrypted box if encryption fails
+        logger.warning(
+          'Falling back to unencrypted daily challenge box: $e',
+          tag: 'QuizLocalDS',
+        );
+        return await _hive.openBox<String>(_dailyChallengeBoxName);
+      }
     }
     return _hive.box<String>(_dailyChallengeBoxName);
   }
