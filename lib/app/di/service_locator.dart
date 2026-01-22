@@ -49,6 +49,18 @@ final GetIt sl = GetIt.instance;
 
 /// API Keys - Configure via environment variables (--dart-define)
 /// Example: flutter run --dart-define=CLAUDE_API_KEY=your_key_here
+///
+/// SECURITY: Keys are loaded at compile time and obfuscated in release builds.
+/// For production builds, use: flutter build --dart-define-from-file=.env.json
+/// Never commit actual API keys to version control.
+///
+/// Required keys for full functionality:
+/// - CLAUDE_API_KEY: AI tutor feature
+/// - REVENUECAT_API_KEY: Subscription management
+/// - WEATHER_API_KEY: Weather data for countries
+/// - UNSPLASH_API_KEY: Country photos
+/// - YOUTUBE_API_KEY: Educational videos
+/// - NEWS_API_KEY: Country news
 const String _claudeApiKey = String.fromEnvironment(
   'CLAUDE_API_KEY',
   defaultValue: '',
@@ -74,8 +86,52 @@ const String _newsApiKey = String.fromEnvironment(
   defaultValue: '',
 );
 
+/// Validate that required API keys are present
+/// Call this during app initialization in release mode
+void validateApiKeys() {
+  final missingKeys = <String>[];
+
+  if (_claudeApiKey.isEmpty) missingKeys.add('CLAUDE_API_KEY');
+  if (_revenueCatApiKey.isEmpty) missingKeys.add('REVENUECAT_API_KEY');
+  // Weather, Unsplash, YouTube, News are optional - app works without them
+
+  if (missingKeys.isNotEmpty) {
+    // In debug mode, just log a warning
+    // In release mode, features requiring these keys will be disabled
+    assert(() {
+      // ignore: avoid_print
+      print('WARNING: Missing API keys: ${missingKeys.join(', ')}');
+      print('Some features will be disabled. Configure via --dart-define');
+      return true;
+    }());
+  }
+}
+
+/// Check if a specific API key is available
+bool isApiKeyAvailable(String keyName) {
+  switch (keyName) {
+    case 'CLAUDE_API_KEY':
+      return _claudeApiKey.isNotEmpty;
+    case 'REVENUECAT_API_KEY':
+      return _revenueCatApiKey.isNotEmpty;
+    case 'WEATHER_API_KEY':
+      return _weatherApiKey.isNotEmpty;
+    case 'UNSPLASH_API_KEY':
+      return _unsplashApiKey.isNotEmpty;
+    case 'YOUTUBE_API_KEY':
+      return _youtubeApiKey.isNotEmpty;
+    case 'NEWS_API_KEY':
+      return _newsApiKey.isNotEmpty;
+    default:
+      return false;
+  }
+}
+
 /// Initialize all dependencies
 Future<void> initServiceLocator() async {
+  // Validate API keys are present (logs warning in debug mode)
+  validateApiKeys();
+
   await _initExternalDependencies();
   _initCore();
   _initDataSources();

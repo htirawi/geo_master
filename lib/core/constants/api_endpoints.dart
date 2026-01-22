@@ -16,9 +16,12 @@ abstract final class ApiEndpoints {
   static const String claudeBaseUrl = 'https://api.anthropic.com/v1';
   static const String claudeMessages = '$claudeBaseUrl/messages';
 
-  // Firebase Cloud Functions (placeholder - will be configured per project)
-  static const String cloudFunctionsBaseUrl =
-      'https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net';
+  // Firebase Cloud Functions - configured via environment variable
+  // Use: --dart-define=CLOUD_FUNCTIONS_URL=https://your-region-your-project.cloudfunctions.net
+  static const String cloudFunctionsBaseUrl = String.fromEnvironment(
+    'CLOUD_FUNCTIONS_URL',
+    defaultValue: '',
+  );
 
   // Wikipedia REST API (free, no key required)
   static const String wikipediaBaseUrl = 'https://en.wikipedia.org/api/rest_v1';

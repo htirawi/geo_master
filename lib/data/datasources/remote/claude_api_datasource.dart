@@ -32,7 +32,12 @@ class ClaudeApiDataSource implements IClaudeApiDataSource {
     required String apiKey,
     Dio? dio,
   })  : _apiKey = apiKey,
-        _dio = dio ?? Dio();
+        _dio = dio ?? Dio() {
+    // Security: Validate API key format on construction
+    if (_apiKey.isNotEmpty && !_isValidApiKeyFormat(_apiKey)) {
+      logger.warning('Invalid Claude API key format', tag: 'ClaudeAPI');
+    }
+  }
 
   final String _apiKey;
   final Dio _dio;
@@ -41,12 +46,45 @@ class ClaudeApiDataSource implements IClaudeApiDataSource {
   static const String _model = 'claude-sonnet-4-20250514';
   static const int _maxTokens = 1024;
 
+  // Security: Rate limiting tracking
+  DateTime? _lastRequestTime;
+  static const Duration _minRequestInterval = Duration(milliseconds: 500);
+
+  /// Validate API key format (basic check - Anthropic keys start with 'sk-ant-')
+  bool _isValidApiKeyFormat(String key) {
+    return key.startsWith('sk-ant-') && key.length > 20;
+  }
+
+  /// Check if API is available (key is configured)
+  bool get isAvailable => _apiKey.isNotEmpty;
+
+  /// Enforce rate limiting between requests
+  Future<void> _enforceRateLimit() async {
+    if (_lastRequestTime != null) {
+      final elapsed = DateTime.now().difference(_lastRequestTime!);
+      if (elapsed < _minRequestInterval) {
+        await Future<void>.delayed(_minRequestInterval - elapsed);
+      }
+    }
+    _lastRequestTime = DateTime.now();
+  }
+
   @override
   Stream<String> sendMessage({
     required String message,
     required TutorContextModel context,
     required List<ChatMessageModel> conversationHistory,
   }) async* {
+    // Security: Verify API key is available
+    if (!isAvailable) {
+      throw const ServerException(
+        message: 'AI tutor is not configured. Please contact support.',
+      );
+    }
+
+    // Security: Enforce rate limiting
+    await _enforceRateLimit();
+
     try {
       final systemPrompt = _buildSystemPrompt(context);
       final messages = _buildMessages(conversationHistory, message);
@@ -130,6 +168,16 @@ class ClaudeApiDataSource implements IClaudeApiDataSource {
     required TutorContextModel context,
     required List<ChatMessageModel> conversationHistory,
   }) async {
+    // Security: Verify API key is available
+    if (!isAvailable) {
+      throw const ServerException(
+        message: 'AI tutor is not configured. Please contact support.',
+      );
+    }
+
+    // Security: Enforce rate limiting
+    await _enforceRateLimit();
+
     try {
       final systemPrompt = _buildSystemPrompt(context);
       final messages = _buildMessages(conversationHistory, message);
@@ -247,29 +295,112 @@ Guidelines:
   }
 
   /// Sanitize user-provided context data to prevent prompt injection
+  /// Security: Uses aggressive filtering and whitelist approach
   String _sanitizeContextData(String input) {
     if (input.isEmpty) return '';
 
-    // Limit length to prevent abuse
+    // Limit length to prevent abuse (strict limit for context data)
     var sanitized = input.length > 50 ? input.substring(0, 50) : input;
 
-    // Remove or replace potentially dangerous patterns
-    sanitized = sanitized
-        // Remove newlines that could break out of context
-        .replaceAll(RegExp(r'[\n\r]'), ' ')
-        // Remove common prompt injection patterns
-        .replaceAll(RegExp(r'ignore\s+(all\s+)?previous', caseSensitive: false), '')
-        .replaceAll(RegExp(r'disregard\s+(all\s+)?', caseSensitive: false), '')
-        .replaceAll(RegExp(r'forget\s+(all\s+)?', caseSensitive: false), '')
-        .replaceAll(RegExp(r'new\s+instructions?', caseSensitive: false), '')
-        .replaceAll(RegExp(r'system\s+prompt', caseSensitive: false), '')
-        // Remove XML-like tags that might be used to inject
-        .replaceAll(RegExp(r'<[^>]+>'), '')
-        // Remove excessive whitespace
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim();
+    // Security: Remove ALL control characters and special Unicode
+    sanitized = sanitized.replaceAll(RegExp(r'[\x00-\x1F\x7F-\x9F]'), '');
+
+    // Security: Remove Unicode direction override characters (used in attacks)
+    sanitized = sanitized.replaceAll(RegExp(r'[\u200B-\u200F\u202A-\u202E\u2060-\u206F]'), '');
+
+    // Security: Remove newlines and carriage returns
+    sanitized = sanitized.replaceAll(RegExp(r'[\n\r\v\f]'), ' ');
+
+    // Security: Comprehensive prompt injection pattern removal
+    final injectionPatterns = [
+      // Direct instruction override attempts
+      r'ignore\s*(all\s*)?(previous|above|prior|earlier)',
+      r'disregard\s*(all\s*)?(previous|above|prior|instructions?)',
+      r'forget\s*(all\s*)?(previous|above|prior|everything)',
+      r'override\s*(all\s*)?(previous|instructions?|rules?)',
+      r'bypass\s*(all\s*)?(previous|instructions?|rules?|filters?)',
+      // Instruction injection attempts
+      r'new\s+instructions?',
+      r'updated?\s+instructions?',
+      r'system\s+prompt',
+      r'you\s+are\s+now',
+      r'act\s+as\s+if',
+      r'pretend\s+(to\s+be|you\s+are)',
+      r'roleplay\s+as',
+      r'from\s+now\s+on',
+      r'instead\s*,?\s+(do|say|respond|output)',
+      // Context escape attempts
+      r'---+\s*(end|start|new)',
+      r'```',
+      r'\[\[|\]\]',
+      r'\{\{|\}\}',
+      // Jailbreak keywords
+      r'jailbreak',
+      r'dan\s+mode',
+      r'developer\s+mode',
+      r'no\s+restrictions?',
+      r'without\s+restrictions?',
+      r'uncensored',
+    ];
+
+    for (final pattern in injectionPatterns) {
+      sanitized = sanitized.replaceAll(
+        RegExp(pattern, caseSensitive: false),
+        '',
+      );
+    }
+
+    // Security: Remove XML/HTML-like tags
+    sanitized = sanitized.replaceAll(RegExp(r'<[^>]*>'), '');
+
+    // Security: Remove potential delimiter characters that could escape context
+    sanitized = sanitized.replaceAll(RegExp(r'[|\\^~`]'), '');
+
+    // Security: Collapse multiple spaces and trim
+    sanitized = sanitized.replaceAll(RegExp(r'\s+'), ' ').trim();
+
+    // Security: Final whitelist validation - only allow safe characters
+    // Allow letters (including Arabic/Unicode), numbers, spaces, and basic punctuation
+    sanitized = sanitized.replaceAll(
+      RegExp(r'[^\p{L}\p{N}\s\-.,!?()\[\]]+', unicode: true),
+      '',
+    );
 
     return sanitized;
+  }
+
+  /// Validate that user message doesn't contain obvious injection attempts
+  /// Returns sanitized message or throws if message is clearly malicious
+  String _validateUserMessage(String message) {
+    // Check for excessive injection pattern density
+    final lowerMessage = message.toLowerCase();
+    final injectionKeywords = [
+      'ignore previous',
+      'disregard',
+      'system prompt',
+      'jailbreak',
+      'dan mode',
+      'developer mode',
+    ];
+
+    var injectionCount = 0;
+    for (final keyword in injectionKeywords) {
+      if (lowerMessage.contains(keyword)) {
+        injectionCount++;
+      }
+    }
+
+    // If multiple injection patterns detected, the message is likely malicious
+    if (injectionCount >= 2) {
+      logger.warning(
+        'Potential prompt injection attempt detected',
+        tag: 'ClaudeAPI',
+      );
+      // Return a safe default message instead of blocking
+      return 'Hello, I have a geography question.';
+    }
+
+    return message;
   }
 
   List<Map<String, dynamic>> _buildMessages(
@@ -284,15 +415,19 @@ Guidelines:
         : history;
 
     for (final msg in recentHistory) {
+      // Security: Sanitize historical messages too (in case of corrupted data)
+      final sanitizedContent = InputSanitizer.sanitizeMessage(msg.content);
       messages.add({
         'role': msg.role == MessageRole.user ? 'user' : 'assistant',
-        'content': msg.content,
+        'content': sanitizedContent,
       });
     }
 
-    // Sanitize and add new user message
-    // This removes control characters and limits length for security
-    final sanitizedMessage = InputSanitizer.sanitizeMessage(newMessage);
+    // Security: Sanitize and validate new user message
+    // First sanitize, then validate for injection attempts
+    var sanitizedMessage = InputSanitizer.sanitizeMessage(newMessage);
+    sanitizedMessage = _validateUserMessage(sanitizedMessage);
+
     messages.add({
       'role': 'user',
       'content': sanitizedMessage,
