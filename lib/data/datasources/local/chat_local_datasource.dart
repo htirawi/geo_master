@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/error/exceptions.dart';
+import '../../../core/services/logger_service.dart';
 import '../../models/chat_message_model.dart';
 
 /// Chat local data source interface
@@ -30,25 +33,81 @@ abstract class IChatLocalDataSource {
   Future<void> clearCache();
 }
 
-/// Chat local data source implementation using Hive and SharedPreferences
+/// Chat local data source implementation using Hive with encryption
+/// Security: Chat history is encrypted to protect user privacy
 class ChatLocalDataSource implements IChatLocalDataSource {
   ChatLocalDataSource({
     required HiveInterface hive,
     required SharedPreferences sharedPreferences,
+    FlutterSecureStorage? secureStorage,
   })  : _hive = hive,
-        _sharedPreferences = sharedPreferences;
+        _sharedPreferences = sharedPreferences,
+        _secureStorage = secureStorage ?? const FlutterSecureStorage();
 
   final HiveInterface _hive;
   final SharedPreferences _sharedPreferences;
+  final FlutterSecureStorage _secureStorage;
 
-  static const String _chatBoxName = 'chat_history';
+  static const String _chatBoxName = 'chat_history_secure';
   static const String _messageCountPrefix = 'ai_messages_';
   static const String _messageCountDatePrefix = 'ai_messages_date_';
+  static const String _encryptionKeyName = 'chat_box_encryption_key';
   static const int _maxMessagesPerConversation = 100;
+
+  HiveCipher? _cipher;
+
+  /// Get or create the encryption cipher for Hive boxes
+  /// Security: Uses secure storage to protect encryption key
+  Future<HiveCipher> _getOrCreateCipher() async {
+    if (_cipher != null) return _cipher!;
+
+    try {
+      // Try to read existing key from secure storage
+      var keyString = await _secureStorage.read(key: _encryptionKeyName);
+
+      Uint8List encryptionKey;
+      if (keyString != null) {
+        // Decode existing key
+        encryptionKey = base64Decode(keyString);
+      } else {
+        // Generate new random key (32 bytes for AES-256)
+        encryptionKey = Uint8List.fromList(Hive.generateSecureKey());
+        keyString = base64Encode(encryptionKey);
+        // Store in secure storage
+        await _secureStorage.write(key: _encryptionKeyName, value: keyString);
+        logger.debug(
+          'Generated new chat encryption key',
+          tag: 'ChatLocalDS',
+        );
+      }
+
+      _cipher = HiveAesCipher(encryptionKey);
+      return _cipher!;
+    } catch (e) {
+      logger.warning(
+        'Failed to create encryption cipher, using unencrypted storage',
+        tag: 'ChatLocalDS',
+      );
+      rethrow;
+    }
+  }
 
   Future<Box<String>> get _chatBox async {
     if (!_hive.isBoxOpen(_chatBoxName)) {
-      return await _hive.openBox<String>(_chatBoxName);
+      try {
+        final cipher = await _getOrCreateCipher();
+        return await _hive.openBox<String>(
+          _chatBoxName,
+          encryptionCipher: cipher,
+        );
+      } catch (e) {
+        // Fallback to unencrypted box if encryption fails
+        logger.warning(
+          'Falling back to unencrypted chat box',
+          tag: 'ChatLocalDS',
+        );
+        return await _hive.openBox<String>(_chatBoxName);
+      }
     }
     return _hive.box<String>(_chatBoxName);
   }

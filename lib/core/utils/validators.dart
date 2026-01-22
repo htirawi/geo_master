@@ -63,14 +63,22 @@ class Validators {
     return ValidationResult.valid();
   }
 
-  /// Validate password for sign-in (less strict - just check not empty)
+  /// Validate password for sign-in
+  /// Security: Consistent minimum length requirement with sign-up
   static ValidationResult validatePasswordForSignIn(String? password) {
     if (password == null || password.isEmpty) {
       return ValidationResult.invalid('Password is required');
     }
 
-    if (password.length < 6) {
-      return ValidationResult.invalid('Password is too short');
+    // Security: Use same minimum length as sign-up to prevent weak passwords
+    if (password.length < minPasswordLength) {
+      return ValidationResult.invalid(
+        'Password must be at least $minPasswordLength characters',
+      );
+    }
+
+    if (password.length > maxPasswordLength) {
+      return ValidationResult.invalid('Password is too long');
     }
 
     return ValidationResult.valid();

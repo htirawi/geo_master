@@ -63,6 +63,14 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
   final fb.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
+  // Security: Rate limiting for password reset
+  final Map<String, DateTime> _passwordResetAttempts = {};
+  static const Duration _passwordResetCooldown = Duration(minutes: 2);
+
+  // Security: Track anonymous sign-ins for rate limiting
+  DateTime? _lastAnonymousSignIn;
+  static const Duration _anonymousSignInCooldown = Duration(seconds: 30);
+
   @override
   Stream<User?> get authStateChanges {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
@@ -119,8 +127,9 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
       );
     } catch (e) {
       if (e is AuthException) rethrow;
-      throw AuthException(
-        message: 'An error occurred during Google sign in: $e',
+      // Security: Don't expose internal error details
+      throw const AuthException(
+        message: 'An error occurred during Google sign in',
         code: 'unknown',
       );
     }
@@ -185,8 +194,9 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
       );
     } catch (e) {
       if (e is AuthException) rethrow;
-      throw AuthException(
-        message: 'An error occurred during Apple sign in: $e',
+      // Security: Don't expose internal error details
+      throw const AuthException(
+        message: 'An error occurred during Apple sign in',
         code: 'unknown',
       );
     }
@@ -237,8 +247,9 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
       );
     } catch (e) {
       if (e is AuthException) rethrow;
-      throw AuthException(
-        message: 'An error occurred during sign in: $e',
+      // Security: Don't expose internal error details
+      throw const AuthException(
+        message: 'An error occurred during sign in',
         code: 'unknown',
       );
     }
@@ -313,8 +324,9 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
       );
     } catch (e) {
       if (e is AuthException) rethrow;
-      throw AuthException(
-        message: 'An error occurred during sign up: $e',
+      // Security: Don't expose internal error details
+      throw const AuthException(
+        message: 'An error occurred during sign up',
         code: 'unknown',
       );
     }
@@ -322,8 +334,20 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
 
   @override
   Future<User> signInAnonymously() async {
+    // Security: Rate limit anonymous sign-ins to prevent abuse
+    if (_lastAnonymousSignIn != null) {
+      final elapsed = DateTime.now().difference(_lastAnonymousSignIn!);
+      if (elapsed < _anonymousSignInCooldown) {
+        throw const AuthException(
+          message: 'Please wait before trying again',
+          code: 'rate_limited',
+        );
+      }
+    }
+
     try {
       final userCredential = await _firebaseAuth.signInAnonymously();
+      _lastAnonymousSignIn = DateTime.now();
 
       final firebaseUser = userCredential.user;
       if (firebaseUser == null) {
@@ -341,8 +365,8 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
       );
     } catch (e) {
       if (e is AuthException) rethrow;
-      throw AuthException(
-        message: 'An error occurred during anonymous sign in: $e',
+      throw const AuthException(
+        message: 'An error occurred during anonymous sign in',
         code: 'unknown',
       );
     }
@@ -363,8 +387,9 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
       );
     } catch (e) {
       if (e is AuthException) rethrow;
-      throw AuthException(
-        message: 'An error occurred during sign out: $e',
+      // Security: Don't expose internal error details
+      throw const AuthException(
+        message: 'An error occurred during sign out',
         code: 'unknown',
       );
     }
@@ -372,8 +397,40 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
 
   @override
   Future<void> sendPasswordResetEmail(String email) async {
+    // Security: Rate limit password reset requests per email
+    final normalizedEmail = email.trim().toLowerCase();
+    final lastAttempt = _passwordResetAttempts[normalizedEmail];
+
+    if (lastAttempt != null) {
+      final elapsed = DateTime.now().difference(lastAttempt);
+      if (elapsed < _passwordResetCooldown) {
+        final remainingSeconds =
+            (_passwordResetCooldown - elapsed).inSeconds;
+        throw AuthException(
+          message: 'Please wait $remainingSeconds seconds before requesting another reset',
+          code: 'rate_limited',
+        );
+      }
+    }
+
+    // Security: Validate email format
+    final emailValidation = Validators.validateEmail(email);
+    if (!emailValidation.isValid) {
+      throw AuthException(
+        message: emailValidation.errorMessage!,
+        code: 'invalid-email',
+      );
+    }
+
     try {
-      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      await _firebaseAuth.sendPasswordResetEmail(
+        email: Validators.sanitizeEmail(email),
+      );
+      // Record successful request for rate limiting
+      _passwordResetAttempts[normalizedEmail] = DateTime.now();
+
+      // Security: Clean up old entries to prevent memory leak
+      _cleanupPasswordResetAttempts();
     } on fb.FirebaseAuthException catch (e) {
       throw AuthException(
         message: _getErrorMessage(e.code),
@@ -381,11 +438,19 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
       );
     } catch (e) {
       if (e is AuthException) rethrow;
-      throw AuthException(
-        message: 'An error occurred while sending password reset email: $e',
+      throw const AuthException(
+        message: 'An error occurred while sending password reset email',
         code: 'unknown',
       );
     }
+  }
+
+  /// Clean up old password reset attempt records
+  void _cleanupPasswordResetAttempts() {
+    final now = DateTime.now();
+    _passwordResetAttempts.removeWhere((_, timestamp) {
+      return now.difference(timestamp) > const Duration(hours: 1);
+    });
   }
 
   @override
@@ -438,8 +503,9 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
       );
     } catch (e) {
       if (e is AuthException) rethrow;
-      throw AuthException(
-        message: 'An error occurred while updating profile: $e',
+      // Security: Don't expose internal error details
+      throw const AuthException(
+        message: 'An error occurred while updating profile',
         code: 'unknown',
       );
     }
@@ -463,8 +529,9 @@ class FirebaseAuthDataSource implements IFirebaseAuthDataSource {
       );
     } catch (e) {
       if (e is AuthException) rethrow;
-      throw AuthException(
-        message: 'An error occurred while deleting account: $e',
+      // Security: Don't expose internal error details
+      throw const AuthException(
+        message: 'An error occurred while deleting account',
         code: 'unknown',
       );
     }
