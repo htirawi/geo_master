@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../../core/constants/arabic_country_names.dart';
+
 /// Country entity
 @immutable
 class Country {
@@ -58,6 +60,19 @@ class Country {
   String? getDisplayCapital({required bool isArabic}) {
     if (isArabic && capitalArabic != null) return capitalArabic;
     return capital;
+  }
+
+  /// Get display region based on locale
+  String getDisplayRegion({required bool isArabic}) {
+    if (isArabic) return ArabicCountryNames.getRegion(region);
+    return region;
+  }
+
+  /// Get display subregion based on locale
+  String? getDisplaySubregion({required bool isArabic}) {
+    if (subregion == null) return null;
+    if (isArabic) return ArabicCountryNames.getSubregion(subregion!);
+    return subregion;
   }
 
   /// Get formatted population

@@ -1958,11 +1958,65 @@ abstract class AppLocalizations {
   /// **'Delete Account'**
   String get deleteAccount;
 
+  /// No description provided for @enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get enabled;
+
+  /// No description provided for @disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get disabled;
+
+  /// No description provided for @pushNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get pushNotifications;
+
+  /// No description provided for @hapticFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Haptic Feedback'**
+  String get hapticFeedback;
+
+  /// No description provided for @createAccountDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account to sync your progress across devices and unlock additional features.'**
+  String get createAccountDescription;
+
+  /// No description provided for @difficultyEasyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect for beginners'**
+  String get difficultyEasyDesc;
+
+  /// No description provided for @difficultyMediumDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced challenge'**
+  String get difficultyMediumDesc;
+
+  /// No description provided for @difficultyHardDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'For geography experts'**
+  String get difficultyHardDesc;
+
   /// No description provided for @premium.
   ///
   /// In en, this message translates to:
   /// **'Premium'**
   String get premium;
+
+  /// No description provided for @premiumExplorer.
+  ///
+  /// In en, this message translates to:
+  /// **'PREMIUM EXPLORER'**
+  String get premiumExplorer;
 
   /// No description provided for @goPremium.
   ///
@@ -3199,6 +3253,564 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search for any country in the world'**
   String get searchForCountry;
+
+  /// No description provided for @flagAndColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Flag & Colors'**
+  String get flagAndColors;
+
+  /// No description provided for @flagColorsMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'What the Colors Mean'**
+  String get flagColorsMeaning;
+
+  /// No description provided for @flagSymbolism.
+  ///
+  /// In en, this message translates to:
+  /// **'Symbolism'**
+  String get flagSymbolism;
+
+  /// No description provided for @nationalFlag.
+  ///
+  /// In en, this message translates to:
+  /// **'National Flag'**
+  String get nationalFlag;
+
+  /// No description provided for @tapToLearnMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to learn about the flag colors'**
+  String get tapToLearnMore;
+
+  /// No description provided for @colorMeaningUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Color meanings not available for this flag'**
+  String get colorMeaningUnavailable;
+
+  /// No description provided for @additionalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Information'**
+  String get additionalInfo;
+
+  /// No description provided for @hexCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Hex Code'**
+  String get hexCode;
+
+  /// No description provided for @copiedToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get copiedToClipboard;
+
+  /// Title for game modes section
+  ///
+  /// In en, this message translates to:
+  /// **'Game Modes'**
+  String get gameModes;
+
+  /// Title for quiz topic selection
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Topic'**
+  String get chooseTopic;
+
+  /// Quick quiz mode name
+  ///
+  /// In en, this message translates to:
+  /// **'Quick'**
+  String get quickQuizMode;
+
+  /// Quick quiz question count
+  ///
+  /// In en, this message translates to:
+  /// **'5 Qs'**
+  String get quickQuizQuestions;
+
+  /// Timed blitz mode name
+  ///
+  /// In en, this message translates to:
+  /// **'Blitz'**
+  String get timedBlitzMode;
+
+  /// Timed blitz XP multiplier
+  ///
+  /// In en, this message translates to:
+  /// **'2× XP'**
+  String get timedBlitzMultiplier;
+
+  /// Continent challenge mode name
+  ///
+  /// In en, this message translates to:
+  /// **'Continent'**
+  String get continentChallengeMode;
+
+  /// Marathon mode name
+  ///
+  /// In en, this message translates to:
+  /// **'Marathon'**
+  String get marathonMode;
+
+  /// Marathon question count
+  ///
+  /// In en, this message translates to:
+  /// **'50 Qs'**
+  String get marathonQuestions;
+
+  /// Study mode name
+  ///
+  /// In en, this message translates to:
+  /// **'Study'**
+  String get studyModeLabel;
+
+  /// Study mode no XP indicator
+  ///
+  /// In en, this message translates to:
+  /// **'No XP'**
+  String get studyModeNoXp;
+
+  /// Reverse flags quiz title
+  ///
+  /// In en, this message translates to:
+  /// **'Reverse Flags'**
+  String get reverseFlagsQuiz;
+
+  /// Reverse flags quiz description
+  ///
+  /// In en, this message translates to:
+  /// **'Select the flag for the country'**
+  String get reverseFlagsDescription;
+
+  /// Languages quiz title
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get languagesQuizTitle;
+
+  /// Languages quiz description
+  ///
+  /// In en, this message translates to:
+  /// **'Identify official languages'**
+  String get languagesQuizDescription;
+
+  /// Neighbors quiz title
+  ///
+  /// In en, this message translates to:
+  /// **'Neighbors'**
+  String get neighborsQuiz;
+
+  /// Neighbors quiz description
+  ///
+  /// In en, this message translates to:
+  /// **'Select neighboring countries'**
+  String get neighborsQuizDescription;
+
+  /// Mixed quiz title
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed'**
+  String get mixedQuizTitle;
+
+  /// Mixed quiz description
+  ///
+  /// In en, this message translates to:
+  /// **'Random mix of all topics'**
+  String get mixedQuizDescription;
+
+  /// Quick quiz session type name
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Quiz'**
+  String get sessionTypeQuickQuiz;
+
+  /// Continent challenge session type name
+  ///
+  /// In en, this message translates to:
+  /// **'Continent Challenge'**
+  String get sessionTypeContinentChallenge;
+
+  /// Timed blitz session type name
+  ///
+  /// In en, this message translates to:
+  /// **'Timed Blitz'**
+  String get sessionTypeTimedBlitz;
+
+  /// Daily challenge session type name
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Challenge'**
+  String get sessionTypeDailyChallenge;
+
+  /// Marathon session type name
+  ///
+  /// In en, this message translates to:
+  /// **'Marathon'**
+  String get sessionTypeMarathon;
+
+  /// Study mode session type name
+  ///
+  /// In en, this message translates to:
+  /// **'Study Mode'**
+  String get sessionTypeStudyMode;
+
+  /// Standard quiz session type name
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz'**
+  String get sessionTypeStandard;
+
+  /// Title for continent selection bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Select Continent'**
+  String get selectContinent;
+
+  /// Title for exit quiz confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Exit Quiz?'**
+  String get exitQuizTitle;
+
+  /// Message for exit quiz confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress will be lost. Are you sure you want to exit?'**
+  String get exitQuizMessage;
+
+  /// Exit button text
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get exitButton;
+
+  /// Use hint button text
+  ///
+  /// In en, this message translates to:
+  /// **'Use Hint (-5 XP)'**
+  String get useHint;
+
+  /// Confirm multi-select answers button
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Answers'**
+  String get confirmAnswers;
+
+  /// Show answer button for study mode
+  ///
+  /// In en, this message translates to:
+  /// **'Show Answer'**
+  String get showAnswer;
+
+  /// Multi-select instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Select {count} answers'**
+  String selectAnswersCount(int count);
+
+  /// Explanation section title
+  ///
+  /// In en, this message translates to:
+  /// **'Explanation'**
+  String get explanation;
+
+  /// Fun fact section title
+  ///
+  /// In en, this message translates to:
+  /// **'Did you know?'**
+  String get didYouKnow;
+
+  /// Game over title
+  ///
+  /// In en, this message translates to:
+  /// **'Game Over!'**
+  String get gameOver;
+
+  /// Perfect score celebration text
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Score!'**
+  String get perfectScoreTitle;
+
+  /// No description provided for @gradeAPlus.
+  ///
+  /// In en, this message translates to:
+  /// **'A+'**
+  String get gradeAPlus;
+
+  /// No description provided for @gradeA.
+  ///
+  /// In en, this message translates to:
+  /// **'A'**
+  String get gradeA;
+
+  /// No description provided for @gradeB.
+  ///
+  /// In en, this message translates to:
+  /// **'B'**
+  String get gradeB;
+
+  /// No description provided for @gradeC.
+  ///
+  /// In en, this message translates to:
+  /// **'C'**
+  String get gradeC;
+
+  /// No description provided for @gradeD.
+  ///
+  /// In en, this message translates to:
+  /// **'D'**
+  String get gradeD;
+
+  /// No description provided for @gradeF.
+  ///
+  /// In en, this message translates to:
+  /// **'F'**
+  String get gradeF;
+
+  /// Grade A+ display name
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent+'**
+  String get gradeExcellentPlus;
+
+  /// Grade A display name
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get gradeExcellent;
+
+  /// Grade B display name
+  ///
+  /// In en, this message translates to:
+  /// **'Very Good'**
+  String get gradeVeryGood;
+
+  /// Grade C display name
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get gradeGood;
+
+  /// Grade D display name
+  ///
+  /// In en, this message translates to:
+  /// **'Pass'**
+  String get gradePass;
+
+  /// Grade F display name
+  ///
+  /// In en, this message translates to:
+  /// **'Fail'**
+  String get gradeFail;
+
+  /// Level stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get levelLabel;
+
+  /// Mode stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Mode'**
+  String get modeLabel;
+
+  /// Bonuses section title
+  ///
+  /// In en, this message translates to:
+  /// **'Bonuses & Penalties'**
+  String get bonusesAndPenalties;
+
+  /// Streak bonus label
+  ///
+  /// In en, this message translates to:
+  /// **'Streak Bonus'**
+  String get streakBonus;
+
+  /// Speed bonus label
+  ///
+  /// In en, this message translates to:
+  /// **'Speed Bonus'**
+  String get speedBonus;
+
+  /// Hints used label
+  ///
+  /// In en, this message translates to:
+  /// **'Hints'**
+  String get hintsLabel;
+
+  /// Perfect streak label
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Streak'**
+  String get perfectStreakLabel;
+
+  /// Performance analysis section title
+  ///
+  /// In en, this message translates to:
+  /// **'Performance Analysis'**
+  String get performanceAnalysis;
+
+  /// Strong areas section title
+  ///
+  /// In en, this message translates to:
+  /// **'Strong Areas'**
+  String get strongAreas;
+
+  /// Weak areas section title
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Improvement'**
+  String get needsImprovement;
+
+  /// New achievements section title
+  ///
+  /// In en, this message translates to:
+  /// **'New Achievements!'**
+  String get newAchievements;
+
+  /// Perfect quiz achievement name
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Quiz!'**
+  String get achievementPerfectQuiz;
+
+  /// Marathon master achievement name
+  ///
+  /// In en, this message translates to:
+  /// **'Marathon Master!'**
+  String get achievementMarathonMaster;
+
+  /// Daily challenger achievement name
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Challenger!'**
+  String get achievementDailyChallenger;
+
+  /// Speed demon achievement name
+  ///
+  /// In en, this message translates to:
+  /// **'Speed Demon!'**
+  String get achievementSpeedDemon;
+
+  /// Streak master achievement name
+  ///
+  /// In en, this message translates to:
+  /// **'Streak Master!'**
+  String get achievementStreakMaster;
+
+  /// No description provided for @areaCapitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Capitals'**
+  String get areaCapitals;
+
+  /// No description provided for @areaFlags.
+  ///
+  /// In en, this message translates to:
+  /// **'Flags'**
+  String get areaFlags;
+
+  /// No description provided for @areaReverseFlags.
+  ///
+  /// In en, this message translates to:
+  /// **'Reverse Flags'**
+  String get areaReverseFlags;
+
+  /// No description provided for @areaMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Maps'**
+  String get areaMaps;
+
+  /// No description provided for @areaPopulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Population'**
+  String get areaPopulation;
+
+  /// No description provided for @areaCurrencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Currencies'**
+  String get areaCurrencies;
+
+  /// No description provided for @areaLanguages.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get areaLanguages;
+
+  /// No description provided for @areaBorders.
+  ///
+  /// In en, this message translates to:
+  /// **'Borders'**
+  String get areaBorders;
+
+  /// No description provided for @areaTimezones.
+  ///
+  /// In en, this message translates to:
+  /// **'Timezones'**
+  String get areaTimezones;
+
+  /// XP multiplier info text
+  ///
+  /// In en, this message translates to:
+  /// **'{multiplier}x multiplier from {sessionType}'**
+  String xpMultiplierInfo(String multiplier, String sessionType);
+
+  /// Streak bonus percentage
+  ///
+  /// In en, this message translates to:
+  /// **'+{percent}% Streak Bonus'**
+  String streakBonusPercent(int percent);
+
+  /// No description provided for @streak3Days.
+  ///
+  /// In en, this message translates to:
+  /// **'3 Day Streak: +10% XP'**
+  String get streak3Days;
+
+  /// No description provided for @streak7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'7 Day Streak: +25% XP'**
+  String get streak7Days;
+
+  /// No description provided for @streak14Days.
+  ///
+  /// In en, this message translates to:
+  /// **'14 Day Streak: +50% XP'**
+  String get streak14Days;
+
+  /// No description provided for @streak30Days.
+  ///
+  /// In en, this message translates to:
+  /// **'30 Day Streak: +100% XP'**
+  String get streak30Days;
+
+  /// Lives remaining display
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Lives'**
+  String livesRemaining(int count);
+
+  /// Game over reason for marathon
+  ///
+  /// In en, this message translates to:
+  /// **'Out of lives!'**
+  String get outOfLives;
+
+  /// Game over reason for timed blitz
+  ///
+  /// In en, this message translates to:
+  /// **'Time\'s up!'**
+  String get timeUp;
 }
 
 class _AppLocalizationsDelegate

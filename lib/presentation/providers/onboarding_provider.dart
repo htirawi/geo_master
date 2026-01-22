@@ -9,7 +9,7 @@ class OnboardingState {
     this.hasSelectedLanguage = false,
     this.hasCompletedOnboarding = false,
     this.needsPersonalization = true,
-    this.selectedLanguage = 'en',
+    this.selectedLanguage = 'ar', // Arabic as default
   });
 
   final bool hasSelectedLanguage;
@@ -53,7 +53,7 @@ class OnboardingStateNotifier extends StateNotifier<AsyncValue<OnboardingState>>
         _prefs.getBool(_keyOnboardingCompleted) ?? false;
     final needsPersonalization =
         _prefs.getBool(_keyNeedsPersonalization) ?? true;
-    final selectedLanguage = _prefs.getString(_keySelectedLanguage) ?? 'en';
+    final selectedLanguage = _prefs.getString(_keySelectedLanguage) ?? 'ar';
 
     state = AsyncValue.data(
       OnboardingState(
@@ -124,7 +124,7 @@ final onboardingStateProvider =
 /// Selected language provider
 final selectedLanguageProvider = Provider<String>((ref) {
   final onboardingState = ref.watch(onboardingStateProvider);
-  return onboardingState.valueOrNull?.selectedLanguage ?? 'en';
+  return onboardingState.valueOrNull?.selectedLanguage ?? 'ar';
 });
 
 /// Is Arabic provider

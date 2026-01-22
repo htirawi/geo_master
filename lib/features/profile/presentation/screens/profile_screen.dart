@@ -5,14 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../app/routes/routes.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/utils/responsive_utils.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/auth_provider.dart';
+import '../../../../presentation/providers/locale_provider.dart';
 import '../../../../presentation/providers/theme_provider.dart';
+import '../../../../presentation/providers/user_provider.dart';
 
 /// User profile as Traveler's Passport - Explorer Theme
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -29,8 +37,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final user = ref.watch(currentUserProvider);
+    final userProgress = ref.watch(userProgressProvider);
+    final userPrefs = ref.watch(userPreferencesProvider);
     final themeMode = ref.watch(themeModeProvider);
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final currentLocale = ref.watch(localeProvider);
+    final isArabic = currentLocale.languageCode == 'ar';
 
     return Scaffold(
       body: CustomScrollView(
@@ -54,14 +65,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 child: Column(
                   children: [
                     // Traveler Stats Card
-                    _TravelerStatsCard(isArabic: isArabic)
+                    _TravelerStatsCard(
+                      isArabic: isArabic,
+                      countriesLearned: userProgress.countriesLearned,
+                      achievementsCount: userProgress.unlockedAchievements.length,
+                      currentStreak: userProgress.currentStreak,
+                    )
                         .animate()
                         .fadeIn(delay: 200.ms, duration: 500.ms)
                         .slideY(begin: 0.1, end: 0),
                     const SizedBox(height: AppDimensions.spacingLG),
                     // Premium banner (if not premium)
                     if (!(user?.isPremium ?? false)) ...[
-                      _ExpeditionUpgradeCard(isArabic: isArabic)
+                      _ExpeditionUpgradeCard(
+                        isArabic: isArabic,
+                        onTap: () => _showPremiumUpgrade(context),
+                      )
                           .animate()
                           .fadeIn(delay: 300.ms, duration: 500.ms)
                           .slideY(begin: 0.1, end: 0),
@@ -77,8 +96,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           icon: Icons.language,
                           iconColor: AppColors.ocean,
                           title: l10n.language,
-                          subtitle: l10n.english,
-                          onTap: () => _showLanguageDialog(context),
+                          subtitle: isArabic ? l10n.arabic : l10n.english,
+                          onTap: () => _showLanguageDialog(context, l10n),
                         ),
                         _PassportItem(
                           icon: Icons.dark_mode,
@@ -91,7 +110,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           icon: Icons.notifications_active,
                           iconColor: AppColors.sunset,
                           title: l10n.notifications,
-                          onTap: HapticFeedback.lightImpact,
+                          subtitle: userPrefs.notificationsEnabled
+                              ? l10n.enabled
+                              : l10n.disabled,
+                          onTap: () => _showNotificationsDialog(context, l10n),
                         ),
                       ],
                     )
@@ -109,15 +131,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           icon: Icons.terrain,
                           iconColor: AppColors.forest,
                           title: l10n.difficulty,
-                          subtitle: l10n.difficultyMedium,
-                          onTap: HapticFeedback.lightImpact,
+                          subtitle: _getDifficultyLabel(userPrefs.difficultyLevel, l10n),
+                          onTap: () => _showDifficultyDialog(context, l10n),
                         ),
                         _PassportItem(
                           icon: Icons.flag,
                           iconColor: AppColors.secondary,
                           title: l10n.dailyGoal,
-                          subtitle: '15 ${l10n.minutesPerDay}',
-                          onTap: HapticFeedback.lightImpact,
+                          subtitle: '${userPrefs.dailyGoalMinutes} ${l10n.minutesPerDay}',
+                          onTap: () => _showDailyGoalDialog(context, l10n),
                         ),
                       ],
                     )
@@ -136,25 +158,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             icon: Icons.person_add,
                             iconColor: AppColors.tertiary,
                             title: l10n.createAccount,
-                            onTap: HapticFeedback.lightImpact,
+                            onTap: () => _showCreateAccountDialog(context, l10n),
                           ),
                         _PassportItem(
                           icon: Icons.privacy_tip,
                           iconColor: AppColors.info,
                           title: l10n.privacyPolicy,
-                          onTap: HapticFeedback.lightImpact,
+                          onTap: () => _launchUrl(_privacyPolicyUrl),
                         ),
                         _PassportItem(
                           icon: Icons.description,
                           iconColor: AppColors.earth,
                           title: l10n.termsOfService,
-                          onTap: HapticFeedback.lightImpact,
+                          onTap: () => _launchUrl(_termsOfServiceUrl),
                         ),
                         _PassportItem(
                           icon: Icons.help_center,
                           iconColor: AppColors.primary,
                           title: l10n.helpAndSupport,
-                          onTap: HapticFeedback.lightImpact,
+                          onTap: () => _showHelpDialog(context, l10n),
                         ),
                       ],
                     )
@@ -187,6 +209,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
+  // URL constants
+  static const String _privacyPolicyUrl = 'https://geomaster.app/privacy';
+  static const String _termsOfServiceUrl = 'https://geomaster.app/terms';
+  static const String _supportEmail = 'support@geomaster.app';
+
   String _getThemeLabel(ThemeMode mode, AppLocalizations l10n) {
     switch (mode) {
       case ThemeMode.light:
@@ -198,9 +225,433 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
   }
 
-  void _showLanguageDialog(BuildContext context) {
-    HapticFeedback.lightImpact();
+  String _getDifficultyLabel(String difficultyLevel, AppLocalizations l10n) {
+    switch (difficultyLevel) {
+      case 'easy':
+        return l10n.difficultyEasy;
+      case 'medium':
+        return l10n.difficultyMedium;
+      case 'hard':
+        return l10n.difficultyHard;
+      default:
+        return l10n.difficultyMedium;
+    }
   }
+
+  Future<void> _launchUrl(String url) async {
+    HapticFeedback.lightImpact();
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  void _showLanguageDialog(BuildContext context, AppLocalizations l10n) {
+    HapticFeedback.lightImpact();
+    final currentLocale = ref.read(localeProvider);
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.ocean.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.language, color: AppColors.ocean),
+            ),
+            const SizedBox(width: 12),
+            Text(l10n.language),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _LanguageOption(
+              icon: Icons.translate,
+              title: l10n.english,
+              subtitle: 'English',
+              isSelected: currentLocale.languageCode == 'en',
+              onTap: () {
+                HapticFeedback.selectionClick();
+                ref.read(localeNotifierProvider).setLocale(const Locale('en'));
+                Navigator.pop(dialogContext);
+              },
+            ),
+            const SizedBox(height: 8),
+            _LanguageOption(
+              icon: Icons.translate,
+              title: l10n.arabic,
+              subtitle: 'العربية',
+              isSelected: currentLocale.languageCode == 'ar',
+              onTap: () {
+                HapticFeedback.selectionClick();
+                ref.read(localeNotifierProvider).setLocale(const Locale('ar'));
+                Navigator.pop(dialogContext);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showNotificationsDialog(BuildContext context, AppLocalizations l10n) {
+    HapticFeedback.lightImpact();
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => Consumer(
+        builder: (context, dialogRef, _) {
+          final userPrefs = dialogRef.watch(userPreferencesProvider);
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.sunset.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.notifications_active, color: AppColors.sunset),
+                ),
+                const SizedBox(width: 12),
+                Text(l10n.notifications),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _SwitchOption(
+                  icon: Icons.notifications,
+                  title: l10n.pushNotifications,
+                  value: userPrefs.notificationsEnabled,
+                  onChanged: (value) {
+                    HapticFeedback.selectionClick();
+                    final updatedPrefs = userPrefs.copyWith(notificationsEnabled: value);
+                    dialogRef.read(userProfileProvider.notifier).updatePreferences(updatedPrefs);
+                  },
+                ),
+                const SizedBox(height: 12),
+                _SwitchOption(
+                  icon: Icons.volume_up,
+                  title: l10n.soundEffects,
+                  value: userPrefs.soundEnabled,
+                  onChanged: (value) {
+                    HapticFeedback.selectionClick();
+                    final updatedPrefs = userPrefs.copyWith(soundEnabled: value);
+                    dialogRef.read(userProfileProvider.notifier).updatePreferences(updatedPrefs);
+                  },
+                ),
+                const SizedBox(height: 12),
+                _SwitchOption(
+                  icon: Icons.vibration,
+                  title: l10n.hapticFeedback,
+                  value: userPrefs.hapticsEnabled,
+                  onChanged: (value) {
+                    HapticFeedback.selectionClick();
+                    final updatedPrefs = userPrefs.copyWith(hapticsEnabled: value);
+                    dialogRef.read(userProfileProvider.notifier).updatePreferences(updatedPrefs);
+                  },
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(l10n.done),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  void _showDifficultyDialog(BuildContext context, AppLocalizations l10n) {
+    HapticFeedback.lightImpact();
+    final userPrefs = ref.read(userPreferencesProvider);
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.forest.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.terrain, color: AppColors.forest),
+            ),
+            const SizedBox(width: 12),
+            Text(l10n.difficulty),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _DifficultyOption(
+              icon: Icons.sentiment_satisfied,
+              title: l10n.difficultyEasy,
+              subtitle: l10n.difficultyEasyDesc,
+              color: AppColors.difficultyEasy,
+              isSelected: userPrefs.difficultyLevel == 'easy',
+              onTap: () {
+                HapticFeedback.selectionClick();
+                final updatedPrefs = userPrefs.copyWith(difficultyLevel: 'easy');
+                ref.read(userProfileProvider.notifier).updatePreferences(updatedPrefs);
+                Navigator.pop(dialogContext);
+              },
+            ),
+            const SizedBox(height: 8),
+            _DifficultyOption(
+              icon: Icons.sentiment_neutral,
+              title: l10n.difficultyMedium,
+              subtitle: l10n.difficultyMediumDesc,
+              color: AppColors.difficultyMedium,
+              isSelected: userPrefs.difficultyLevel == 'medium',
+              onTap: () {
+                HapticFeedback.selectionClick();
+                final updatedPrefs = userPrefs.copyWith(difficultyLevel: 'medium');
+                ref.read(userProfileProvider.notifier).updatePreferences(updatedPrefs);
+                Navigator.pop(dialogContext);
+              },
+            ),
+            const SizedBox(height: 8),
+            _DifficultyOption(
+              icon: Icons.sentiment_very_dissatisfied,
+              title: l10n.difficultyHard,
+              subtitle: l10n.difficultyHardDesc,
+              color: AppColors.difficultyHard,
+              isSelected: userPrefs.difficultyLevel == 'hard',
+              onTap: () {
+                HapticFeedback.selectionClick();
+                final updatedPrefs = userPrefs.copyWith(difficultyLevel: 'hard');
+                ref.read(userProfileProvider.notifier).updatePreferences(updatedPrefs);
+                Navigator.pop(dialogContext);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDailyGoalDialog(BuildContext context, AppLocalizations l10n) {
+    HapticFeedback.lightImpact();
+    final userPrefs = ref.read(userPreferencesProvider);
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.secondary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.flag, color: AppColors.secondary),
+            ),
+            const SizedBox(width: 12),
+            Text(l10n.dailyGoal),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final minutes in [5, 10, 15, 20, 30])
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: _DailyGoalOption(
+                  minutes: minutes,
+                  label: '$minutes ${l10n.minutesPerDay}',
+                  isSelected: userPrefs.dailyGoalMinutes == minutes,
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    final updatedPrefs = userPrefs.copyWith(dailyGoalMinutes: minutes);
+                    ref.read(userProfileProvider.notifier).updatePreferences(updatedPrefs);
+                    Navigator.pop(dialogContext);
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showCreateAccountDialog(BuildContext context, AppLocalizations l10n) {
+    HapticFeedback.lightImpact();
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.tertiary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.person_add, color: AppColors.tertiary),
+            ),
+            const SizedBox(width: 12),
+            Text(l10n.createAccount),
+          ],
+        ),
+        content: Text(l10n.createAccountDescription),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              context.push(Routes.auth);
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.tertiary,
+            ),
+            child: Text(l10n.signUp),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showHelpDialog(BuildContext context, AppLocalizations l10n) {
+    HapticFeedback.lightImpact();
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.help_center, color: AppColors.primary),
+            ),
+            const SizedBox(width: 12),
+            Text(l10n.helpAndSupport),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.info.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.email, color: AppColors.info, size: 20),
+              ),
+              title: Text(l10n.contactUs),
+              subtitle: const Text(_supportEmail),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _launchUrl('mailto:$_supportEmail');
+              },
+            ),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.secondary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.rate_review, color: AppColors.secondary, size: 20),
+              ),
+              title: Text(l10n.rateApp),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _requestAppReview(context);
+              },
+            ),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.tertiary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.share, color: AppColors.tertiary, size: 20),
+              ),
+              title: Text(l10n.shareApp),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _shareApp(context, l10n);
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l10n.close),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPremiumUpgrade(BuildContext context) {
+    HapticFeedback.mediumImpact();
+    context.push(Routes.subscription);
+  }
+
+  Future<void> _requestAppReview(BuildContext context) async {
+    HapticFeedback.lightImpact();
+    final InAppReview inAppReview = InAppReview.instance;
+
+    if (await inAppReview.isAvailable()) {
+      await inAppReview.requestReview();
+    } else {
+      // Fallback to opening store listing
+      await inAppReview.openStoreListing(
+        appStoreId: _appStoreId,
+      );
+    }
+  }
+
+  Future<void> _shareApp(BuildContext context, AppLocalizations l10n) async {
+    HapticFeedback.lightImpact();
+
+    final String shareText = '''
+${l10n.appTitle} - ${l10n.appTagline}
+
+Download now:
+iOS: https://apps.apple.com/app/id$_appStoreId
+Android: https://play.google.com/store/apps/details?id=$_androidPackageName
+''';
+
+    await Share.share(
+      shareText,
+      subject: l10n.appTitle,
+    );
+  }
+
+  // App Store IDs
+  static const String _appStoreId = ''; // Add your App Store ID when available
+  static const String _androidPackageName = 'com.geomaster.app';
 
   void _showThemeDialog(BuildContext context, AppLocalizations l10n) {
     HapticFeedback.lightImpact();
@@ -364,9 +815,9 @@ class _PassportHeader extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF1A237E), // Deep passport blue
-            Color(0xFF283593),
-            Color(0xFF303F9F),
+            AppColors.oceanDeep, // Explorer theme - deep ocean
+            AppColors.ocean,
+            AppColors.primary,
           ],
         ),
       ),
@@ -559,12 +1010,12 @@ class _PassportHeader extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
-                                    'PREMIUM EXPLORER',
-                                    style: GoogleFonts.robotoMono(
+                                    l10n.premiumExplorer.toUpperCase(),
+                                    style: (isArabic ? GoogleFonts.cairo : GoogleFonts.robotoMono)(
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
-                                      letterSpacing: 1,
+                                      letterSpacing: isArabic ? 0 : 1,
                                     ),
                                   ),
                                 ),
@@ -637,9 +1088,17 @@ class _PassportStampsPainter extends CustomPainter {
 
 /// Traveler stats card showing exploration progress
 class _TravelerStatsCard extends StatelessWidget {
-  const _TravelerStatsCard({required this.isArabic});
+  const _TravelerStatsCard({
+    required this.isArabic,
+    required this.countriesLearned,
+    required this.achievementsCount,
+    required this.currentStreak,
+  });
 
   final bool isArabic;
+  final int countriesLearned;
+  final int achievementsCount;
+  final int currentStreak;
 
   @override
   Widget build(BuildContext context) {
@@ -652,8 +1111,8 @@ class _TravelerStatsCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF00897B),
-            Color(0xFF00695C),
+            AppColors.tertiary,
+            AppColors.tertiaryDark,
           ],
         ),
         borderRadius: BorderRadius.circular(20),
@@ -692,7 +1151,7 @@ class _TravelerStatsCard extends StatelessWidget {
               Expanded(
                 child: _StatItem(
                   icon: Icons.public,
-                  value: '47',
+                  value: '$countriesLearned',
                   label: l10n.countriesVisited,
                   isArabic: isArabic,
                 ),
@@ -705,7 +1164,7 @@ class _TravelerStatsCard extends StatelessWidget {
               Expanded(
                 child: _StatItem(
                   icon: Icons.emoji_events,
-                  value: '12',
+                  value: '$achievementsCount',
                   label: l10n.achievements,
                   isArabic: isArabic,
                 ),
@@ -718,7 +1177,7 @@ class _TravelerStatsCard extends StatelessWidget {
               Expanded(
                 child: _StatItem(
                   icon: Icons.local_fire_department,
-                  value: '7',
+                  value: '$currentStreak',
                   label: l10n.dayStreakLabel,
                   isArabic: isArabic,
                 ),
@@ -773,92 +1232,103 @@ class _StatItem extends StatelessWidget {
 
 /// Expedition upgrade card
 class _ExpeditionUpgradeCard extends StatelessWidget {
-  const _ExpeditionUpgradeCard({required this.isArabic});
+  const _ExpeditionUpgradeCard({
+    required this.isArabic,
+    required this.onTap,
+  });
 
   final bool isArabic;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: AppColors.premiumGradient,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.premium.withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+        child: Ink(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: AppColors.premiumGradient,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.premium.withValues(alpha: 0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(
-              Icons.rocket_launch,
-              color: Colors.white,
-              size: 28,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.upgradeToPremium,
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.rocket_launch,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.upgradeToPremium,
+                      style: (isArabic
+                              ? GoogleFonts.cairo(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                )
+                              : GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ))
+                          .copyWith(color: Colors.white),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.unlockAllFeatures,
+                      style: (isArabic
+                              ? GoogleFonts.cairo(fontSize: 12)
+                              : GoogleFonts.poppins(fontSize: 12))
+                          .copyWith(color: Colors.white.withValues(alpha: 0.9)),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  l10n.upgrade,
                   style: (isArabic
                           ? GoogleFonts.cairo(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             )
                           : GoogleFonts.poppins(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ))
-                      .copyWith(color: Colors.white),
+                      .copyWith(color: AppColors.premium),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  l10n.unlockAllFeatures,
-                  style: (isArabic
-                          ? GoogleFonts.cairo(fontSize: 12)
-                          : GoogleFonts.poppins(fontSize: 12))
-                      .copyWith(color: Colors.white.withValues(alpha: 0.9)),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              l10n.upgrade,
-              style: (isArabic
-                      ? GoogleFonts.cairo(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        )
-                      : GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ))
-                  .copyWith(color: AppColors.premium),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -1175,6 +1645,311 @@ class _AppVersionBadge extends StatelessWidget {
                 .copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Language option in dialog - professional design without flags
+class _LanguageOption extends StatelessWidget {
+  const _LanguageOption({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.ocean.withValues(alpha: 0.15)
+              : theme.colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+          border: isSelected
+              ? Border.all(color: AppColors.ocean, width: 2)
+              : null,
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? AppColors.ocean.withValues(alpha: 0.2)
+                    : theme.colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                size: 20,
+                color: isSelected ? AppColors.ocean : theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: (isArabic
+                            ? GoogleFonts.cairo(
+                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                fontSize: 15,
+                              )
+                            : GoogleFonts.poppins(
+                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                fontSize: 15,
+                              ))
+                        .copyWith(
+                      color: isSelected ? AppColors.ocean : theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: (isArabic
+                            ? GoogleFonts.cairo(fontSize: 12)
+                            : GoogleFonts.poppins(fontSize: 12))
+                        .copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              const Icon(Icons.check_circle, color: AppColors.ocean),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Switch option for settings
+class _SwitchOption extends StatelessWidget {
+  const _SwitchOption({
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final IconData icon;
+  final String title;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.sunset, size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              title,
+              style: (isArabic
+                      ? GoogleFonts.cairo(fontSize: 14)
+                      : GoogleFonts.poppins(fontSize: 14))
+                  .copyWith(color: theme.colorScheme.onSurface),
+            ),
+          ),
+          Switch.adaptive(
+            value: value,
+            onChanged: onChanged,
+            activeTrackColor: AppColors.sunset.withValues(alpha: 0.6),
+            thumbColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return AppColors.sunset;
+              }
+              return null;
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Difficulty option in dialog
+class _DifficultyOption extends StatelessWidget {
+  const _DifficultyOption({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? color.withValues(alpha: 0.15)
+              : theme.colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+          border: isSelected ? Border.all(color: color, width: 2) : null,
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: color, size: 22),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: (isArabic
+                            ? GoogleFonts.cairo(
+                                fontWeight: FontWeight.w600,
+                              )
+                            : GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                              ))
+                        .copyWith(
+                      color: isSelected ? color : theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: (isArabic
+                            ? GoogleFonts.cairo(fontSize: 12)
+                            : GoogleFonts.poppins(fontSize: 12))
+                        .copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected) Icon(Icons.check_circle, color: color),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Daily goal option in dialog
+class _DailyGoalOption extends StatelessWidget {
+  const _DailyGoalOption({
+    required this.minutes,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final int minutes;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
+    // Calculate intensity based on minutes
+    final intensity = (minutes / 30).clamp(0.3, 1.0);
+    final color = Color.lerp(AppColors.success, AppColors.secondary, intensity)!;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? color.withValues(alpha: 0.15)
+              : theme.colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+          border: isSelected ? Border.all(color: color, width: 2) : null,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  '$minutes',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: (isArabic
+                        ? GoogleFonts.cairo(
+                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                          )
+                        : GoogleFonts.poppins(
+                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                          ))
+                    .copyWith(
+                  color: isSelected ? color : theme.colorScheme.onSurface,
+                ),
+              ),
+            ),
+            if (isSelected) Icon(Icons.check_circle, color: color),
+          ],
+        ),
       ),
     );
   }

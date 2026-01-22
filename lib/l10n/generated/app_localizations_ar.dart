@@ -963,7 +963,35 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deleteAccount => 'حذف الحساب';
 
   @override
+  String get enabled => 'مُفعّل';
+
+  @override
+  String get disabled => 'مُعطّل';
+
+  @override
+  String get pushNotifications => 'الإشعارات الفورية';
+
+  @override
+  String get hapticFeedback => 'الاستجابة اللمسية';
+
+  @override
+  String get createAccountDescription =>
+      'أنشئ حساباً لمزامنة تقدمك عبر الأجهزة وفتح ميزات إضافية.';
+
+  @override
+  String get difficultyEasyDesc => 'مثالي للمبتدئين';
+
+  @override
+  String get difficultyMediumDesc => 'تحدٍّ متوازن';
+
+  @override
+  String get difficultyHardDesc => 'لخبراء الجغرافيا';
+
+  @override
   String get premium => 'بريميوم';
+
+  @override
+  String get premiumExplorer => 'مستكشف بريميوم';
 
   @override
   String get goPremium => 'الترقية لبريميوم';
@@ -1614,4 +1642,291 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get searchForCountry => 'ابحث عن أي دولة في العالم';
+
+  @override
+  String get flagAndColors => 'العلم والألوان';
+
+  @override
+  String get flagColorsMeaning => 'ماذا تعني الألوان';
+
+  @override
+  String get flagSymbolism => 'الرمزية';
+
+  @override
+  String get nationalFlag => 'العلم الوطني';
+
+  @override
+  String get tapToLearnMore => 'انقر لمعرفة المزيد عن ألوان العلم';
+
+  @override
+  String get colorMeaningUnavailable => 'معاني الألوان غير متوفرة لهذا العلم';
+
+  @override
+  String get additionalInfo => 'معلومات إضافية';
+
+  @override
+  String get hexCode => 'رمز اللون';
+
+  @override
+  String get copiedToClipboard => 'تم النسخ';
+
+  @override
+  String get gameModes => 'أوضاع اللعب';
+
+  @override
+  String get chooseTopic => 'اختر نوع السؤال';
+
+  @override
+  String get quickQuizMode => 'سريع';
+
+  @override
+  String get quickQuizQuestions => '5 أسئلة';
+
+  @override
+  String get timedBlitzMode => 'البرق';
+
+  @override
+  String get timedBlitzMultiplier => '2× نقاط';
+
+  @override
+  String get continentChallengeMode => 'القارة';
+
+  @override
+  String get marathonMode => 'ماراثون';
+
+  @override
+  String get marathonQuestions => '50 سؤال';
+
+  @override
+  String get studyModeLabel => 'دراسة';
+
+  @override
+  String get studyModeNoXp => 'بدون نقاط';
+
+  @override
+  String get reverseFlagsQuiz => 'الأعلام المعكوسة';
+
+  @override
+  String get reverseFlagsDescription => 'اختر العلم الصحيح للدولة';
+
+  @override
+  String get languagesQuizTitle => 'اللغات';
+
+  @override
+  String get languagesQuizDescription => 'حدد اللغات الرسمية';
+
+  @override
+  String get neighborsQuiz => 'الدول المجاورة';
+
+  @override
+  String get neighborsQuizDescription => 'اختر الدول المجاورة';
+
+  @override
+  String get mixedQuizTitle => 'مختلط';
+
+  @override
+  String get mixedQuizDescription => 'خليط عشوائي من جميع المواضيع';
+
+  @override
+  String get sessionTypeQuickQuiz => 'اختبار سريع';
+
+  @override
+  String get sessionTypeContinentChallenge => 'تحدي القارة';
+
+  @override
+  String get sessionTypeTimedBlitz => 'وضع البرق';
+
+  @override
+  String get sessionTypeDailyChallenge => 'التحدي اليومي';
+
+  @override
+  String get sessionTypeMarathon => 'ماراثون';
+
+  @override
+  String get sessionTypeStudyMode => 'وضع الدراسة';
+
+  @override
+  String get sessionTypeStandard => 'اختبار';
+
+  @override
+  String get selectContinent => 'اختر القارة';
+
+  @override
+  String get exitQuizTitle => 'الخروج من الاختبار؟';
+
+  @override
+  String get exitQuizMessage => 'سيتم فقدان تقدمك. هل أنت متأكد من الخروج؟';
+
+  @override
+  String get exitButton => 'خروج';
+
+  @override
+  String get useHint => 'استخدم تلميح (-5 نقاط)';
+
+  @override
+  String get confirmAnswers => 'تأكيد الإجابات';
+
+  @override
+  String get showAnswer => 'اظهر الإجابة';
+
+  @override
+  String selectAnswersCount(int count) {
+    return 'اختر $count إجابات';
+  }
+
+  @override
+  String get explanation => 'شرح';
+
+  @override
+  String get didYouKnow => 'هل تعلم؟';
+
+  @override
+  String get gameOver => 'انتهت اللعبة!';
+
+  @override
+  String get perfectScoreTitle => 'درجة كاملة!';
+
+  @override
+  String get gradeAPlus => 'أ+';
+
+  @override
+  String get gradeA => 'أ';
+
+  @override
+  String get gradeB => 'ب';
+
+  @override
+  String get gradeC => 'ج';
+
+  @override
+  String get gradeD => 'د';
+
+  @override
+  String get gradeF => 'هـ';
+
+  @override
+  String get gradeExcellentPlus => 'ممتاز+';
+
+  @override
+  String get gradeExcellent => 'ممتاز';
+
+  @override
+  String get gradeVeryGood => 'جيد جداً';
+
+  @override
+  String get gradeGood => 'جيد';
+
+  @override
+  String get gradePass => 'مقبول';
+
+  @override
+  String get gradeFail => 'ضعيف';
+
+  @override
+  String get levelLabel => 'المستوى';
+
+  @override
+  String get modeLabel => 'النوع';
+
+  @override
+  String get bonusesAndPenalties => 'المكافآت والخصومات';
+
+  @override
+  String get streakBonus => 'مكافأة السلسلة';
+
+  @override
+  String get speedBonus => 'مكافأة السرعة';
+
+  @override
+  String get hintsLabel => 'تلميحات';
+
+  @override
+  String get perfectStreakLabel => 'سلسلة مثالية';
+
+  @override
+  String get performanceAnalysis => 'تحليل الأداء';
+
+  @override
+  String get strongAreas => 'نقاط القوة';
+
+  @override
+  String get needsImprovement => 'تحتاج تحسين';
+
+  @override
+  String get newAchievements => 'إنجازات جديدة!';
+
+  @override
+  String get achievementPerfectQuiz => 'اختبار مثالي!';
+
+  @override
+  String get achievementMarathonMaster => 'أسطورة الماراثون!';
+
+  @override
+  String get achievementDailyChallenger => 'بطل التحدي اليومي!';
+
+  @override
+  String get achievementSpeedDemon => 'سريع البرق!';
+
+  @override
+  String get achievementStreakMaster => 'سيد السلسلة!';
+
+  @override
+  String get areaCapitals => 'العواصم';
+
+  @override
+  String get areaFlags => 'الأعلام';
+
+  @override
+  String get areaReverseFlags => 'أعلام معكوسة';
+
+  @override
+  String get areaMaps => 'الخرائط';
+
+  @override
+  String get areaPopulation => 'السكان';
+
+  @override
+  String get areaCurrencies => 'العملات';
+
+  @override
+  String get areaLanguages => 'اللغات';
+
+  @override
+  String get areaBorders => 'الحدود';
+
+  @override
+  String get areaTimezones => 'المناطق الزمنية';
+
+  @override
+  String xpMultiplierInfo(String multiplier, String sessionType) {
+    return 'مضاعف ${multiplier}x من $sessionType';
+  }
+
+  @override
+  String streakBonusPercent(int percent) {
+    return '+$percent% مكافأة السلسلة';
+  }
+
+  @override
+  String get streak3Days => 'سلسلة 3 أيام: +10% نقاط';
+
+  @override
+  String get streak7Days => 'سلسلة 7 أيام: +25% نقاط';
+
+  @override
+  String get streak14Days => 'سلسلة 14 يوم: +50% نقاط';
+
+  @override
+  String get streak30Days => 'سلسلة 30 يوم: +100% نقاط';
+
+  @override
+  String livesRemaining(int count) {
+    return '$count أرواح';
+  }
+
+  @override
+  String get outOfLives => 'نفدت الأرواح!';
+
+  @override
+  String get timeUp => 'انتهى الوقت!';
 }

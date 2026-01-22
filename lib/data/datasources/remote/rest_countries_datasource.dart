@@ -173,8 +173,15 @@ class RestCountriesDataSource implements IRestCountriesDataSource {
   }
 
   /// Get the fields parameter for API requests
+  /// NOTE: REST Countries API has a 10 field limit
   String _getFields() {
-    return 'name,cca2,cca3,capital,region,subregion,population,area,languages,currencies,flags,coatOfArms,latlng,borders,timezones,translations';
+    // Essential fields only (10 max)
+    return 'name,cca2,cca3,capital,region,subregion,population,area,flags,latlng';
+  }
+
+  /// Get extended fields for single country lookups
+  String _getExtendedFields() {
+    return 'name,cca2,cca3,capital,region,subregion,population,area,flags,borders';
   }
 
   /// Handle Dio errors

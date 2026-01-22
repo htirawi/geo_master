@@ -126,6 +126,7 @@ flutter:
     - assets/animations/lottie/
     - assets/sounds/ui/
     - assets/sounds/feedback/
+    - assets/data/
 
   # Fonts are loaded dynamically via google_fonts package for better licensing and smaller app size
   # To use bundled fonts instead, uncomment below and add font files to assets/fonts/

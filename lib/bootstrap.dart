@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'app/di/service_locator.dart';
+import 'core/constants/arabic_country_names.dart';
+import 'core/services/translation_service.dart';
 import 'firebase_options.dart';
 
 /// Bootstrap the application
@@ -33,6 +35,12 @@ Future<void> bootstrap() async {
 
   // Initialize service locator
   await initServiceLocator();
+
+  // Load Arabic translations from bundled JSON asset
+  await ArabicCountryNames.loadFromAsset();
+
+  // Initialize translation service (Firebase Remote Config layer)
+  await sl<TranslationService>().initialize();
 
   // Set preferred orientations
   await SystemChrome.setPreferredOrientations([

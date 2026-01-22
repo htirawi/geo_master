@@ -6,12 +6,18 @@ class QuizModel {
     required this.id,
     required this.mode,
     required this.difficulty,
+    this.sessionType = QuizSessionType.standard,
     this.region,
+    this.continent,
     required this.questions,
     required this.currentQuestionIndex,
     required this.answers,
     required this.startedAt,
     this.completedAt,
+    this.livesRemaining,
+    this.hintsUsed = 0,
+    this.speedBonusMultiplier = 1.0,
+    this.streakAtStart = 0,
   });
 
   factory QuizModel.fromJson(Map<String, dynamic> json) {
@@ -25,7 +31,12 @@ class QuizModel {
         (d) => d.name == json['difficulty'],
         orElse: () => QuizDifficulty.medium,
       ),
+      sessionType: QuizSessionType.values.firstWhere(
+        (s) => s.name == json['sessionType'],
+        orElse: () => QuizSessionType.standard,
+      ),
       region: json['region'] as String?,
+      continent: json['continent'] as String?,
       questions: (json['questions'] as List<dynamic>?)
               ?.map((q) =>
                   QuizQuestionModel.fromJson(q as Map<String, dynamic>))
@@ -42,6 +53,10 @@ class QuizModel {
       completedAt: json['completedAt'] != null
           ? DateTime.parse(json['completedAt'] as String)
           : null,
+      livesRemaining: json['livesRemaining'] as int?,
+      hintsUsed: json['hintsUsed'] as int? ?? 0,
+      speedBonusMultiplier: (json['speedBonusMultiplier'] as num?)?.toDouble() ?? 1.0,
+      streakAtStart: json['streakAtStart'] as int? ?? 0,
     );
   }
 
@@ -50,7 +65,9 @@ class QuizModel {
       id: entity.id,
       mode: entity.mode,
       difficulty: entity.difficulty,
+      sessionType: entity.sessionType,
       region: entity.region,
+      continent: entity.continent,
       questions:
           entity.questions.map(QuizQuestionModel.fromEntity).toList(),
       currentQuestionIndex: entity.currentQuestionIndex,
@@ -58,30 +75,46 @@ class QuizModel {
           entity.answers.map(QuizAnswerModel.fromEntity).toList(),
       startedAt: entity.startedAt,
       completedAt: entity.completedAt,
+      livesRemaining: entity.livesRemaining,
+      hintsUsed: entity.hintsUsed,
+      speedBonusMultiplier: entity.speedBonusMultiplier,
+      streakAtStart: entity.streakAtStart,
     );
   }
 
   final String id;
   final QuizMode mode;
   final QuizDifficulty difficulty;
+  final QuizSessionType sessionType;
   final String? region;
+  final String? continent;
   final List<QuizQuestionModel> questions;
   final int currentQuestionIndex;
   final List<QuizAnswerModel> answers;
   final DateTime startedAt;
   final DateTime? completedAt;
+  final int? livesRemaining;
+  final int hintsUsed;
+  final double speedBonusMultiplier;
+  final int streakAtStart;
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'mode': mode.name,
       'difficulty': difficulty.name,
+      'sessionType': sessionType.name,
       'region': region,
+      'continent': continent,
       'questions': questions.map((q) => q.toJson()).toList(),
       'currentQuestionIndex': currentQuestionIndex,
       'answers': answers.map((a) => a.toJson()).toList(),
       'startedAt': startedAt.toIso8601String(),
       'completedAt': completedAt?.toIso8601String(),
+      'livesRemaining': livesRemaining,
+      'hintsUsed': hintsUsed,
+      'speedBonusMultiplier': speedBonusMultiplier,
+      'streakAtStart': streakAtStart,
     };
   }
 
@@ -90,12 +123,18 @@ class QuizModel {
       id: id,
       mode: mode,
       difficulty: difficulty,
+      sessionType: sessionType,
       region: region,
+      continent: continent,
       questions: questions.map((q) => q.toEntity()).toList(),
       currentQuestionIndex: currentQuestionIndex,
       answers: answers.map((a) => a.toEntity()).toList(),
       startedAt: startedAt,
       completedAt: completedAt,
+      livesRemaining: livesRemaining,
+      hintsUsed: hintsUsed,
+      speedBonusMultiplier: speedBonusMultiplier,
+      streakAtStart: streakAtStart,
     );
   }
 }
@@ -109,9 +148,18 @@ class QuizQuestionModel {
     required this.questionArabic,
     required this.correctAnswer,
     required this.options,
+    this.questionType = QuestionType.multipleChoice,
     this.imageUrl,
     this.countryCode,
     this.metadata,
+    this.hint,
+    this.hintArabic,
+    this.explanation,
+    this.explanationArabic,
+    this.correctAnswers,
+    this.matchingPairs,
+    this.funFact,
+    this.funFactArabic,
   });
 
   factory QuizQuestionModel.fromJson(Map<String, dynamic> json) {
@@ -120,6 +168,10 @@ class QuizQuestionModel {
       mode: QuizMode.values.firstWhere(
         (m) => m.name == json['mode'],
         orElse: () => QuizMode.mixed,
+      ),
+      questionType: QuestionType.values.firstWhere(
+        (t) => t.name == json['questionType'],
+        orElse: () => QuestionType.multipleChoice,
       ),
       question: json['question'] as String? ?? '',
       questionArabic: json['questionArabic'] as String? ?? '',
@@ -131,6 +183,17 @@ class QuizQuestionModel {
       imageUrl: json['imageUrl'] as String?,
       countryCode: json['countryCode'] as String?,
       metadata: json['metadata'] as Map<String, dynamic>?,
+      hint: json['hint'] as String?,
+      hintArabic: json['hintArabic'] as String?,
+      explanation: json['explanation'] as String?,
+      explanationArabic: json['explanationArabic'] as String?,
+      correctAnswers: (json['correctAnswers'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
+      matchingPairs: (json['matchingPairs'] as Map<String, dynamic>?)
+          ?.map((k, v) => MapEntry(k, v.toString())),
+      funFact: json['funFact'] as String?,
+      funFactArabic: json['funFactArabic'] as String?,
     );
   }
 
@@ -138,6 +201,7 @@ class QuizQuestionModel {
     return QuizQuestionModel(
       id: entity.id,
       mode: entity.mode,
+      questionType: entity.questionType,
       question: entity.question,
       questionArabic: entity.questionArabic,
       correctAnswer: entity.correctAnswer,
@@ -145,11 +209,20 @@ class QuizQuestionModel {
       imageUrl: entity.imageUrl,
       countryCode: entity.countryCode,
       metadata: entity.metadata,
+      hint: entity.hint,
+      hintArabic: entity.hintArabic,
+      explanation: entity.explanation,
+      explanationArabic: entity.explanationArabic,
+      correctAnswers: entity.correctAnswers,
+      matchingPairs: entity.matchingPairs,
+      funFact: entity.funFact,
+      funFactArabic: entity.funFactArabic,
     );
   }
 
   final String id;
   final QuizMode mode;
+  final QuestionType questionType;
   final String question;
   final String questionArabic;
   final String correctAnswer;
@@ -157,11 +230,20 @@ class QuizQuestionModel {
   final String? imageUrl;
   final String? countryCode;
   final Map<String, dynamic>? metadata;
+  final String? hint;
+  final String? hintArabic;
+  final String? explanation;
+  final String? explanationArabic;
+  final List<String>? correctAnswers;
+  final Map<String, String>? matchingPairs;
+  final String? funFact;
+  final String? funFactArabic;
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'mode': mode.name,
+      'questionType': questionType.name,
       'question': question,
       'questionArabic': questionArabic,
       'correctAnswer': correctAnswer,
@@ -169,6 +251,14 @@ class QuizQuestionModel {
       'imageUrl': imageUrl,
       'countryCode': countryCode,
       'metadata': metadata,
+      'hint': hint,
+      'hintArabic': hintArabic,
+      'explanation': explanation,
+      'explanationArabic': explanationArabic,
+      'correctAnswers': correctAnswers,
+      'matchingPairs': matchingPairs,
+      'funFact': funFact,
+      'funFactArabic': funFactArabic,
     };
   }
 
@@ -176,6 +266,7 @@ class QuizQuestionModel {
     return QuizQuestion(
       id: id,
       mode: mode,
+      questionType: questionType,
       question: question,
       questionArabic: questionArabic,
       correctAnswer: correctAnswer,
@@ -183,6 +274,14 @@ class QuizQuestionModel {
       imageUrl: imageUrl,
       countryCode: countryCode,
       metadata: metadata,
+      hint: hint,
+      hintArabic: hintArabic,
+      explanation: explanation,
+      explanationArabic: explanationArabic,
+      correctAnswers: correctAnswers,
+      matchingPairs: matchingPairs,
+      funFact: funFact,
+      funFactArabic: funFactArabic,
     );
   }
 }
@@ -195,6 +294,11 @@ class QuizAnswerModel {
     required this.correctAnswer,
     required this.timeTakenMs,
     required this.answeredAt,
+    this.selectedAnswers,
+    this.correctAnswers,
+    this.usedHint = false,
+    this.speedBonus = 1.0,
+    this.xpEarned = 0,
   });
 
   factory QuizAnswerModel.fromJson(Map<String, dynamic> json) {
@@ -206,6 +310,15 @@ class QuizAnswerModel {
       answeredAt: json['answeredAt'] != null
           ? DateTime.parse(json['answeredAt'] as String)
           : DateTime.now(),
+      selectedAnswers: (json['selectedAnswers'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
+      correctAnswers: (json['correctAnswers'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
+      usedHint: json['usedHint'] as bool? ?? false,
+      speedBonus: (json['speedBonus'] as num?)?.toDouble() ?? 1.0,
+      xpEarned: json['xpEarned'] as int? ?? 0,
     );
   }
 
@@ -216,6 +329,11 @@ class QuizAnswerModel {
       correctAnswer: entity.correctAnswer,
       timeTakenMs: entity.timeTaken.inMilliseconds,
       answeredAt: entity.answeredAt,
+      selectedAnswers: entity.selectedAnswers,
+      correctAnswers: entity.correctAnswers,
+      usedHint: entity.usedHint,
+      speedBonus: entity.speedBonus,
+      xpEarned: entity.xpEarned,
     );
   }
 
@@ -224,6 +342,11 @@ class QuizAnswerModel {
   final String correctAnswer;
   final int timeTakenMs;
   final DateTime answeredAt;
+  final List<String>? selectedAnswers;
+  final List<String>? correctAnswers;
+  final bool usedHint;
+  final double speedBonus;
+  final int xpEarned;
 
   Map<String, dynamic> toJson() {
     return {
@@ -232,6 +355,11 @@ class QuizAnswerModel {
       'correctAnswer': correctAnswer,
       'timeTakenMs': timeTakenMs,
       'answeredAt': answeredAt.toIso8601String(),
+      'selectedAnswers': selectedAnswers,
+      'correctAnswers': correctAnswers,
+      'usedHint': usedHint,
+      'speedBonus': speedBonus,
+      'xpEarned': xpEarned,
     };
   }
 
@@ -242,6 +370,11 @@ class QuizAnswerModel {
       correctAnswer: correctAnswer,
       timeTaken: Duration(milliseconds: timeTakenMs),
       answeredAt: answeredAt,
+      selectedAnswers: selectedAnswers,
+      correctAnswers: correctAnswers,
+      usedHint: usedHint,
+      speedBonus: speedBonus,
+      xpEarned: xpEarned,
     );
   }
 }
@@ -261,6 +394,16 @@ class QuizResultModel {
     required this.xpEarned,
     required this.completedAt,
     this.answers = const [],
+    this.sessionType = QuizSessionType.standard,
+    this.continent,
+    this.hintsUsed = 0,
+    this.streakBonus = 1.0,
+    this.speedBonus = 1.0,
+    this.averageTimePerQuestionMs = 0,
+    this.perfectStreak = 0,
+    this.weakAreas = const [],
+    this.strongAreas = const [],
+    this.newAchievements = const [],
   });
 
   factory QuizResultModel.fromJson(Map<String, dynamic> json) {
@@ -276,6 +419,10 @@ class QuizResultModel {
         (d) => d.name == json['difficulty'],
         orElse: () => QuizDifficulty.medium,
       ),
+      sessionType: QuizSessionType.values.firstWhere(
+        (s) => s.name == json['sessionType'],
+        orElse: () => QuizSessionType.standard,
+      ),
       score: json['score'] as int? ?? 0,
       totalQuestions: json['totalQuestions'] as int? ?? 0,
       accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0.0,
@@ -288,6 +435,21 @@ class QuizResultModel {
               ?.map((a) => QuizAnswerModel.fromJson(a as Map<String, dynamic>))
               .toList() ??
           [],
+      continent: json['continent'] as String?,
+      hintsUsed: json['hintsUsed'] as int? ?? 0,
+      streakBonus: (json['streakBonus'] as num?)?.toDouble() ?? 1.0,
+      speedBonus: (json['speedBonus'] as num?)?.toDouble() ?? 1.0,
+      averageTimePerQuestionMs: json['averageTimePerQuestionMs'] as int? ?? 0,
+      perfectStreak: json['perfectStreak'] as int? ?? 0,
+      weakAreas: (json['weakAreas'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ?? [],
+      strongAreas: (json['strongAreas'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ?? [],
+      newAchievements: (json['newAchievements'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ?? [],
     );
   }
 
@@ -298,14 +460,23 @@ class QuizResultModel {
       userId: entity.userId,
       mode: entity.mode,
       difficulty: entity.difficulty,
+      sessionType: entity.sessionType,
       score: entity.score,
       totalQuestions: entity.totalQuestions,
       accuracy: entity.accuracy,
       timeTakenMs: entity.timeTaken.inMilliseconds,
       xpEarned: entity.xpEarned,
       completedAt: entity.completedAt,
-      answers:
-          entity.answers.map(QuizAnswerModel.fromEntity).toList(),
+      answers: entity.answers.map(QuizAnswerModel.fromEntity).toList(),
+      continent: entity.continent,
+      hintsUsed: entity.hintsUsed,
+      streakBonus: entity.streakBonus,
+      speedBonus: entity.speedBonus,
+      averageTimePerQuestionMs: entity.averageTimePerQuestion.inMilliseconds,
+      perfectStreak: entity.perfectStreak,
+      weakAreas: entity.weakAreas,
+      strongAreas: entity.strongAreas,
+      newAchievements: entity.newAchievements,
     );
   }
 
@@ -314,6 +485,7 @@ class QuizResultModel {
   final String userId;
   final QuizMode mode;
   final QuizDifficulty difficulty;
+  final QuizSessionType sessionType;
   final int score;
   final int totalQuestions;
   final double accuracy;
@@ -321,6 +493,15 @@ class QuizResultModel {
   final int xpEarned;
   final DateTime completedAt;
   final List<QuizAnswerModel> answers;
+  final String? continent;
+  final int hintsUsed;
+  final double streakBonus;
+  final double speedBonus;
+  final int averageTimePerQuestionMs;
+  final int perfectStreak;
+  final List<String> weakAreas;
+  final List<String> strongAreas;
+  final List<String> newAchievements;
 
   Map<String, dynamic> toJson() {
     return {
@@ -329,6 +510,7 @@ class QuizResultModel {
       'userId': userId,
       'mode': mode.name,
       'difficulty': difficulty.name,
+      'sessionType': sessionType.name,
       'score': score,
       'totalQuestions': totalQuestions,
       'accuracy': accuracy,
@@ -336,6 +518,15 @@ class QuizResultModel {
       'xpEarned': xpEarned,
       'completedAt': completedAt.toIso8601String(),
       'answers': answers.map((a) => a.toJson()).toList(),
+      'continent': continent,
+      'hintsUsed': hintsUsed,
+      'streakBonus': streakBonus,
+      'speedBonus': speedBonus,
+      'averageTimePerQuestionMs': averageTimePerQuestionMs,
+      'perfectStreak': perfectStreak,
+      'weakAreas': weakAreas,
+      'strongAreas': strongAreas,
+      'newAchievements': newAchievements,
     };
   }
 
@@ -346,6 +537,7 @@ class QuizResultModel {
       userId: userId,
       mode: mode,
       difficulty: difficulty,
+      sessionType: sessionType,
       score: score,
       totalQuestions: totalQuestions,
       accuracy: accuracy,
@@ -353,6 +545,15 @@ class QuizResultModel {
       xpEarned: xpEarned,
       completedAt: completedAt,
       answers: answers.map((a) => a.toEntity()).toList(),
+      continent: continent,
+      hintsUsed: hintsUsed,
+      streakBonus: streakBonus,
+      speedBonus: speedBonus,
+      averageTimePerQuestion: Duration(milliseconds: averageTimePerQuestionMs),
+      perfectStreak: perfectStreak,
+      weakAreas: weakAreas,
+      strongAreas: strongAreas,
+      newAchievements: newAchievements,
     );
   }
 }

@@ -1,3 +1,4 @@
+import '../../core/constants/arabic_country_names.dart';
 import '../../domain/entities/country.dart';
 
 /// Country data model for API responses
@@ -183,13 +184,19 @@ class CountryModel {
 
   /// Convert to domain entity
   Country toEntity() {
+    // Use local Arabic translations for reliable localization
+    final arabicName = ArabicCountryNames.getName(cca2) ?? name;
+    final arabicCapital = capitals.isNotEmpty
+        ? (ArabicCountryNames.getCapital(cca2) ?? capitals.first)
+        : null;
+
     return Country(
       code: cca2,
       code3: cca3,
       name: name,
-      nameArabic: translations['ara']?.common ?? name,
+      nameArabic: arabicName,
       capital: capitals.isNotEmpty ? capitals.first : null,
-      capitalArabic: translations['ara']?.common,
+      capitalArabic: arabicCapital,
       region: region,
       subregion: subregion,
       population: population,

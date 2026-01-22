@@ -103,7 +103,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
       name: 'Oceania',
       nameArabic: 'أوقيانوسيا',
       imageUrl: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9',
-      countryCount: 14,
+      countryCount: 16,
       totalPopulation: 45000000,
       totalArea: 8525989,
       description: 'The smallest continent, featuring unique wildlife.',
@@ -170,6 +170,12 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
     String continentId,
   ) async {
     try {
+      // Handle Americas specially - they share the same region in REST Countries API
+      if (continentId == ContinentIds.northAmerica ||
+          continentId == ContinentIds.southAmerica) {
+        return _getAmericasCountries(continentId);
+      }
+
       // Map continent ID to region name
       final regionName = _continentIdToRegion(continentId);
       if (regionName == null) {
@@ -182,6 +188,34 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
     }
   }
 
+  /// Get Americas countries filtered by subregion
+  Future<Either<Failure, List<Country>>> _getAmericasCountries(
+    String continentId,
+  ) async {
+    final result = await _countryRepository.getCountriesByRegion('Americas');
+    return result.fold(
+      Left.new,
+      (countries) {
+        // North America subregions: Northern America, Central America, Caribbean
+        // South America subregion: South America
+        final isNorthAmerica = continentId == ContinentIds.northAmerica;
+
+        final filtered = countries.where((c) {
+          final subregion = (c.subregion ?? '').toLowerCase();
+          if (isNorthAmerica) {
+            return subregion.contains('northern') ||
+                   subregion.contains('central') ||
+                   subregion.contains('caribbean');
+          } else {
+            return subregion.contains('south');
+          }
+        }).toList();
+
+        return Right(filtered);
+      },
+    );
+  }
+
   String? _continentIdToRegion(String continentId) {
     switch (continentId) {
       case ContinentIds.africa:
@@ -190,12 +224,10 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
         return 'Asia';
       case ContinentIds.europe:
         return 'Europe';
-      case ContinentIds.northAmerica:
-        return 'Americas';
-      case ContinentIds.southAmerica:
-        return 'Americas';
       case ContinentIds.oceania:
         return 'Oceania';
+      case ContinentIds.antarctica:
+        return 'Antarctic';
       default:
         return null;
     }

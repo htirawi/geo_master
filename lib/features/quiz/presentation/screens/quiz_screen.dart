@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../domain/entities/quiz.dart';
-import '../../../../domain/repositories/i_quiz_repository.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/quiz_provider.dart';
 import '../../../../presentation/providers/subscription_provider.dart';
@@ -17,8 +16,11 @@ import '../../../../presentation/providers/subscription_provider.dart';
 final _selectedDifficultyProvider =
     StateProvider<QuizDifficulty>((ref) => QuizDifficulty.medium);
 
+/// Selected continent provider for continent challenge
+final _selectedContinentProvider = StateProvider<String?>((ref) => null);
+
 /// Quiz mode selection screen - Challenge Arena Theme
-/// An adventure-styled quiz selection experience
+/// An adventure-styled quiz selection experience with all game modes
 class QuizScreen extends ConsumerWidget {
   const QuizScreen({super.key});
 
@@ -28,13 +30,15 @@ class QuizScreen extends ConsumerWidget {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final selectedDifficulty = ref.watch(_selectedDifficultyProvider);
     final quizStats = ref.watch(quizStatisticsProvider);
+    final isDailyChallengeCompleted = ref.watch(isDailyChallengeCompletedProvider);
+    final currentStreak = ref.watch(currentStreakProvider);
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           // Challenge Arena Header
           SliverToBoxAdapter(
-            child: _ChallengeHeader(isArabic: isArabic),
+            child: _ChallengeHeader(isArabic: isArabic, streak: currentStreak),
           ),
           // Stats Overview
           SliverToBoxAdapter(
@@ -42,6 +46,17 @@ class QuizScreen extends ConsumerWidget {
                 .animate()
                 .fadeIn(delay: 200.ms, duration: 400.ms)
                 .slideY(begin: 0.1, end: 0),
+          ),
+          // Game Modes Section (Session Types)
+          SliverToBoxAdapter(
+            child: _GameModesSection(
+              selectedDifficulty: selectedDifficulty,
+              isDailyChallengeCompleted: isDailyChallengeCompleted.valueOrNull ?? false,
+              isArabic: isArabic,
+              onSelectContinent: (continent) {
+                ref.read(_selectedContinentProvider.notifier).state = continent;
+              },
+            ).animate().fadeIn(delay: 300.ms, duration: 400.ms),
           ),
           // Difficulty Selector
           SliverToBoxAdapter(
@@ -52,7 +67,7 @@ class QuizScreen extends ConsumerWidget {
                 ref.read(_selectedDifficultyProvider.notifier).state = difficulty;
               },
               isArabic: isArabic,
-            ).animate().fadeIn(delay: 300.ms, duration: 400.ms),
+            ).animate().fadeIn(delay: 400.ms, duration: 400.ms),
           ),
           // Quiz Modes Section Title
           SliverToBoxAdapter(
@@ -67,14 +82,14 @@ class QuizScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
-                      Icons.sports_esports,
+                      Icons.category,
                       color: AppColors.secondary,
                       size: 20,
                     ),
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    l10n.selectChallenge,
+                    isArabic ? 'اختر نوع السؤال' : 'Choose Topic',
                     style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -82,7 +97,7 @@ class QuizScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-            ).animate().fadeIn(delay: 400.ms, duration: 400.ms),
+            ).animate().fadeIn(delay: 500.ms, duration: 400.ms),
           ),
           // Quiz Mode Cards
           SliverPadding(
@@ -101,7 +116,7 @@ class QuizScreen extends ConsumerWidget {
                   questionsCount: 195,
                   onTap: () =>
                       _startQuiz(context, ref, QuizMode.capitals, selectedDifficulty),
-                ).animate().fadeIn(delay: 450.ms, duration: 400.ms),
+                ).animate().fadeIn(delay: 550.ms, duration: 400.ms),
                 const SizedBox(height: 12),
                 _QuizModeCard(
                   icon: Icons.flag,
@@ -115,7 +130,23 @@ class QuizScreen extends ConsumerWidget {
                   questionsCount: 195,
                   onTap: () =>
                       _startQuiz(context, ref, QuizMode.flags, selectedDifficulty),
-                ).animate().fadeIn(delay: 500.ms, duration: 400.ms),
+                ).animate().fadeIn(delay: 600.ms, duration: 400.ms),
+                const SizedBox(height: 12),
+                _QuizModeCard(
+                  icon: Icons.flag_outlined,
+                  title: isArabic ? 'الأعلام المعكوسة' : 'Reverse Flags',
+                  description: isArabic
+                      ? 'اختر العلم الصحيح للدولة'
+                      : 'Select the flag for the country',
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFE91E63), Color(0xFFF48FB1)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  questionsCount: 195,
+                  onTap: () =>
+                      _startQuiz(context, ref, QuizMode.reverseFlags, selectedDifficulty),
+                ).animate().fadeIn(delay: 650.ms, duration: 400.ms),
                 const SizedBox(height: 12),
                 _QuizModeCard(
                   icon: Icons.map,
@@ -130,7 +161,7 @@ class QuizScreen extends ConsumerWidget {
                   isPremium: true,
                   onTap: () =>
                       _startQuiz(context, ref, QuizMode.maps, selectedDifficulty),
-                ).animate().fadeIn(delay: 550.ms, duration: 400.ms),
+                ).animate().fadeIn(delay: 700.ms, duration: 400.ms),
                 const SizedBox(height: 12),
                 _QuizModeCard(
                   icon: Icons.people,
@@ -144,7 +175,7 @@ class QuizScreen extends ConsumerWidget {
                   questionsCount: 100,
                   onTap: () =>
                       _startQuiz(context, ref, QuizMode.population, selectedDifficulty),
-                ).animate().fadeIn(delay: 600.ms, duration: 400.ms),
+                ).animate().fadeIn(delay: 750.ms, duration: 400.ms),
                 const SizedBox(height: 12),
                 _QuizModeCard(
                   icon: Icons.attach_money,
@@ -158,7 +189,55 @@ class QuizScreen extends ConsumerWidget {
                   questionsCount: 150,
                   onTap: () =>
                       _startQuiz(context, ref, QuizMode.currencies, selectedDifficulty),
-                ).animate().fadeIn(delay: 650.ms, duration: 400.ms),
+                ).animate().fadeIn(delay: 800.ms, duration: 400.ms),
+                const SizedBox(height: 12),
+                _QuizModeCard(
+                  icon: Icons.translate,
+                  title: isArabic ? 'اللغات' : 'Languages',
+                  description: isArabic
+                      ? 'حدد اللغات الرسمية'
+                      : 'Identify official languages',
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF5C6BC0), Color(0xFF9FA8DA)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  questionsCount: 150,
+                  onTap: () =>
+                      _startQuiz(context, ref, QuizMode.languages, selectedDifficulty),
+                ).animate().fadeIn(delay: 850.ms, duration: 400.ms),
+                const SizedBox(height: 12),
+                _QuizModeCard(
+                  icon: Icons.share_location,
+                  title: isArabic ? 'الدول المجاورة' : 'Neighbors',
+                  description: isArabic
+                      ? 'اختر الدول المجاورة'
+                      : 'Select neighboring countries',
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF26A69A), Color(0xFF80CBC4)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  questionsCount: 150,
+                  onTap: () =>
+                      _startQuiz(context, ref, QuizMode.borders, selectedDifficulty),
+                ).animate().fadeIn(delay: 900.ms, duration: 400.ms),
+                const SizedBox(height: 12),
+                _QuizModeCard(
+                  icon: Icons.shuffle,
+                  title: isArabic ? 'مختلط' : 'Mixed',
+                  description: isArabic
+                      ? 'خليط عشوائي من جميع المواضيع'
+                      : 'Random mix of all topics',
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF37474F), Color(0xFF78909C)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  questionsCount: 195,
+                  onTap: () =>
+                      _startQuiz(context, ref, QuizMode.mixed, selectedDifficulty),
+                ).animate().fadeIn(delay: 950.ms, duration: 400.ms),
                 const SizedBox(height: 100),
               ]),
             ),
@@ -177,7 +256,7 @@ class QuizScreen extends ConsumerWidget {
     HapticFeedback.mediumImpact();
 
     // Check premium access for map mode
-    if (mode == QuizMode.maps) {
+    if (mode == QuizMode.maps || mode == QuizMode.landmarks) {
       final isPremium = ref.read(isPremiumProvider);
       if (!isPremium) {
         context.push(Routes.paywall);
@@ -191,11 +270,12 @@ class QuizScreen extends ConsumerWidget {
   }
 }
 
-/// Challenge Arena Header
+/// Challenge Arena Header with streak display
 class _ChallengeHeader extends StatelessWidget {
-  const _ChallengeHeader({required this.isArabic});
+  const _ChallengeHeader({required this.isArabic, required this.streak});
 
   final bool isArabic;
+  final int streak;
 
   @override
   Widget build(BuildContext context) {
@@ -251,28 +331,61 @@ class _ChallengeHeader extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 14),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.challengeArena,
-                            style: (isArabic
-                                    ? GoogleFonts.cairo
-                                    : GoogleFonts.poppins)(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.challengeArena,
+                              style: (isArabic
+                                      ? GoogleFonts.cairo
+                                      : GoogleFonts.poppins)(
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          Text(
-                            l10n.selectChallenge,
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              color: Colors.white.withValues(alpha: 0.85),
+                            Text(
+                              l10n.selectChallenge,
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                color: Colors.white.withValues(alpha: 0.85),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                      // Streak badge
+                      if (streak > 0)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.local_fire_department,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '$streak',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                     ],
                   ).animate().fadeIn(duration: 400.ms),
                 ],
@@ -364,9 +477,9 @@ class _StatsOverview extends StatelessWidget {
               ),
               _buildDivider(context),
               _StatItem(
-                icon: Icons.star,
-                value: '${statistics.correctAnswers}',
-                label: l10n.correctAnswers,
+                icon: Icons.local_fire_department,
+                value: '${statistics.bestStreak}',
+                label: l10n.bestStreak,
                 color: AppColors.xpGold,
               ),
             ],
@@ -448,6 +561,301 @@ class _StatItem extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Game Modes Section - Session Types (Quick Quiz, Timed Blitz, etc.)
+class _GameModesSection extends ConsumerWidget {
+  const _GameModesSection({
+    required this.selectedDifficulty,
+    required this.isDailyChallengeCompleted,
+    required this.isArabic,
+    required this.onSelectContinent,
+  });
+
+  final QuizDifficulty selectedDifficulty;
+  final bool isDailyChallengeCompleted;
+  final bool isArabic;
+  final ValueChanged<String> onSelectContinent;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isPremium = ref.watch(isPremiumProvider);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 12),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.sports_esports,
+                    color: AppColors.primary,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  isArabic ? 'أوضاع اللعب' : 'Game Modes',
+                  style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Game mode cards in a grid
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              // Daily Challenge
+              _GameModeChip(
+                icon: Icons.today,
+                label: isArabic ? 'التحدي اليومي' : 'Daily',
+                color: const Color(0xFFFF6D00),
+                isCompleted: isDailyChallengeCompleted,
+                onTap: isDailyChallengeCompleted
+                    ? null
+                    : () => _startDailyChallenge(context, ref),
+              ),
+              // Quick Quiz
+              _GameModeChip(
+                icon: Icons.bolt,
+                label: isArabic ? 'سريع' : 'Quick',
+                color: const Color(0xFF2196F3),
+                subtitle: isArabic ? '5 أسئلة' : '5 Qs',
+                onTap: () => _startQuickQuiz(context, ref),
+              ),
+              // Timed Blitz
+              _GameModeChip(
+                icon: Icons.timer,
+                label: isArabic ? 'البرق' : 'Blitz',
+                color: const Color(0xFFF44336),
+                subtitle: isArabic ? '2× نقاط' : '2× XP',
+                onTap: () => _startTimedBlitz(context, ref),
+              ),
+              // Continent Challenge
+              _GameModeChip(
+                icon: Icons.public,
+                label: isArabic ? 'القارة' : 'Continent',
+                color: const Color(0xFF4CAF50),
+                onTap: () => _showContinentPicker(context, ref),
+              ),
+              // Marathon (Premium)
+              _GameModeChip(
+                icon: Icons.sports_score,
+                label: isArabic ? 'ماراثون' : 'Marathon',
+                color: const Color(0xFF9C27B0),
+                subtitle: isArabic ? '50 سؤال' : '50 Qs',
+                isPremium: !isPremium,
+                onTap: () => _startMarathon(context, ref, isPremium),
+              ),
+              // Study Mode
+              _GameModeChip(
+                icon: Icons.school,
+                label: isArabic ? 'دراسة' : 'Study',
+                color: const Color(0xFF607D8B),
+                subtitle: isArabic ? 'بدون نقاط' : 'No XP',
+                onTap: () => _startStudyMode(context, ref),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _startDailyChallenge(BuildContext context, WidgetRef ref) {
+    HapticFeedback.mediumImpact();
+    ref.read(quizStateProvider.notifier).startDailyChallenge();
+    context.push('${Routes.quizGame}?sessionType=dailyChallenge');
+  }
+
+  void _startQuickQuiz(BuildContext context, WidgetRef ref) {
+    HapticFeedback.mediumImpact();
+    ref.read(quizStateProvider.notifier).startQuickQuiz(
+          difficulty: selectedDifficulty,
+        );
+    context.push('${Routes.quizGame}?sessionType=quickQuiz&difficulty=${selectedDifficulty.name}');
+  }
+
+  void _startTimedBlitz(BuildContext context, WidgetRef ref) {
+    HapticFeedback.mediumImpact();
+    ref.read(quizStateProvider.notifier).startTimedBlitz(
+          difficulty: selectedDifficulty,
+        );
+    context.push('${Routes.quizGame}?sessionType=timedBlitz&difficulty=${selectedDifficulty.name}');
+  }
+
+  void _startMarathon(BuildContext context, WidgetRef ref, bool isPremium) {
+    HapticFeedback.mediumImpact();
+    if (!isPremium) {
+      context.push(Routes.paywall);
+      return;
+    }
+    ref.read(quizStateProvider.notifier).startMarathon(
+          difficulty: selectedDifficulty,
+        );
+    context.push('${Routes.quizGame}?sessionType=marathon&difficulty=${selectedDifficulty.name}');
+  }
+
+  void _startStudyMode(BuildContext context, WidgetRef ref) {
+    HapticFeedback.mediumImpact();
+    ref.read(quizStateProvider.notifier).startStudyMode(
+          mode: QuizMode.mixed,
+        );
+    context.push('${Routes.quizGame}?sessionType=studyMode');
+  }
+
+  void _showContinentPicker(BuildContext context, WidgetRef ref) {
+    HapticFeedback.mediumImpact();
+    final continents = [
+      ('Africa', isArabic ? 'أفريقيا' : 'Africa'),
+      ('Asia', isArabic ? 'آسيا' : 'Asia'),
+      ('Europe', isArabic ? 'أوروبا' : 'Europe'),
+      ('North America', isArabic ? 'أمريكا الشمالية' : 'North America'),
+      ('South America', isArabic ? 'أمريكا الجنوبية' : 'South America'),
+      ('Oceania', isArabic ? 'أوقيانوسيا' : 'Oceania'),
+    ];
+
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              isArabic ? 'اختر القارة' : 'Select Continent',
+              style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ...continents.map((continent) => ListTile(
+                  leading: const Icon(Icons.public),
+                  title: Text(continent.$2),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () {
+                    Navigator.pop(context);
+                    ref.read(quizStateProvider.notifier).startContinentChallenge(
+                          continent: continent.$1,
+                          difficulty: selectedDifficulty,
+                        );
+                    context.push(
+                      '${Routes.quizGame}?sessionType=continentChallenge&continent=${continent.$1}&difficulty=${selectedDifficulty.name}',
+                    );
+                  },
+                )),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Game mode chip widget
+class _GameModeChip extends StatelessWidget {
+  const _GameModeChip({
+    required this.icon,
+    required this.label,
+    required this.color,
+    this.subtitle,
+    this.isPremium = false,
+    this.isCompleted = false,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color color;
+  final String? subtitle;
+  final bool isPremium;
+  final bool isCompleted;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: isCompleted
+              ? Colors.grey.withValues(alpha: 0.2)
+              : color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isCompleted ? Colors.grey : color.withValues(alpha: 0.3),
+            width: 1.5,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isCompleted ? Icons.check_circle : icon,
+              color: isCompleted ? Colors.grey : color,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      label,
+                      style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: isCompleted ? Colors.grey : color,
+                      ),
+                    ),
+                    if (isPremium) ...[
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.star,
+                        size: 12,
+                        color: AppColors.xpGold,
+                      ),
+                    ],
+                  ],
+                ),
+                if (subtitle != null)
+                  Text(
+                    subtitle!,
+                    style: GoogleFonts.poppins(
+                      fontSize: 10,
+                      color: isCompleted
+                          ? Colors.grey
+                          : color.withValues(alpha: 0.7),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

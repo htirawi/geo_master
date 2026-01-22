@@ -11,6 +11,8 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/auth_provider.dart';
 import '../../../../presentation/providers/country_provider.dart';
+import '../../../../presentation/providers/user_preferences_provider.dart'
+    show LocalLearningPreferences, localLearningPreferencesProvider;
 import '../../../../presentation/providers/user_provider.dart';
 
 /// Home screen - Explorer's Dashboard
@@ -307,10 +309,10 @@ class _TodaysDestinationCard extends ConsumerWidget {
         return GestureDetector(
           onTap: () {
             HapticFeedback.lightImpact();
-            context.push('${Routes.countryDetail}/${country.code}');
+            context.push(Routes.countryDetailPath(country.code));
           },
           child: Container(
-            height: 200,
+            height: 220,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
@@ -353,86 +355,108 @@ class _TodaysDestinationCard extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Label
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: AppColors.sunrise,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.pin_drop, color: Colors.white, size: 14),
-                              const SizedBox(width: 4),
-                              Text(
-                                l10n.countryOfTheDay,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 11,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
+                        // Label - positioned at top right for RTL support
+                        Align(
+                          alignment: isArabic ? Alignment.topRight : Alignment.topLeft,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: AppColors.sunrise,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.pin_drop, color: Colors.white, size: 14),
+                                const SizedBox(width: 4),
+                                Text(
+                                  l10n.countryOfTheDay,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 11,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                         const Spacer(),
-                        // Country name and info
-                        Text(
-                          country.getDisplayName(isArabic: isArabic),
-                          style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-                            fontSize: 28,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withValues(alpha: 0.3),
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 4),
+                        // Country name and info with arrow
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Icon(Icons.location_on,
-                              color: Colors.white.withValues(alpha: 0.8), size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              country.region,
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                color: Colors.white.withValues(alpha: 0.8),
+                            // Country info
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    country.getDisplayName(isArabic: isArabic),
+                                    style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
+                                      fontSize: 28,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black.withValues(alpha: 0.3),
+                                          blurRadius: 10,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.people,
+                                        color: Colors.white.withValues(alpha: 0.8), size: 16),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        country.formattedPopulation,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 14,
+                                          color: Colors.white.withValues(alpha: 0.8),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Icon(Icons.location_on,
+                                        color: Colors.white.withValues(alpha: 0.8), size: 16),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        country.getDisplayRegion(isArabic: isArabic),
+                                        style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
+                                          fontSize: 14,
+                                          color: Colors.white.withValues(alpha: 0.8),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            Icon(Icons.people,
-                              color: Colors.white.withValues(alpha: 0.8), size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              country.formattedPopulation,
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                color: Colors.white.withValues(alpha: 0.8),
+                            // Explore arrow - now part of the row, not overlapping
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.2),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                isArabic ? Icons.arrow_back : Icons.arrow_forward,
+                                color: AppColors.primary,
+                                size: 20,
                               ),
                             ),
                           ],
                         ),
                       ],
-                    ),
-                  ),
-                  // Explore arrow
-                  Positioned(
-                    right: 16,
-                    bottom: 16,
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const Icon(Icons.arrow_forward,
-                        color: AppColors.primary, size: 20),
                     ),
                   ),
                 ],
@@ -580,13 +604,34 @@ class _CompassActionItem extends StatelessWidget {
   }
 }
 
-/// Daily Challenge Card with adventure theme
+/// Daily Challenge Card with adventure theme - personalized based on user interests
 class _DailyChallengeCard extends ConsumerWidget {
   const _DailyChallengeCard();
+
+  /// Get quiz mode based on user interests
+  String _getPreferredQuizMode(LocalLearningPreferences prefs) {
+    // Priority order based on what user selected
+    if (prefs.isInterestedIn('flags')) return 'flags';
+    if (prefs.isInterestedIn('capitals')) return 'capitals';
+    if (prefs.isInterestedIn('geography')) return 'geography';
+    if (prefs.isInterestedIn('culture')) return 'culture';
+    if (prefs.isInterestedIn('languages')) return 'languages';
+    if (prefs.isInterestedIn('history')) return 'history';
+    // Default if no interests selected
+    return 'capitals';
+  }
+
+  /// Get difficulty string from user preferences
+  String _getDifficulty(LocalLearningPreferences prefs) {
+    return prefs.difficulty;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final userPrefs = ref.watch(localLearningPreferencesProvider);
+    final quizMode = _getPreferredQuizMode(userPrefs);
+    final difficulty = _getDifficulty(userPrefs);
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -671,11 +716,11 @@ class _DailyChallengeCard extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 16),
-          // Start button
+          // Start button - uses personalized quiz mode and difficulty
           GestureDetector(
             onTap: () {
               HapticFeedback.mediumImpact();
-              context.push('${Routes.quizGame}?mode=capitals&difficulty=medium');
+              context.push('${Routes.quizGame}?mode=$quizMode&difficulty=$difficulty');
             },
             child: Container(
               width: 60,

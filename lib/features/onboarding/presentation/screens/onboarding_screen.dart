@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -29,10 +30,26 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
 
   late AnimationController _particleController;
   late AnimationController _pulseController;
+  late AnimationController _flagsController;
+
+  // Country codes for floating flags - matching splash/auth screens
+  static const List<String> _flagCodes = [
+    'JO', 'PS', 'SA', 'AE', 'KW', 'EG', 'US', 'GB',
+    'FR', 'DE', 'JP', 'CN', 'BR', 'IN', 'AU', 'CA',
+  ];
 
   @override
   void initState() {
     super.initState();
+
+    // Set status bar style for dark theme
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
+
     _particleController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 15),
@@ -42,6 +59,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     )..repeat(reverse: true);
+
+    _flagsController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 12),
+    )..repeat();
   }
 
   @override
@@ -49,53 +71,54 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     _pageController.dispose();
     _particleController.dispose();
     _pulseController.dispose();
+    _flagsController.dispose();
     super.dispose();
   }
 
   List<_OnboardingPageData> _buildPages(AppLocalizations l10n) {
     return [
       _OnboardingPageData(
-        illustration: '🌍',
+        icon: Icons.public_rounded, // Globe - Explore the world
         title: l10n.onboardingExploreTitle,
         description: l10n.onboardingExploreDescription,
-        color: AppColors.primary,
+        color: const Color(0xFF4FC3F7), // Matching globe blue
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF1E88E5), Color(0xFF1565C0)],
+          colors: [Color(0xFF4FC3F7), Color(0xFF1E88E5)],
         ),
       ),
       _OnboardingPageData(
-        illustration: '🧠',
+        icon: Icons.explore_rounded, // Compass - Quiz/Navigation
         title: l10n.onboardingQuizTitle,
         description: l10n.onboardingQuizDescription,
-        color: AppColors.secondary,
+        color: const Color(0xFFFFB74D), // Warm amber
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFFF9800), Color(0xFFEF6C00)],
+          colors: [Color(0xFFFFB74D), Color(0xFFFF9800)],
         ),
       ),
       _OnboardingPageData(
-        illustration: '🤖',
+        icon: Icons.travel_explore_rounded, // AI Travel/Smart exploration
         title: l10n.onboardingAiTitle,
         description: l10n.onboardingAiDescription,
-        color: AppColors.tertiary,
+        color: const Color(0xFF4DB6AC), // Teal
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF26A69A), Color(0xFF00796B)],
+          colors: [Color(0xFF4DB6AC), Color(0xFF26A69A)],
         ),
       ),
       _OnboardingPageData(
-        illustration: '🏆',
+        icon: Icons.emoji_events_rounded, // Trophy with map theme
         title: l10n.onboardingAchievementsTitle,
         description: l10n.onboardingAchievementsDescription,
-        color: AppColors.xpGold,
+        color: const Color(0xFFFFD54F), // Gold
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFFFD700), Color(0xFFFFA000)],
+          colors: [Color(0xFFFFD54F), Color(0xFFFFC107)],
         ),
       ),
     ];
@@ -105,27 +128,34 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final isArabic = ref.watch(isArabicProvider);
-    final size = MediaQuery.of(context).size;
     final pages = _buildPages(l10n);
 
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
+          // Dark gradient matching splash/auth/language screens
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: [
-              pages[_currentPage].color.withValues(alpha: 0.05),
-              Colors.white,
-              pages[_currentPage].color.withValues(alpha: 0.03),
+              Color(0xFF0D1B2A),
+              Color(0xFF1B263B),
+              Color(0xFF415A77),
             ],
+            stops: [0.0, 0.5, 1.0],
           ),
         ),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              _buildParticles(size, pages[_currentPage].color),
-              Column(
+        child: Stack(
+          children: [
+            // Gradient orbs for visual depth
+            _buildGradientOrbs(pages[_currentPage].color),
+
+            // Floating flags background
+            ..._buildFloatingFlags(),
+
+            // Main content
+            SafeArea(
+              child: Column(
                 children: [
                   _buildSkipButton(l10n, isArabic, pages[_currentPage].color),
                   Expanded(
@@ -148,11 +178,127 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                   _buildNavigationButtons(l10n, isArabic, pages),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  // Gradient orbs for visual depth (matching other screens)
+  Widget _buildGradientOrbs(Color accentColor) {
+    return Stack(
+      children: [
+        Positioned(
+          top: -80,
+          right: -80,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            width: 250,
+            height: 250,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  accentColor.withValues(alpha: 0.25),
+                  accentColor.withValues(alpha: 0.0),
+                ],
+              ),
+            ),
+          ),
+        )
+            .animate(onPlay: (c) => c.repeat(reverse: true))
+            .scale(
+              begin: const Offset(1, 1),
+              end: const Offset(1.15, 1.15),
+              duration: 4.seconds,
+            ),
+        Positioned(
+          bottom: -120,
+          left: -80,
+          child: Container(
+            width: 300,
+            height: 300,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  AppColors.tertiary.withValues(alpha: 0.15),
+                  AppColors.tertiary.withValues(alpha: 0.0),
+                ],
+              ),
+            ),
+          ),
+        )
+            .animate(onPlay: (c) => c.repeat(reverse: true))
+            .scale(
+              begin: const Offset(1.15, 1.15),
+              end: const Offset(1, 1),
+              duration: 5.seconds,
+            ),
+      ],
+    );
+  }
+
+  // Floating flags positioned around edges (matching auth screen)
+  List<Widget> _buildFloatingFlags() {
+    final random = math.Random(42);
+    return List.generate(10, (index) {
+      // Position flags around edges, avoiding center content area
+      final isLeftSide = index % 2 == 0;
+      final verticalPosition = 0.1 + (index / 10) * 0.8;
+      final flagSize = 20 + random.nextDouble() * 10;
+      final flagCode = _flagCodes[index % _flagCodes.length];
+
+      return AnimatedBuilder(
+        animation: _flagsController,
+        builder: (context, child) {
+          final size = MediaQuery.of(context).size;
+          final progress = (_flagsController.value + (index * 0.1)) % 1.0;
+
+          // Gentle floating motion
+          final baseX = isLeftSide ? 10.0 : size.width - flagSize - 10;
+          final x = baseX + math.sin(progress * 2 * math.pi) * 15;
+          final y = verticalPosition * size.height +
+              math.cos(progress * 2 * math.pi + index) * 10;
+
+          return Positioned(
+            left: isLeftSide ? x : null,
+            right: isLeftSide ? null : size.width - x - flagSize,
+            top: y,
+            child: child!,
+          );
+        },
+        child: Opacity(
+          opacity: 0.4,
+          child: Container(
+            width: flagSize,
+            height: flagSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.3),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: CountryFlag.fromCountryCode(
+                flagCode,
+                width: flagSize,
+                height: flagSize,
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildSkipButton(AppLocalizations l10n, bool isArabic, Color color) {
@@ -164,44 +310,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
           onPressed: () => _completeOnboarding(context),
           child: Text(
             l10n.skip,
-            style: TextStyle(color: color, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.8),
+              fontWeight: FontWeight.w600,
+            ),
           ),
         )
             .animate()
             .fadeIn(duration: 300.ms)
             .slideX(begin: isArabic ? -0.2 : 0.2, end: 0),
       ),
-    );
-  }
-
-  Widget _buildParticles(Size size, Color color) {
-    final random = math.Random(123);
-    return Stack(
-      children: List.generate(20, (index) {
-        final x = random.nextDouble();
-        final y = random.nextDouble();
-        final particleSize = 4.0 + random.nextDouble() * 6;
-
-        return AnimatedBuilder(
-          animation: _particleController,
-          builder: (context, _) {
-            final progress =
-                (_particleController.value + (index * 0.05)) % 1.0;
-            return Positioned(
-              left: x * size.width,
-              top: ((y + progress) % 1.0) * size.height,
-              child: Container(
-                width: particleSize,
-                height: particleSize,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: color.withValues(alpha: 0.1 + random.nextDouble() * 0.1),
-                ),
-              ),
-            );
-          },
-        );
-      }),
     );
   }
 
@@ -324,14 +442,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
 
 class _OnboardingPageData {
   const _OnboardingPageData({
-    required this.illustration,
+    required this.icon,
     required this.title,
     required this.description,
     required this.color,
     required this.gradient,
   });
 
-  final String illustration;
+  final IconData icon;
   final String title;
   final String description;
   final Color color;
@@ -382,8 +500,8 @@ class _OnboardingPage extends StatelessWidget {
           shape: BoxShape.circle,
           gradient: RadialGradient(
             colors: [
-              data.color.withValues(alpha: 0.15),
-              data.color.withValues(alpha: 0.05),
+              data.color.withValues(alpha: 0.25),
+              data.color.withValues(alpha: 0.1),
               Colors.transparent,
             ],
             stops: const [0.5, 0.7, 1.0],
@@ -392,17 +510,19 @@ class _OnboardingPage extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
+            // Outer ring
             Container(
               width: 160,
               height: 160,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: data.color.withValues(alpha: 0.2),
+                  color: data.color.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
             ),
+            // Inner circle with icon
             Container(
               width: 130,
               height: 130,
@@ -412,22 +532,55 @@ class _OnboardingPage extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    data.color.withValues(alpha: 0.1),
-                    data.color.withValues(alpha: 0.2),
+                    data.color.withValues(alpha: 0.3),
+                    data.color.withValues(alpha: 0.15),
                   ],
+                ),
+                border: Border.all(
+                  color: data.color.withValues(alpha: 0.4),
+                  width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: data.color.withValues(alpha: 0.3),
+                    color: data.color.withValues(alpha: 0.4),
                     blurRadius: 30,
                     spreadRadius: 5,
                   ),
                 ],
               ),
               child: Center(
-                child: Text(
-                  data.illustration,
-                  style: const TextStyle(fontSize: 60),
+                child: ShaderMask(
+                  shaderCallback: (bounds) => LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white,
+                      data.color.withValues(alpha: 0.9),
+                    ],
+                  ).createShader(bounds),
+                  child: Icon(
+                    data.icon,
+                    size: 60,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            // Shine effect
+            Positioned(
+              top: 30,
+              left: 35,
+              child: Container(
+                width: 30,
+                height: 18,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.white.withValues(alpha: 0.4),
+                      Colors.white.withValues(alpha: 0.0),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -450,7 +603,7 @@ class _OnboardingPage extends StatelessWidget {
       data.title,
       style: theme.textTheme.headlineSmall?.copyWith(
         fontWeight: FontWeight.bold,
-        color: data.color,
+        color: Colors.white,
       ),
       textAlign: TextAlign.center,
     )
@@ -463,7 +616,7 @@ class _OnboardingPage extends StatelessWidget {
     return Text(
       data.description,
       style: theme.textTheme.bodyLarge?.copyWith(
-        color: AppColors.textSecondaryLight,
+        color: Colors.white.withValues(alpha: 0.7),
         height: 1.5,
       ),
       textAlign: TextAlign.center,
@@ -491,13 +644,18 @@ class _AnimatedPageIndicator extends StatelessWidget {
       width: isActive ? 32 : 10,
       height: 10,
       decoration: BoxDecoration(
-        color: isActive ? color : color.withValues(alpha: 0.2),
+        // Use accent color when active, semi-transparent white when inactive
+        color: isActive ? color : Colors.white.withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: isActive ? color.withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.15),
+          width: 1,
+        ),
         boxShadow: isActive
             ? [
                 BoxShadow(
-                  color: color.withValues(alpha: 0.4),
-                  blurRadius: 8,
+                  color: color.withValues(alpha: 0.5),
+                  blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
               ]

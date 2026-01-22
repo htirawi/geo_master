@@ -11,6 +11,9 @@ abstract class IQuizRepository {
     required QuizDifficulty difficulty,
     String? region,
     int questionCount = 10,
+    QuizSessionType sessionType = QuizSessionType.standard,
+    String? continent,
+    int currentStreak = 0,
   });
 
   /// Submit an answer

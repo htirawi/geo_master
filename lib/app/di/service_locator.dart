@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/network/api_client.dart';
 import '../../core/services/cache_service.dart';
+import '../../core/services/translation_service.dart';
 import '../../data/datasources/local/chat_local_datasource.dart';
 import '../../data/datasources/local/quiz_local_datasource.dart';
 import '../../data/datasources/remote/claude_api_datasource.dart';
@@ -109,6 +111,22 @@ Future<void> _initExternalDependencies() async {
   // Firebase instances
   sl.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
   sl.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
+
+  // Firebase Remote Config
+  final remoteConfig = FirebaseRemoteConfig.instance;
+  await remoteConfig.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: const Duration(minutes: 1),
+    minimumFetchInterval: const Duration(hours: 1),
+  ));
+  sl.registerSingleton<FirebaseRemoteConfig>(remoteConfig);
+
+  // Translation Service (layered Arabic translations)
+  sl.registerLazySingleton<TranslationService>(
+    () => TranslationService(
+      remoteConfig: sl<FirebaseRemoteConfig>(),
+      hive: sl<HiveInterface>(),
+    ),
+  );
 }
 
 /// Initialize core utilities

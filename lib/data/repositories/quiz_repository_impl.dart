@@ -14,6 +14,50 @@ import '../datasources/local/quiz_local_datasource.dart';
 import '../datasources/remote/firestore_user_datasource.dart';
 import '../models/quiz_model.dart';
 
+/// Fun facts about countries for educational content
+const Map<String, Map<String, String>> _countryFunFacts = {
+  'FR': {
+    'en': 'Paris is called the City of Light because it was one of the first cities to use street lighting.',
+    'ar': 'تُسمى باريس مدينة النور لأنها كانت من أوائل المدن التي استخدمت إنارة الشوارع.',
+  },
+  'JP': {
+    'en': 'Japan has more than 6,800 islands, but only about 430 are inhabited.',
+    'ar': 'اليابان لديها أكثر من 6800 جزيرة، لكن حوالي 430 منها فقط مأهولة بالسكان.',
+  },
+  'BR': {
+    'en': 'Brazil produces about one-third of the world\'s coffee.',
+    'ar': 'البرازيل تنتج حوالي ثلث القهوة في العالم.',
+  },
+  'EG': {
+    'en': 'The Great Pyramid of Giza was the tallest man-made structure for over 3,800 years.',
+    'ar': 'كان الهرم الأكبر في الجيزة أطول هيكل من صنع الإنسان لأكثر من 3800 عام.',
+  },
+  'AU': {
+    'en': 'Australia is both a country and a continent, and has the longest fence in the world.',
+    'ar': 'أستراليا هي دولة وقارة في آن واحد، ولديها أطول سياج في العالم.',
+  },
+  'IN': {
+    'en': 'India has the world\'s largest postal network with over 150,000 post offices.',
+    'ar': 'الهند لديها أكبر شبكة بريدية في العالم مع أكثر من 150,000 مكتب بريد.',
+  },
+  'CN': {
+    'en': 'The Great Wall of China is not visible from space with the naked eye, contrary to popular belief.',
+    'ar': 'سور الصين العظيم غير مرئي من الفضاء بالعين المجردة، على عكس الاعتقاد الشائع.',
+  },
+  'IT': {
+    'en': 'Italy has more UNESCO World Heritage Sites than any other country.',
+    'ar': 'إيطاليا لديها مواقع تراث عالمي لليونسكو أكثر من أي دولة أخرى.',
+  },
+  'SA': {
+    'en': 'Saudi Arabia has no rivers, making it one of the few countries without permanent surface water.',
+    'ar': 'المملكة العربية السعودية ليس لديها أنهار، مما يجعلها من الدول القليلة بدون مياه سطحية دائمة.',
+  },
+  'US': {
+    'en': 'The United States has no official language at the federal level.',
+    'ar': 'الولايات المتحدة ليس لديها لغة رسمية على المستوى الفيدرالي.',
+  },
+};
+
 /// Quiz repository implementation
 class QuizRepositoryImpl implements IQuizRepository {
   QuizRepositoryImpl({
@@ -36,6 +80,9 @@ class QuizRepositoryImpl implements IQuizRepository {
     required QuizDifficulty difficulty,
     String? region,
     int questionCount = 10,
+    QuizSessionType sessionType = QuizSessionType.standard,
+    String? continent,
+    int currentStreak = 0,
   }) async {
     try {
       // Get countries for quiz generation
@@ -43,11 +90,16 @@ class QuizRepositoryImpl implements IQuizRepository {
       return countriesResult.fold(
         Left.new,
         (allCountries) async {
-          // Filter by region if specified
+          // Filter by region or continent if specified
           var countries = allCountries;
-          if (region != null) {
+          if (region != null && region.isNotEmpty) {
             countries = allCountries
                 .where((c) => c.region.toLowerCase() == region.toLowerCase())
+                .toList();
+          } else if (continent != null && continent.isNotEmpty) {
+            countries = allCountries
+                .where((c) => c.continents
+                    .any((cont) => cont.toLowerCase() == continent.toLowerCase()))
                 .toList();
           }
 
@@ -55,27 +107,41 @@ class QuizRepositoryImpl implements IQuizRepository {
             return Left(QuizFailure.noQuestionsAvailable());
           }
 
+          // Determine actual question count based on session type
+          final actualQuestionCount = sessionType.questionCount;
+
           // Generate questions based on mode
           final questions = <QuizQuestion>[];
           final usedCountries = <String>{};
 
-          for (var i = 0; i < questionCount && usedCountries.length < countries.length; i++) {
+          // Shuffle countries for randomness
+          final shuffledCountries = List<Country>.from(countries)..shuffle(_random);
+
+          for (var i = 0; i < actualQuestionCount && usedCountries.length < shuffledCountries.length; i++) {
             // Select a country that hasn't been used
-            Country targetCountry;
-            do {
-              targetCountry = countries[_random.nextInt(countries.length)];
-            } while (usedCountries.contains(targetCountry.code));
+            Country? targetCountry;
+            for (final country in shuffledCountries) {
+              if (!usedCountries.contains(country.code)) {
+                targetCountry = country;
+                break;
+              }
+            }
+
+            if (targetCountry == null) break;
             usedCountries.add(targetCountry.code);
 
             // Generate question based on mode
+            final questionMode = mode == QuizMode.mixed
+                ? _getRandomQuizMode()
+                : mode;
+
             final question = _generateQuestion(
-              mode: mode == QuizMode.mixed
-                  ? QuizMode.values[_random.nextInt(QuizMode.values.length - 1)]
-                  : mode,
+              mode: questionMode,
               targetCountry: targetCountry,
               allCountries: countries,
               difficulty: difficulty,
               questionIndex: i,
+              sessionType: sessionType,
             );
 
             if (question != null) {
@@ -87,17 +153,27 @@ class QuizRepositoryImpl implements IQuizRepository {
             return Left(QuizFailure.noQuestionsAvailable());
           }
 
+          // Calculate initial lives for marathon mode
+          int? initialLives;
+          if (sessionType == QuizSessionType.marathon) {
+            initialLives = 3; // Three lives for marathon mode
+          }
+
           final quiz = Quiz(
             id: _uuid.v4(),
             mode: mode,
             difficulty: difficulty,
+            sessionType: sessionType,
             region: region,
+            continent: continent,
             questions: questions,
             startedAt: DateTime.now(),
+            livesRemaining: initialLives,
+            streakAtStart: currentStreak,
           );
 
           logger.debug(
-            'Generated quiz with ${questions.length} questions',
+            'Generated ${sessionType.name} quiz with ${questions.length} questions',
             tag: 'QuizRepo',
           );
 
@@ -115,12 +191,27 @@ class QuizRepositoryImpl implements IQuizRepository {
     }
   }
 
+  /// Get a random quiz mode (excluding mixed and premium modes)
+  QuizMode _getRandomQuizMode() {
+    final availableModes = [
+      QuizMode.capitals,
+      QuizMode.flags,
+      QuizMode.reverseFlags,
+      QuizMode.population,
+      QuizMode.currencies,
+      QuizMode.languages,
+      QuizMode.borders,
+    ];
+    return availableModes[_random.nextInt(availableModes.length)];
+  }
+
   QuizQuestion? _generateQuestion({
     required QuizMode mode,
     required Country targetCountry,
     required List<Country> allCountries,
     required QuizDifficulty difficulty,
     required int questionIndex,
+    QuizSessionType sessionType = QuizSessionType.standard,
   }) {
     final optionsCount = difficulty.optionsCount;
 
@@ -129,6 +220,14 @@ class QuizRepositoryImpl implements IQuizRepository {
         .where((c) => c.code != targetCountry.code)
         .toList()
       ..shuffle(_random);
+
+    // Get fun fact for this country
+    final funFactData = _countryFunFacts[targetCountry.code];
+    final funFact = funFactData?['en'];
+    final funFactArabic = funFactData?['ar'];
+
+    // Determine if we should include hints (not for study mode)
+    final includeHint = sessionType != QuizSessionType.studyMode;
 
     switch (mode) {
       case QuizMode.capitals:
@@ -144,11 +243,18 @@ class QuizRepositoryImpl implements IQuizRepository {
         return QuizQuestion(
           id: _uuid.v4(),
           mode: mode,
+          questionType: QuestionType.multipleChoice,
           question: 'What is the capital of ${targetCountry.name}?',
           questionArabic: 'ما هي عاصمة ${targetCountry.nameArabic}؟',
           correctAnswer: targetCountry.capital!,
           options: options,
           countryCode: targetCountry.code,
+          hint: includeHint ? 'This city is in ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'هذه المدينة في ${targetCountry.region}' : null,
+          explanation: '${targetCountry.capital} is the capital and largest city of ${targetCountry.name}.',
+          explanationArabic: '${targetCountry.capital} هي عاصمة وأكبر مدينة في ${targetCountry.nameArabic}.',
+          funFact: funFact,
+          funFactArabic: funFactArabic,
         );
 
       case QuizMode.flags:
@@ -160,12 +266,46 @@ class QuizRepositoryImpl implements IQuizRepository {
         return QuizQuestion(
           id: _uuid.v4(),
           mode: mode,
+          questionType: QuestionType.flagIdentification,
           question: 'Which country does this flag belong to?',
           questionArabic: 'لأي دولة ينتمي هذا العلم؟',
           correctAnswer: targetCountry.name,
           options: options,
           imageUrl: targetCountry.flagUrl,
           countryCode: targetCountry.code,
+          hint: includeHint ? 'This country is located in ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'تقع هذه الدولة في ${targetCountry.region}' : null,
+          explanation: 'This is the flag of ${targetCountry.name}.',
+          explanationArabic: 'هذا هو علم ${targetCountry.nameArabic}.',
+          funFact: funFact,
+          funFactArabic: funFactArabic,
+        );
+
+      case QuizMode.reverseFlags:
+        // Show country name, select the correct flag
+        final flagOptions = [
+          targetCountry.flagUrl,
+          ...wrongOptions
+              .take(optionsCount - 1)
+              .map((c) => c.flagUrl),
+        ]..shuffle(_random);
+
+        return QuizQuestion(
+          id: _uuid.v4(),
+          mode: mode,
+          questionType: QuestionType.reverseFlag,
+          question: 'Select the flag of ${targetCountry.name}',
+          questionArabic: 'اختر علم ${targetCountry.nameArabic}',
+          correctAnswer: targetCountry.flagUrl,
+          options: flagOptions,
+          countryCode: targetCountry.code,
+          hint: includeHint ? 'The flag might contain colors from the national symbol' : null,
+          hintArabic: includeHint ? 'قد يحتوي العلم على ألوان من الرمز الوطني' : null,
+          explanation: 'The flag of ${targetCountry.name} features its national colors and symbols.',
+          explanationArabic: 'يتميز علم ${targetCountry.nameArabic} بألوانه ورموزه الوطنية.',
+          metadata: {
+            'isImageOptions': true,
+          },
         );
 
       case QuizMode.maps:
@@ -177,6 +317,7 @@ class QuizRepositoryImpl implements IQuizRepository {
         return QuizQuestion(
           id: _uuid.v4(),
           mode: mode,
+          questionType: QuestionType.mapLocation,
           question: 'Identify this country on the map',
           questionArabic: 'حدد هذه الدولة على الخريطة',
           correctAnswer: targetCountry.name,
@@ -186,6 +327,10 @@ class QuizRepositoryImpl implements IQuizRepository {
             'latitude': targetCountry.coordinates.latitude,
             'longitude': targetCountry.coordinates.longitude,
           },
+          hint: includeHint ? 'This country is in ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'تقع هذه الدولة في ${targetCountry.region}' : null,
+          explanation: '${targetCountry.name} is located in ${targetCountry.region}.',
+          explanationArabic: 'تقع ${targetCountry.nameArabic} في ${targetCountry.region}.',
         );
 
       case QuizMode.population:
@@ -200,26 +345,22 @@ class QuizRepositoryImpl implements IQuizRepository {
         }
         popOptions.shuffle(_random);
 
-        // Format populations for display
-        String formatPop(int pop) {
-          if (pop >= 1000000000) {
-            return '${(pop / 1000000000).toStringAsFixed(1)}B';
-          } else if (pop >= 1000000) {
-            return '${(pop / 1000000).toStringAsFixed(1)}M';
-          } else if (pop >= 1000) {
-            return '${(pop / 1000).toStringAsFixed(1)}K';
-          }
-          return pop.toString();
-        }
-
         return QuizQuestion(
           id: _uuid.v4(),
           mode: mode,
+          questionType: QuestionType.population,
           question: 'What is the approximate population of ${targetCountry.name}?',
           questionArabic: 'ما هو عدد سكان ${targetCountry.nameArabic} تقريباً؟',
-          correctAnswer: formatPop(targetCountry.population),
-          options: popOptions.map((c) => formatPop(c.population)).toList(),
+          correctAnswer: _formatPopulation(targetCountry.population),
+          options: popOptions.map((c) => _formatPopulation(c.population)).toList(),
           countryCode: targetCountry.code,
+          hint: includeHint ? 'This is one of the ${targetCountry.population > 100000000 ? "most populous" : "smaller"} countries in ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'هذه واحدة من ${targetCountry.population > 100000000 ? "أكثر الدول سكاناً" : "الدول الأصغر"} في ${targetCountry.region}' : null,
+          explanation: '${targetCountry.name} has a population of approximately ${_formatPopulation(targetCountry.population)}.',
+          explanationArabic: 'يبلغ عدد سكان ${targetCountry.nameArabic} حوالي ${_formatPopulation(targetCountry.population)}.',
+          metadata: {
+            'exactPopulation': targetCountry.population,
+          },
         );
 
       case QuizMode.currencies:
@@ -239,11 +380,16 @@ class QuizRepositoryImpl implements IQuizRepository {
         return QuizQuestion(
           id: _uuid.v4(),
           mode: mode,
+          questionType: QuestionType.multipleChoice,
           question: 'What currency is used in ${targetCountry.name}?',
           questionArabic: 'ما هي العملة المستخدمة في ${targetCountry.nameArabic}؟',
           correctAnswer: '${currency.name} (${currency.symbol})',
           options: options,
           countryCode: targetCountry.code,
+          hint: includeHint ? 'The currency symbol is ${currency.symbol}' : null,
+          hintArabic: includeHint ? 'رمز العملة هو ${currency.symbol}' : null,
+          explanation: '${currency.name} is the official currency of ${targetCountry.name}.',
+          explanationArabic: '${currency.name} هي العملة الرسمية في ${targetCountry.nameArabic}.',
         );
 
       case QuizMode.languages:
@@ -260,17 +406,114 @@ class QuizRepositoryImpl implements IQuizRepository {
         return QuizQuestion(
           id: _uuid.v4(),
           mode: mode,
+          questionType: QuestionType.multipleChoice,
           question: 'What is an official language of ${targetCountry.name}?',
           questionArabic: 'ما هي اللغة الرسمية في ${targetCountry.nameArabic}؟',
           correctAnswer: language,
           options: options,
           countryCode: targetCountry.code,
+          hint: includeHint ? 'This country is in ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'تقع هذه الدولة في ${targetCountry.region}' : null,
+          explanation: '$language is one of the official languages spoken in ${targetCountry.name}.',
+          explanationArabic: '$language هي إحدى اللغات الرسمية المتحدثة في ${targetCountry.nameArabic}.',
         );
+
+      case QuizMode.borders:
+        // Multi-select question for neighboring countries
+        if (targetCountry.borders.isEmpty) return null;
+
+        // Get actual border country names
+        final borderCountries = <String>[];
+        for (final borderCode in targetCountry.borders) {
+          final borderCountry = allCountries.firstWhere(
+            (c) => c.code == borderCode,
+            orElse: () => allCountries.first,
+          );
+          if (borderCountry.code == borderCode) {
+            borderCountries.add(borderCountry.name);
+          }
+        }
+
+        if (borderCountries.isEmpty) return null;
+
+        // Get some wrong options (countries that don't border)
+        final nonBorderingCountries = wrongOptions
+            .where((c) => !targetCountry.borders.contains(c.code))
+            .take(4)
+            .map((c) => c.name)
+            .toList();
+
+        final allOptions = [...borderCountries, ...nonBorderingCountries]
+          ..shuffle(_random);
+
+        return QuizQuestion(
+          id: _uuid.v4(),
+          mode: mode,
+          questionType: QuestionType.multiSelect,
+          question: 'Which countries border ${targetCountry.name}? (Select all)',
+          questionArabic: 'ما هي الدول التي تحد ${targetCountry.nameArabic}؟ (اختر الكل)',
+          correctAnswer: borderCountries.first,
+          correctAnswers: borderCountries,
+          options: allOptions,
+          countryCode: targetCountry.code,
+          hint: includeHint ? '${targetCountry.name} has ${borderCountries.length} neighboring countries' : null,
+          hintArabic: includeHint ? '${targetCountry.nameArabic} لديها ${borderCountries.length} دول مجاورة' : null,
+          explanation: '${targetCountry.name} shares borders with ${borderCountries.join(", ")}.',
+          explanationArabic: '${targetCountry.nameArabic} تشترك في الحدود مع ${borderCountries.join("، ")}.',
+        );
+
+      case QuizMode.timezones:
+        if (targetCountry.timezones.isEmpty) return null;
+        final timezone = targetCountry.timezones.first;
+
+        // Get wrong timezone options
+        final wrongTimezones = wrongOptions
+            .where((c) => c.timezones.isNotEmpty && c.timezones.first != timezone)
+            .take(optionsCount - 1)
+            .map((c) => c.timezones.first)
+            .toSet()
+            .toList();
+
+        if (wrongTimezones.length < optionsCount - 1) return null;
+
+        final options = [timezone, ...wrongTimezones.take(optionsCount - 1)]
+          ..shuffle(_random);
+
+        return QuizQuestion(
+          id: _uuid.v4(),
+          mode: mode,
+          questionType: QuestionType.timeZone,
+          question: 'What is the primary timezone of ${targetCountry.name}?',
+          questionArabic: 'ما هي المنطقة الزمنية الرئيسية في ${targetCountry.nameArabic}؟',
+          correctAnswer: timezone,
+          options: options,
+          countryCode: targetCountry.code,
+          hint: includeHint ? 'This country is in ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'تقع هذه الدولة في ${targetCountry.region}' : null,
+          explanation: '${targetCountry.name} uses $timezone as its primary timezone.',
+          explanationArabic: '${targetCountry.nameArabic} تستخدم $timezone كمنطقتها الزمنية الرئيسية.',
+        );
+
+      case QuizMode.landmarks:
+        // Premium feature - would need landmark data
+        return null;
 
       case QuizMode.mixed:
         // This case is handled by selecting a random mode above
         return null;
     }
+  }
+
+  /// Format population for display
+  String _formatPopulation(int pop) {
+    if (pop >= 1000000000) {
+      return '${(pop / 1000000000).toStringAsFixed(1)}B';
+    } else if (pop >= 1000000) {
+      return '${(pop / 1000000).toStringAsFixed(1)}M';
+    } else if (pop >= 1000) {
+      return '${(pop / 1000).toStringAsFixed(1)}K';
+    }
+    return pop.toString();
   }
 
   @override
@@ -302,17 +545,98 @@ class QuizRepositoryImpl implements IQuizRepository {
     String? userId,
   }) async {
     try {
-      // Calculate XP based on performance
+      // Calculate base XP
       const baseXp = 10;
       final correctAnswersXp = quiz.score * 10;
       final difficultyMultiplier = quiz.difficulty.xpMultiplier;
-      final perfectBonus = quiz.isPerfectScore ? 50 : 0;
-      final speedBonus =
-          quiz.timeElapsed.inSeconds < (quiz.totalQuestions * 10) ? 25 : 0;
+      final sessionMultiplier = quiz.sessionType.xpMultiplier;
 
-      final totalXp = ((baseXp + correctAnswersXp + perfectBonus + speedBonus) *
-              difficultyMultiplier)
-          .round();
+      // Perfect score bonus
+      final perfectBonus = quiz.isPerfectScore ? 50 : 0;
+
+      // Speed bonus (if answered quickly)
+      final avgTimePerQuestion = quiz.answers.isEmpty
+          ? Duration.zero
+          : Duration(
+              milliseconds: quiz.answers
+                      .map((a) => a.timeTaken.inMilliseconds)
+                      .reduce((a, b) => a + b) ~/
+                  quiz.answers.length);
+
+      final speedBonus = avgTimePerQuestion.inSeconds < 10 ? 25 : 0;
+      final speedBonusMultiplier =
+          avgTimePerQuestion.inSeconds < 5 ? 1.5 : (avgTimePerQuestion.inSeconds < 10 ? 1.25 : 1.0);
+
+      // Streak bonus
+      final streakBonus = quiz.streakBonus;
+
+      // Hint penalty (5 XP per hint used)
+      final hintPenalty = quiz.hintsUsed * 5;
+
+      // Study mode earns no XP
+      final totalXp = quiz.sessionType == QuizSessionType.studyMode
+          ? 0
+          : ((baseXp + correctAnswersXp + perfectBonus + speedBonus - hintPenalty) *
+                  difficultyMultiplier *
+                  sessionMultiplier *
+                  streakBonus)
+              .round()
+              .clamp(0, 10000);
+
+      // Calculate longest correct answer streak
+      var currentPerfectStreak = 0;
+      var maxPerfectStreak = 0;
+      for (final answer in quiz.answers) {
+        if (answer.isCorrect) {
+          currentPerfectStreak++;
+          if (currentPerfectStreak > maxPerfectStreak) {
+            maxPerfectStreak = currentPerfectStreak;
+          }
+        } else {
+          currentPerfectStreak = 0;
+        }
+      }
+
+      // Analyze weak and strong areas based on quiz mode performance
+      final modeCorrectCount = <QuizMode, int>{};
+      final modeTotalCount = <QuizMode, int>{};
+
+      for (var i = 0; i < quiz.questions.length && i < quiz.answers.length; i++) {
+        final question = quiz.questions[i];
+        final answer = quiz.answers[i];
+        modeTotalCount[question.mode] = (modeTotalCount[question.mode] ?? 0) + 1;
+        if (answer.isCorrect) {
+          modeCorrectCount[question.mode] = (modeCorrectCount[question.mode] ?? 0) + 1;
+        }
+      }
+
+      final weakAreas = <String>[];
+      final strongAreas = <String>[];
+
+      for (final mode in modeTotalCount.keys) {
+        final total = modeTotalCount[mode] ?? 0;
+        final correct = modeCorrectCount[mode] ?? 0;
+        if (total > 0) {
+          final accuracy = correct / total;
+          if (accuracy < 0.5) {
+            weakAreas.add(mode.displayName);
+          } else if (accuracy >= 0.8) {
+            strongAreas.add(mode.displayName);
+          }
+        }
+      }
+
+      // Check for potential new achievements
+      final newAchievements = <String>[];
+      if (quiz.isPerfectScore) {
+        newAchievements.add('perfect_quiz');
+      }
+      if (quiz.sessionType == QuizSessionType.marathon && quiz.score >= 40) {
+        newAchievements.add('marathon_master');
+      }
+      if (quiz.sessionType == QuizSessionType.dailyChallenge) {
+        newAchievements.add('daily_challenger');
+      }
 
       final result = QuizResult(
         id: _uuid.v4(),
@@ -320,6 +644,7 @@ class QuizRepositoryImpl implements IQuizRepository {
         userId: userId ?? '',
         mode: quiz.mode,
         difficulty: quiz.difficulty,
+        sessionType: quiz.sessionType,
         score: quiz.score,
         totalQuestions: quiz.totalQuestions,
         accuracy: quiz.accuracy,
@@ -327,6 +652,15 @@ class QuizRepositoryImpl implements IQuizRepository {
         xpEarned: totalXp,
         completedAt: DateTime.now(),
         answers: quiz.answers,
+        continent: quiz.continent,
+        hintsUsed: quiz.hintsUsed,
+        streakBonus: streakBonus,
+        speedBonus: speedBonusMultiplier,
+        averageTimePerQuestion: avgTimePerQuestion,
+        perfectStreak: maxPerfectStreak,
+        weakAreas: weakAreas,
+        strongAreas: strongAreas,
+        newAchievements: newAchievements,
       );
 
       final resultModel = QuizResultModel.fromEntity(result);
@@ -352,11 +686,23 @@ class QuizRepositoryImpl implements IQuizRepository {
         }
       }
 
+      // Mark daily challenge as completed if applicable
+      if (quiz.sessionType == QuizSessionType.dailyChallenge && userId != null) {
+        try {
+          await _localDataSource.saveDailyChallengeCompletion(userId, DateTime.now());
+        } catch (e) {
+          logger.warning(
+            'Failed to mark daily challenge as completed: $e',
+            tag: 'QuizRepo',
+          );
+        }
+      }
+
       // Clear quiz progress
       await _localDataSource.clearSavedQuizProgress(userId ?? '');
 
       logger.info(
-        'Quiz completed: ${quiz.score}/${quiz.totalQuestions}, XP: $totalXp',
+        'Quiz completed: ${quiz.score}/${quiz.totalQuestions}, XP: $totalXp, Session: ${quiz.sessionType.name}',
         tag: 'QuizRepo',
       );
 

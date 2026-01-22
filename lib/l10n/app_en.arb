@@ -435,8 +435,17 @@
   "shareApp": "Share App",
   "contactUs": "Contact Us",
   "deleteAccount": "Delete Account",
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "pushNotifications": "Push Notifications",
+  "hapticFeedback": "Haptic Feedback",
+  "createAccountDescription": "Create an account to sync your progress across devices and unlock additional features.",
+  "difficultyEasyDesc": "Perfect for beginners",
+  "difficultyMediumDesc": "Balanced challenge",
+  "difficultyHardDesc": "For geography experts",
 
   "premium": "Premium",
+  "premiumExplorer": "PREMIUM EXPLORER",
   "goPremium": "Go Premium",
   "premiumFeatures": "Premium Features",
   "unlimitedQuizzes": "Unlimited Quizzes",
@@ -909,5 +918,339 @@
   },
 
   "noResultsFound": "No results found",
-  "searchForCountry": "Search for any country in the world"
+  "searchForCountry": "Search for any country in the world",
+
+  "flagAndColors": "Flag & Colors",
+  "flagColorsMeaning": "What the Colors Mean",
+  "flagSymbolism": "Symbolism",
+  "nationalFlag": "National Flag",
+  "tapToLearnMore": "Tap to learn about the flag colors",
+  "colorMeaningUnavailable": "Color meanings not available for this flag",
+  "additionalInfo": "Additional Information",
+  "hexCode": "Hex Code",
+  "copiedToClipboard": "Copied to clipboard",
+
+  "gameModes": "Game Modes",
+  "@gameModes": {
+    "description": "Title for game modes section"
+  },
+  "chooseTopic": "Choose Topic",
+  "@chooseTopic": {
+    "description": "Title for quiz topic selection"
+  },
+
+  "quickQuizMode": "Quick",
+  "@quickQuizMode": {
+    "description": "Quick quiz mode name"
+  },
+  "quickQuizQuestions": "5 Qs",
+  "@quickQuizQuestions": {
+    "description": "Quick quiz question count"
+  },
+  "timedBlitzMode": "Blitz",
+  "@timedBlitzMode": {
+    "description": "Timed blitz mode name"
+  },
+  "timedBlitzMultiplier": "2× XP",
+  "@timedBlitzMultiplier": {
+    "description": "Timed blitz XP multiplier"
+  },
+  "continentChallengeMode": "Continent",
+  "@continentChallengeMode": {
+    "description": "Continent challenge mode name"
+  },
+  "marathonMode": "Marathon",
+  "@marathonMode": {
+    "description": "Marathon mode name"
+  },
+  "marathonQuestions": "50 Qs",
+  "@marathonQuestions": {
+    "description": "Marathon question count"
+  },
+  "studyModeLabel": "Study",
+  "@studyModeLabel": {
+    "description": "Study mode name"
+  },
+  "studyModeNoXp": "No XP",
+  "@studyModeNoXp": {
+    "description": "Study mode no XP indicator"
+  },
+
+  "reverseFlagsQuiz": "Reverse Flags",
+  "@reverseFlagsQuiz": {
+    "description": "Reverse flags quiz title"
+  },
+  "reverseFlagsDescription": "Select the flag for the country",
+  "@reverseFlagsDescription": {
+    "description": "Reverse flags quiz description"
+  },
+  "languagesQuizTitle": "Languages",
+  "@languagesQuizTitle": {
+    "description": "Languages quiz title"
+  },
+  "languagesQuizDescription": "Identify official languages",
+  "@languagesQuizDescription": {
+    "description": "Languages quiz description"
+  },
+  "neighborsQuiz": "Neighbors",
+  "@neighborsQuiz": {
+    "description": "Neighbors quiz title"
+  },
+  "neighborsQuizDescription": "Select neighboring countries",
+  "@neighborsQuizDescription": {
+    "description": "Neighbors quiz description"
+  },
+  "mixedQuizTitle": "Mixed",
+  "@mixedQuizTitle": {
+    "description": "Mixed quiz title"
+  },
+  "mixedQuizDescription": "Random mix of all topics",
+  "@mixedQuizDescription": {
+    "description": "Mixed quiz description"
+  },
+
+  "sessionTypeQuickQuiz": "Quick Quiz",
+  "@sessionTypeQuickQuiz": {
+    "description": "Quick quiz session type name"
+  },
+  "sessionTypeContinentChallenge": "Continent Challenge",
+  "@sessionTypeContinentChallenge": {
+    "description": "Continent challenge session type name"
+  },
+  "sessionTypeTimedBlitz": "Timed Blitz",
+  "@sessionTypeTimedBlitz": {
+    "description": "Timed blitz session type name"
+  },
+  "sessionTypeDailyChallenge": "Daily Challenge",
+  "@sessionTypeDailyChallenge": {
+    "description": "Daily challenge session type name"
+  },
+  "sessionTypeMarathon": "Marathon",
+  "@sessionTypeMarathon": {
+    "description": "Marathon session type name"
+  },
+  "sessionTypeStudyMode": "Study Mode",
+  "@sessionTypeStudyMode": {
+    "description": "Study mode session type name"
+  },
+  "sessionTypeStandard": "Quiz",
+  "@sessionTypeStandard": {
+    "description": "Standard quiz session type name"
+  },
+
+  "selectContinent": "Select Continent",
+  "@selectContinent": {
+    "description": "Title for continent selection bottom sheet"
+  },
+
+  "exitQuizTitle": "Exit Quiz?",
+  "@exitQuizTitle": {
+    "description": "Title for exit quiz confirmation dialog"
+  },
+  "exitQuizMessage": "Your progress will be lost. Are you sure you want to exit?",
+  "@exitQuizMessage": {
+    "description": "Message for exit quiz confirmation dialog"
+  },
+  "exitButton": "Exit",
+  "@exitButton": {
+    "description": "Exit button text"
+  },
+
+  "useHint": "Use Hint (-5 XP)",
+  "@useHint": {
+    "description": "Use hint button text"
+  },
+  "confirmAnswers": "Confirm Answers",
+  "@confirmAnswers": {
+    "description": "Confirm multi-select answers button"
+  },
+  "showAnswer": "Show Answer",
+  "@showAnswer": {
+    "description": "Show answer button for study mode"
+  },
+  "selectAnswersCount": "Select {count} answers",
+  "@selectAnswersCount": {
+    "description": "Multi-select instruction",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "explanation": "Explanation",
+  "@explanation": {
+    "description": "Explanation section title"
+  },
+  "didYouKnow": "Did you know?",
+  "@didYouKnow": {
+    "description": "Fun fact section title"
+  },
+
+  "gameOver": "Game Over!",
+  "@gameOver": {
+    "description": "Game over title"
+  },
+  "perfectScoreTitle": "Perfect Score!",
+  "@perfectScoreTitle": {
+    "description": "Perfect score celebration text"
+  },
+
+  "gradeAPlus": "A+",
+  "gradeA": "A",
+  "gradeB": "B",
+  "gradeC": "C",
+  "gradeD": "D",
+  "gradeF": "F",
+  "gradeExcellentPlus": "Excellent+",
+  "@gradeExcellentPlus": {
+    "description": "Grade A+ display name"
+  },
+  "gradeExcellent": "Excellent",
+  "@gradeExcellent": {
+    "description": "Grade A display name"
+  },
+  "gradeVeryGood": "Very Good",
+  "@gradeVeryGood": {
+    "description": "Grade B display name"
+  },
+  "gradeGood": "Good",
+  "@gradeGood": {
+    "description": "Grade C display name"
+  },
+  "gradePass": "Pass",
+  "@gradePass": {
+    "description": "Grade D display name"
+  },
+  "gradeFail": "Fail",
+  "@gradeFail": {
+    "description": "Grade F display name"
+  },
+
+  "levelLabel": "Level",
+  "@levelLabel": {
+    "description": "Level stat label"
+  },
+  "modeLabel": "Mode",
+  "@modeLabel": {
+    "description": "Mode stat label"
+  },
+
+  "bonusesAndPenalties": "Bonuses & Penalties",
+  "@bonusesAndPenalties": {
+    "description": "Bonuses section title"
+  },
+  "streakBonus": "Streak Bonus",
+  "@streakBonus": {
+    "description": "Streak bonus label"
+  },
+  "speedBonus": "Speed Bonus",
+  "@speedBonus": {
+    "description": "Speed bonus label"
+  },
+  "hintsLabel": "Hints",
+  "@hintsLabel": {
+    "description": "Hints used label"
+  },
+  "perfectStreakLabel": "Perfect Streak",
+  "@perfectStreakLabel": {
+    "description": "Perfect streak label"
+  },
+
+  "performanceAnalysis": "Performance Analysis",
+  "@performanceAnalysis": {
+    "description": "Performance analysis section title"
+  },
+  "strongAreas": "Strong Areas",
+  "@strongAreas": {
+    "description": "Strong areas section title"
+  },
+  "needsImprovement": "Needs Improvement",
+  "@needsImprovement": {
+    "description": "Weak areas section title"
+  },
+
+  "newAchievements": "New Achievements!",
+  "@newAchievements": {
+    "description": "New achievements section title"
+  },
+  "achievementPerfectQuiz": "Perfect Quiz!",
+  "@achievementPerfectQuiz": {
+    "description": "Perfect quiz achievement name"
+  },
+  "achievementMarathonMaster": "Marathon Master!",
+  "@achievementMarathonMaster": {
+    "description": "Marathon master achievement name"
+  },
+  "achievementDailyChallenger": "Daily Challenger!",
+  "@achievementDailyChallenger": {
+    "description": "Daily challenger achievement name"
+  },
+  "achievementSpeedDemon": "Speed Demon!",
+  "@achievementSpeedDemon": {
+    "description": "Speed demon achievement name"
+  },
+  "achievementStreakMaster": "Streak Master!",
+  "@achievementStreakMaster": {
+    "description": "Streak master achievement name"
+  },
+
+  "areaCapitals": "Capitals",
+  "areaFlags": "Flags",
+  "areaReverseFlags": "Reverse Flags",
+  "areaMaps": "Maps",
+  "areaPopulation": "Population",
+  "areaCurrencies": "Currencies",
+  "areaLanguages": "Languages",
+  "areaBorders": "Borders",
+  "areaTimezones": "Timezones",
+
+  "xpMultiplierInfo": "{multiplier}x multiplier from {sessionType}",
+  "@xpMultiplierInfo": {
+    "description": "XP multiplier info text",
+    "placeholders": {
+      "multiplier": {
+        "type": "String",
+        "example": "2.0"
+      },
+      "sessionType": {
+        "type": "String",
+        "example": "Timed Blitz"
+      }
+    }
+  },
+
+  "streakBonusPercent": "+{percent}% Streak Bonus",
+  "@streakBonusPercent": {
+    "description": "Streak bonus percentage",
+    "placeholders": {
+      "percent": {
+        "type": "int",
+        "example": "25"
+      }
+    }
+  },
+  "streak3Days": "3 Day Streak: +10% XP",
+  "streak7Days": "7 Day Streak: +25% XP",
+  "streak14Days": "14 Day Streak: +50% XP",
+  "streak30Days": "30 Day Streak: +100% XP",
+
+  "livesRemaining": "{count} Lives",
+  "@livesRemaining": {
+    "description": "Lives remaining display",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "outOfLives": "Out of lives!",
+  "@outOfLives": {
+    "description": "Game over reason for marathon"
+  },
+  "timeUp": "Time's up!",
+  "@timeUp": {
+    "description": "Game over reason for timed blitz"
+  }
 }

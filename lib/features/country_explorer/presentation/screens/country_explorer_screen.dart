@@ -664,7 +664,7 @@ class _CountryListView extends ConsumerWidget {
   }
 }
 
-/// Country List Card
+/// Country List Card - Professional flag display with proper aspect ratio
 class _CountryListCard extends StatelessWidget {
   const _CountryListCard({
     required this.country,
@@ -679,6 +679,7 @@ class _CountryListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final regionColor = _getRegionColor(country.region);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -688,99 +689,142 @@ class _CountryListCard extends StatelessWidget {
           context.push(Routes.countryDetail.replaceFirst(':code', country.code));
         },
         child: Container(
+          constraints: const BoxConstraints(minHeight: 100),
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           child: Row(
             children: [
-              // Flag
-              ClipRRect(
-                borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(20),
+              // Flag Container - Proper aspect ratio with full flag display
+              Container(
+                width: 120,
+                constraints: const BoxConstraints(minHeight: 90, maxHeight: 110),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadiusDirectional.horizontal(
+                    start: Radius.circular(20),
+                  ),
+                  color: Colors.grey[100],
                 ),
-                child: SizedBox(
-                  width: 100,
-                  height: 80,
-                  child: CachedNetworkImage(
-                    imageUrl: country.flagUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (_, __) => Container(
-                      color: Colors.grey[200],
-                      child: Center(
-                        child: Text(
-                          country.flagEmoji,
-                          style: const TextStyle(fontSize: 32),
+                child: ClipRRect(
+                  borderRadius: const BorderRadiusDirectional.horizontal(
+                    start: Radius.circular(20),
+                  ),
+                  child: Stack(
+                    children: [
+                      // Subtle gradient background for white flags
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.grey[200]!,
+                              Colors.grey[100]!,
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    errorWidget: (_, __, ___) => Container(
-                      color: Colors.grey[200],
-                      child: Center(
-                        child: Text(
-                          country.flagEmoji,
-                          style: const TextStyle(fontSize: 32),
+                      // Flag image with contain to show full flag
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: CachedNetworkImage(
+                            imageUrl: country.flagUrl,
+                            fit: BoxFit.contain,
+                            placeholder: (_, __) => Center(
+                              child: Text(
+                                country.flagEmoji,
+                                style: const TextStyle(fontSize: 40),
+                              ),
+                            ),
+                            errorWidget: (_, __, ___) => Center(
+                              child: Text(
+                                country.flagEmoji,
+                                style: const TextStyle(fontSize: 40),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      // Subtle border overlay for definition
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadiusDirectional.horizontal(
+                            start: Radius.circular(20),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              // Info
+              // Info Section
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(14),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // Country name
                       Text(
                         country.getDisplayName(isArabic: isArabic),
                         style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).textTheme.titleLarge?.color,
                         ),
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
+                      // Capital with icon
                       Row(
                         children: [
                           Icon(
                             Icons.location_on,
                             size: 14,
-                            color: _getRegionColor(country.region),
+                            color: regionColor,
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            country.getDisplayCapital(isArabic: isArabic) ?? '-',
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Colors.grey[600],
+                          Expanded(
+                            child: Text(
+                              country.getDisplayCapital(isArabic: isArabic) ?? '-',
+                              style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 6),
-                      Row(
+                      // Info chips - using Wrap for responsiveness
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
                         children: [
                           _InfoChip(
-                            icon: Icons.people,
                             label: country.formattedPopulation,
                             color: AppColors.primary,
                           ),
-                          const SizedBox(width: 8),
                           _InfoChip(
-                            icon: _getRegionIcon(country.region),
                             label: _getLocalizedRegion(l10n, country.region),
-                            color: _getRegionColor(country.region),
+                            color: regionColor,
                           ),
                         ],
                       ),
@@ -788,18 +832,18 @@ class _CountryListCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // Arrow
+              // Arrow indicator
               Container(
                 margin: const EdgeInsetsDirectional.only(end: 12),
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.tertiary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  color: regionColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
-                  Icons.arrow_forward_ios,
+                child: Icon(
+                  isArabic ? Icons.arrow_back_ios : Icons.arrow_forward_ios,
                   size: 14,
-                  color: AppColors.tertiary,
+                  color: regionColor,
                 ),
               ),
             ],
@@ -863,37 +907,31 @@ class _CountryListCard extends StatelessWidget {
 
 class _InfoChip extends StatelessWidget {
   const _InfoChip({
-    required this.icon,
     required this.label,
     required this.color,
   });
 
-  final IconData icon;
   final String label;
   final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(6),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 12, color: color),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-              color: color,
-            ),
-          ),
-        ],
+      child: Text(
+        label,
+        style: GoogleFonts.poppins(
+          fontSize: 9,
+          fontWeight: FontWeight.w500,
+          color: color,
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
@@ -990,7 +1028,7 @@ class _CountryGridView extends ConsumerWidget {
   }
 }
 
-/// Country Grid Card
+/// Country Grid Card - Professional flag display with proper aspect ratio
 class _CountryGridCard extends StatelessWidget {
   const _CountryGridCard({
     required this.country,
@@ -1004,6 +1042,8 @@ class _CountryGridCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final regionColor = _getRegionColor(country.region);
+
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
@@ -1024,7 +1064,7 @@ class _CountryGridCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Flag
+            // Flag Container - Proper display with full flag visible
             Expanded(
               flex: 3,
               child: ClipRRect(
@@ -1033,44 +1073,47 @@ class _CountryGridCard extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    CachedNetworkImage(
-                      imageUrl: country.flagUrl,
-                      fit: BoxFit.cover,
-                      placeholder: (_, __) => Container(
-                        color: Colors.grey[200],
-                        child: Center(
-                          child: Text(
-                            country.flagEmoji,
-                            style: const TextStyle(fontSize: 40),
-                          ),
+                    // Background for white flags
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.grey[200]!,
+                            Colors.grey[100]!,
+                          ],
                         ),
                       ),
-                      errorWidget: (_, __, ___) => Container(
-                        color: Colors.grey[200],
-                        child: Center(
+                    ),
+                    // Flag image - contain to show full flag
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: CachedNetworkImage(
+                        imageUrl: country.flagUrl,
+                        fit: BoxFit.contain,
+                        placeholder: (_, __) => Center(
                           child: Text(
                             country.flagEmoji,
-                            style: const TextStyle(fontSize: 40),
+                            style: const TextStyle(fontSize: 48),
+                          ),
+                        ),
+                        errorWidget: (_, __, ___) => Center(
+                          child: Text(
+                            country.flagEmoji,
+                            style: const TextStyle(fontSize: 48),
                           ),
                         ),
                       ),
                     ),
-                    // Gradient overlay
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withValues(alpha: 0.3),
-                            ],
-                          ),
+                    // Subtle inner shadow for depth
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.vertical(top: Radius.circular(20)),
+                        border: Border.all(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          width: 1,
                         ),
                       ),
                     ),
@@ -1084,8 +1127,15 @@ class _CountryGridCard extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: _getRegionColor(country.region),
+                          color: regionColor,
                           borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: regionColor.withValues(alpha: 0.3),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: Icon(
                           _getRegionIcon(country.region),
@@ -1098,7 +1148,7 @@ class _CountryGridCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Info
+            // Info Section
             Expanded(
               flex: 2,
               child: Padding(
@@ -1110,25 +1160,25 @@ class _CountryGridCard extends StatelessWidget {
                     Text(
                       country.getDisplayName(isArabic: isArabic),
                       style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
                       ),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Row(
                       children: [
                         Icon(
-                          Icons.location_city,
+                          Icons.location_on,
                           size: 12,
-                          color: Colors.grey[500],
+                          color: regionColor,
                         ),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             country.getDisplayCapital(isArabic: isArabic) ?? '-',
-                            style: GoogleFonts.poppins(
+                            style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
                               fontSize: 11,
                               color: Colors.grey[600],
                             ),

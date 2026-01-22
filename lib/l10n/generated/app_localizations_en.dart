@@ -965,7 +965,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAccount => 'Delete Account';
 
   @override
+  String get enabled => 'Enabled';
+
+  @override
+  String get disabled => 'Disabled';
+
+  @override
+  String get pushNotifications => 'Push Notifications';
+
+  @override
+  String get hapticFeedback => 'Haptic Feedback';
+
+  @override
+  String get createAccountDescription =>
+      'Create an account to sync your progress across devices and unlock additional features.';
+
+  @override
+  String get difficultyEasyDesc => 'Perfect for beginners';
+
+  @override
+  String get difficultyMediumDesc => 'Balanced challenge';
+
+  @override
+  String get difficultyHardDesc => 'For geography experts';
+
+  @override
   String get premium => 'Premium';
+
+  @override
+  String get premiumExplorer => 'PREMIUM EXPLORER';
 
   @override
   String get goPremium => 'Go Premium';
@@ -1616,4 +1644,293 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchForCountry => 'Search for any country in the world';
+
+  @override
+  String get flagAndColors => 'Flag & Colors';
+
+  @override
+  String get flagColorsMeaning => 'What the Colors Mean';
+
+  @override
+  String get flagSymbolism => 'Symbolism';
+
+  @override
+  String get nationalFlag => 'National Flag';
+
+  @override
+  String get tapToLearnMore => 'Tap to learn about the flag colors';
+
+  @override
+  String get colorMeaningUnavailable =>
+      'Color meanings not available for this flag';
+
+  @override
+  String get additionalInfo => 'Additional Information';
+
+  @override
+  String get hexCode => 'Hex Code';
+
+  @override
+  String get copiedToClipboard => 'Copied to clipboard';
+
+  @override
+  String get gameModes => 'Game Modes';
+
+  @override
+  String get chooseTopic => 'Choose Topic';
+
+  @override
+  String get quickQuizMode => 'Quick';
+
+  @override
+  String get quickQuizQuestions => '5 Qs';
+
+  @override
+  String get timedBlitzMode => 'Blitz';
+
+  @override
+  String get timedBlitzMultiplier => '2× XP';
+
+  @override
+  String get continentChallengeMode => 'Continent';
+
+  @override
+  String get marathonMode => 'Marathon';
+
+  @override
+  String get marathonQuestions => '50 Qs';
+
+  @override
+  String get studyModeLabel => 'Study';
+
+  @override
+  String get studyModeNoXp => 'No XP';
+
+  @override
+  String get reverseFlagsQuiz => 'Reverse Flags';
+
+  @override
+  String get reverseFlagsDescription => 'Select the flag for the country';
+
+  @override
+  String get languagesQuizTitle => 'Languages';
+
+  @override
+  String get languagesQuizDescription => 'Identify official languages';
+
+  @override
+  String get neighborsQuiz => 'Neighbors';
+
+  @override
+  String get neighborsQuizDescription => 'Select neighboring countries';
+
+  @override
+  String get mixedQuizTitle => 'Mixed';
+
+  @override
+  String get mixedQuizDescription => 'Random mix of all topics';
+
+  @override
+  String get sessionTypeQuickQuiz => 'Quick Quiz';
+
+  @override
+  String get sessionTypeContinentChallenge => 'Continent Challenge';
+
+  @override
+  String get sessionTypeTimedBlitz => 'Timed Blitz';
+
+  @override
+  String get sessionTypeDailyChallenge => 'Daily Challenge';
+
+  @override
+  String get sessionTypeMarathon => 'Marathon';
+
+  @override
+  String get sessionTypeStudyMode => 'Study Mode';
+
+  @override
+  String get sessionTypeStandard => 'Quiz';
+
+  @override
+  String get selectContinent => 'Select Continent';
+
+  @override
+  String get exitQuizTitle => 'Exit Quiz?';
+
+  @override
+  String get exitQuizMessage =>
+      'Your progress will be lost. Are you sure you want to exit?';
+
+  @override
+  String get exitButton => 'Exit';
+
+  @override
+  String get useHint => 'Use Hint (-5 XP)';
+
+  @override
+  String get confirmAnswers => 'Confirm Answers';
+
+  @override
+  String get showAnswer => 'Show Answer';
+
+  @override
+  String selectAnswersCount(int count) {
+    return 'Select $count answers';
+  }
+
+  @override
+  String get explanation => 'Explanation';
+
+  @override
+  String get didYouKnow => 'Did you know?';
+
+  @override
+  String get gameOver => 'Game Over!';
+
+  @override
+  String get perfectScoreTitle => 'Perfect Score!';
+
+  @override
+  String get gradeAPlus => 'A+';
+
+  @override
+  String get gradeA => 'A';
+
+  @override
+  String get gradeB => 'B';
+
+  @override
+  String get gradeC => 'C';
+
+  @override
+  String get gradeD => 'D';
+
+  @override
+  String get gradeF => 'F';
+
+  @override
+  String get gradeExcellentPlus => 'Excellent+';
+
+  @override
+  String get gradeExcellent => 'Excellent';
+
+  @override
+  String get gradeVeryGood => 'Very Good';
+
+  @override
+  String get gradeGood => 'Good';
+
+  @override
+  String get gradePass => 'Pass';
+
+  @override
+  String get gradeFail => 'Fail';
+
+  @override
+  String get levelLabel => 'Level';
+
+  @override
+  String get modeLabel => 'Mode';
+
+  @override
+  String get bonusesAndPenalties => 'Bonuses & Penalties';
+
+  @override
+  String get streakBonus => 'Streak Bonus';
+
+  @override
+  String get speedBonus => 'Speed Bonus';
+
+  @override
+  String get hintsLabel => 'Hints';
+
+  @override
+  String get perfectStreakLabel => 'Perfect Streak';
+
+  @override
+  String get performanceAnalysis => 'Performance Analysis';
+
+  @override
+  String get strongAreas => 'Strong Areas';
+
+  @override
+  String get needsImprovement => 'Needs Improvement';
+
+  @override
+  String get newAchievements => 'New Achievements!';
+
+  @override
+  String get achievementPerfectQuiz => 'Perfect Quiz!';
+
+  @override
+  String get achievementMarathonMaster => 'Marathon Master!';
+
+  @override
+  String get achievementDailyChallenger => 'Daily Challenger!';
+
+  @override
+  String get achievementSpeedDemon => 'Speed Demon!';
+
+  @override
+  String get achievementStreakMaster => 'Streak Master!';
+
+  @override
+  String get areaCapitals => 'Capitals';
+
+  @override
+  String get areaFlags => 'Flags';
+
+  @override
+  String get areaReverseFlags => 'Reverse Flags';
+
+  @override
+  String get areaMaps => 'Maps';
+
+  @override
+  String get areaPopulation => 'Population';
+
+  @override
+  String get areaCurrencies => 'Currencies';
+
+  @override
+  String get areaLanguages => 'Languages';
+
+  @override
+  String get areaBorders => 'Borders';
+
+  @override
+  String get areaTimezones => 'Timezones';
+
+  @override
+  String xpMultiplierInfo(String multiplier, String sessionType) {
+    return '${multiplier}x multiplier from $sessionType';
+  }
+
+  @override
+  String streakBonusPercent(int percent) {
+    return '+$percent% Streak Bonus';
+  }
+
+  @override
+  String get streak3Days => '3 Day Streak: +10% XP';
+
+  @override
+  String get streak7Days => '7 Day Streak: +25% XP';
+
+  @override
+  String get streak14Days => '14 Day Streak: +50% XP';
+
+  @override
+  String get streak30Days => '30 Day Streak: +100% XP';
+
+  @override
+  String livesRemaining(int count) {
+    return '$count Lives';
+  }
+
+  @override
+  String get outOfLives => 'Out of lives!';
+
+  @override
+  String get timeUp => 'Time\'s up!';
 }
