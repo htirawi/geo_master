@@ -35,7 +35,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to get user: $e'));
+      return const Left(ServerFailure(message: 'Failed to get user'));
     }
   }
 
@@ -57,7 +57,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to get current user: $e'));
+      return const Left(ServerFailure(message: 'Failed to get current user'));
     }
   }
 
@@ -77,7 +77,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to save user: $e'));
+      return const Left(ServerFailure(message: 'Failed to save user'));
     }
   }
 
@@ -103,7 +103,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to update preferences: $e'));
+      return const Left(ServerFailure(message: 'Failed to update preferences'));
     }
   }
 
@@ -129,7 +129,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to update progress: $e'));
+      return const Left(ServerFailure(message: 'Failed to update progress'));
     }
   }
 
@@ -149,7 +149,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to add XP: $e'));
+      return const Left(ServerFailure(message: 'Failed to add XP'));
     }
   }
 
@@ -169,7 +169,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to update streak: $e'));
+      return const Left(ServerFailure(message: 'Failed to update streak'));
     }
   }
 
@@ -199,8 +199,8 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(
-        ServerFailure(message: 'Failed to increment countries learned: $e'),
+      return const Left(
+        ServerFailure(message: 'Failed to increment countries learned'),
       );
     }
   }
@@ -228,8 +228,8 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(
-        ServerFailure(message: 'Failed to increment quizzes completed: $e'),
+      return const Left(
+        ServerFailure(message: 'Failed to increment quizzes completed'),
       );
     }
   }
@@ -258,7 +258,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to update quiz stats: $e'));
+      return const Left(ServerFailure(message: 'Failed to update quiz stats'));
     }
   }
 
@@ -284,7 +284,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to unlock achievement: $e'));
+      return const Left(ServerFailure(message: 'Failed to unlock achievement'));
     }
   }
 
@@ -305,8 +305,8 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(
-        ServerFailure(message: 'Failed to get learned countries: $e'),
+      return const Left(
+        ServerFailure(message: 'Failed to get learned countries'),
       );
     }
   }
@@ -315,8 +315,13 @@ class UserRepositoryImpl implements IUserRepository {
   Future<Either<Failure, List<String>>> checkAndUnlockAchievements(
     String userId,
   ) async {
+    // Security: Achievement validation is performed using progress data
+    // fetched from Firestore (server-side source of truth), not client-side
+    // values. This prevents achievement manipulation by modifying local data.
+    // For additional security, consider implementing achievement validation
+    // in Firebase Cloud Functions to ensure server-side verification.
     try {
-      // Get current user progress
+      // Get current user progress from Firestore (server-side validation)
       final userResult = await getUserById(userId);
 
       return userResult.fold(
@@ -404,7 +409,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to check achievements: $e'));
+      return const Left(ServerFailure(message: 'Failed to check achievements'));
     }
   }
 
@@ -442,7 +447,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to get leaderboard: $e'));
+      return const Left(ServerFailure(message: 'Failed to get leaderboard'));
     }
   }
 
@@ -461,7 +466,7 @@ class UserRepositoryImpl implements IUserRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to get user rank: $e'));
+      return const Left(ServerFailure(message: 'Failed to get user rank'));
     }
   }
 }

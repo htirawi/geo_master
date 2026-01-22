@@ -137,7 +137,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
 
       await box.put(key, jsonEncode(messages));
     } catch (e) {
-      throw CacheException(message: 'Failed to save chat message: $e');
+      throw CacheException(message: 'Failed to save chat message');
     }
   }
 
@@ -157,7 +157,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
           .map((m) => ChatMessageModel.fromJson(m as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw CacheException(message: 'Failed to get chat history: $e');
+      throw CacheException(message: 'Failed to get chat history');
     }
   }
 
@@ -168,7 +168,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
       final key = 'chat_$userId';
       await box.delete(key);
     } catch (e) {
-      throw CacheException(message: 'Failed to clear chat history: $e');
+      throw CacheException(message: 'Failed to clear chat history');
     }
   }
 
@@ -189,7 +189,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
 
       return _sharedPreferences.getInt('$_messageCountPrefix$userId') ?? 0;
     } catch (e) {
-      throw CacheException(message: 'Failed to get message count: $e');
+      throw CacheException(message: 'Failed to get message count');
     }
   }
 
@@ -208,7 +208,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
         today,
       );
     } catch (e) {
-      throw CacheException(message: 'Failed to increment message count: $e');
+      throw CacheException(message: 'Failed to increment message count');
     }
   }
 
@@ -222,7 +222,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
         today,
       );
     } catch (e) {
-      throw CacheException(message: 'Failed to reset message count: $e');
+      throw CacheException(message: 'Failed to reset message count');
     }
   }
 
@@ -241,7 +241,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
         }
       }
     } catch (e) {
-      throw CacheException(message: 'Failed to clear chat cache: $e');
+      throw CacheException(message: 'Failed to clear chat cache');
     }
   }
 

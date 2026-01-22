@@ -96,7 +96,7 @@ class AiTutorRepositoryImpl implements IAiTutorRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(AiTutorFailure(message: 'Failed to send message: $e'));
+      return const Left(AiTutorFailure(message: 'Failed to send message'));
     }
   }
 
@@ -156,7 +156,7 @@ class AiTutorRepositoryImpl implements IAiTutorRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(CacheFailure(message: 'Failed to get chat history: $e'));
+      return const Left(CacheFailure(message: 'Failed to get chat history'));
     }
   }
 
@@ -176,7 +176,7 @@ class AiTutorRepositoryImpl implements IAiTutorRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(CacheFailure(message: 'Failed to clear chat history: $e'));
+      return const Left(CacheFailure(message: 'Failed to clear chat history'));
     }
   }
 
@@ -203,7 +203,7 @@ class AiTutorRepositoryImpl implements IAiTutorRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(CacheFailure(message: 'Failed to get remaining messages: $e'));
+      return const Left(CacheFailure(message: 'Failed to get remaining messages'));
     }
   }
 
@@ -235,7 +235,7 @@ class AiTutorRepositoryImpl implements IAiTutorRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(CacheFailure(message: 'Failed to check message limit: $e'));
+      return const Left(CacheFailure(message: 'Failed to check message limit'));
     }
   }
 
@@ -260,7 +260,7 @@ class AiTutorRepositoryImpl implements IAiTutorRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(CacheFailure(message: 'Failed to save message: $e'));
+      return const Left(CacheFailure(message: 'Failed to save message'));
     }
   }
 

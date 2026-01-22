@@ -95,7 +95,7 @@ class UnsplashDataSource implements IUnsplashDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'Unsplash API error: $e');
+      throw ServerException(message: 'Unsplash API error');
     }
   }
 
@@ -144,7 +144,7 @@ class UnsplashDataSource implements IUnsplashDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'Unsplash API error: $e');
+      throw ServerException(message: 'Unsplash API error');
     }
   }
 

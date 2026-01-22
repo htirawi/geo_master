@@ -82,7 +82,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       return _cipher!;
     } catch (e) {
       logger.warning(
-        'Failed to create encryption cipher, using unencrypted storage: $e',
+        'Failed to create encryption cipher, using unencrypted storage',
         tag: 'QuizLocalDS',
       );
       // Fallback: return a dummy cipher that doesn't encrypt
@@ -102,7 +102,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       } catch (e) {
         // Fallback to unencrypted box if encryption fails
         logger.warning(
-          'Falling back to unencrypted progress box: $e',
+          'Falling back to unencrypted progress box',
           tag: 'QuizLocalDS',
         );
         return await _hive.openBox<String>(_progressBoxName);
@@ -122,7 +122,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       } catch (e) {
         // Fallback to unencrypted box if encryption fails
         logger.warning(
-          'Falling back to unencrypted history box: $e',
+          'Falling back to unencrypted history box',
           tag: 'QuizLocalDS',
         );
         return await _hive.openBox<String>(_historyBoxName);
@@ -142,7 +142,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       } catch (e) {
         // Fallback to unencrypted box if encryption fails
         logger.warning(
-          'Falling back to unencrypted daily challenge box: $e',
+          'Falling back to unencrypted daily challenge box',
           tag: 'QuizLocalDS',
         );
         return await _hive.openBox<String>(_dailyChallengeBoxName);
@@ -158,7 +158,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       final key = 'progress_${quiz.id}';
       await box.put(key, jsonEncode(quiz.toJson()));
     } catch (e) {
-      throw CacheException(message: 'Failed to save quiz progress: $e');
+      throw CacheException(message: 'Failed to save quiz progress');
     }
   }
 
@@ -184,7 +184,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       }
       return null;
     } catch (e) {
-      throw CacheException(message: 'Failed to get quiz progress: $e');
+      throw CacheException(message: 'Failed to get quiz progress');
     }
   }
 
@@ -199,7 +199,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
         await box.delete(key);
       }
     } catch (e) {
-      throw CacheException(message: 'Failed to clear quiz progress: $e');
+      throw CacheException(message: 'Failed to clear quiz progress');
     }
   }
 
@@ -210,7 +210,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       final key = 'result_${result.userId}_${result.completedAt.millisecondsSinceEpoch}';
       await box.put(key, jsonEncode(result.toJson()));
     } catch (e) {
-      throw CacheException(message: 'Failed to save quiz result: $e');
+      throw CacheException(message: 'Failed to save quiz result');
     }
   }
 
@@ -241,7 +241,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       results.sort((a, b) => b.completedAt.compareTo(a.completedAt));
       return results.take(limit).toList();
     } catch (e) {
-      throw CacheException(message: 'Failed to get quiz history: $e');
+      throw CacheException(message: 'Failed to get quiz history');
     }
   }
 
@@ -256,7 +256,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       await box.put(key, DateTime.now().toIso8601String());
     } catch (e) {
       throw CacheException(
-        message: 'Failed to save daily challenge completion: $e',
+        message: 'Failed to save daily challenge completion',
       );
     }
   }
@@ -269,7 +269,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       return box.containsKey(key);
     } catch (e) {
       throw CacheException(
-        message: 'Failed to check daily challenge status: $e',
+        message: 'Failed to check daily challenge status',
       );
     }
   }
@@ -285,7 +285,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       await historyBox.clear();
       await dailyChallengeBox.clear();
     } catch (e) {
-      throw CacheException(message: 'Failed to clear quiz cache: $e');
+      throw CacheException(message: 'Failed to clear quiz cache');
     }
   }
 

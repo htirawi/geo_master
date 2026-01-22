@@ -85,7 +85,7 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
         error: e,
         stackTrace: stackTrace,
       );
-      throw ServerException(message: 'Failed to initialize purchases: $e');
+      throw ServerException(message: 'Failed to initialize purchases');
     }
   }
 
@@ -97,7 +97,7 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
       return customerInfo;
     } catch (e) {
       logger.error('Failed to get customer info', tag: 'RevenueCat', error: e);
-      throw ServerException(message: 'Failed to get subscription info: $e');
+      throw ServerException(message: 'Failed to get subscription info');
     }
   }
 
@@ -112,7 +112,7 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
       return offerings;
     } catch (e) {
       logger.error('Failed to get offerings', tag: 'RevenueCat', error: e);
-      throw ServerException(message: 'Failed to get subscription options: $e');
+      throw ServerException(message: 'Failed to get subscription options');
     }
   }
 
@@ -126,7 +126,7 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
       );
       return customerInfo;
     } on PurchasesErrorCode catch (e) {
-      logger.error('Purchase error: $e', tag: 'RevenueCat');
+      logger.error('Purchase error', tag: 'RevenueCat');
 
       if (e == PurchasesErrorCode.purchaseCancelledError) {
         throw const ServerException(message: 'Purchase cancelled');
@@ -135,11 +135,11 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
       } else if (e == PurchasesErrorCode.paymentPendingError) {
         throw const ServerException(message: 'Payment is pending');
       } else {
-        throw ServerException(message: 'Purchase failed: $e');
+        throw ServerException(message: 'Purchase failed');
       }
     } catch (e) {
       logger.error('Unexpected purchase error', tag: 'RevenueCat', error: e);
-      throw ServerException(message: 'Failed to complete purchase: $e');
+      throw ServerException(message: 'Failed to complete purchase');
     }
   }
 
@@ -151,7 +151,7 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
       return customerInfo;
     } catch (e) {
       logger.error('Failed to restore purchases', tag: 'RevenueCat', error: e);
-      throw ServerException(message: 'Failed to restore purchases: $e');
+      throw ServerException(message: 'Failed to restore purchases');
     }
   }
 
@@ -163,7 +163,7 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
       return result.customerInfo;
     } catch (e) {
       logger.error('Failed to log in user', tag: 'RevenueCat', error: e);
-      throw ServerException(message: 'Failed to sync user: $e');
+      throw ServerException(message: 'Failed to sync user');
     }
   }
 
@@ -174,7 +174,7 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
       logger.info('User logged out from RevenueCat', tag: 'RevenueCat');
     } catch (e) {
       logger.error('Failed to log out user', tag: 'RevenueCat', error: e);
-      throw ServerException(message: 'Failed to sign out: $e');
+      throw ServerException(message: 'Failed to sign out');
     }
   }
 

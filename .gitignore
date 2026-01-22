@@ -47,6 +47,7 @@ app.*.map.json
 # Environment files (NEVER commit API keys)
 .env
 .env.*
+!.env.example
 *.env
 
 # Secrets and credentials

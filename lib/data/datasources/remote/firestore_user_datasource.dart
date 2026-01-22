@@ -103,7 +103,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
     } on FirebaseException catch (e) {
       throw ServerException(message: 'Failed to get user: ${e.message}');
     } catch (e) {
-      throw ServerException(message: 'Unexpected error getting user: $e');
+      throw ServerException(message: 'Unexpected error getting user');
     }
   }
 
@@ -126,7 +126,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
     } on FirebaseException catch (e) {
       throw ServerException(message: 'Failed to save user: ${e.message}');
     } catch (e) {
-      throw ServerException(message: 'Unexpected error saving user: $e');
+      throw ServerException(message: 'Unexpected error saving user');
     }
   }
 
@@ -144,7 +144,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
           message: 'Failed to update preferences: ${e.message}');
     } catch (e) {
       throw ServerException(
-          message: 'Unexpected error updating preferences: $e');
+          message: 'Unexpected error updating preferences');
     }
   }
 
@@ -160,7 +160,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
     } on FirebaseException catch (e) {
       throw ServerException(message: 'Failed to update progress: ${e.message}');
     } catch (e) {
-      throw ServerException(message: 'Unexpected error updating progress: $e');
+      throw ServerException(message: 'Unexpected error updating progress');
     }
   }
 
@@ -204,7 +204,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       throw ServerException(message: 'Failed to add XP: ${e.message}');
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException(message: 'Unexpected error adding XP: $e');
+      throw ServerException(message: 'Unexpected error adding XP');
     }
   }
 
@@ -272,7 +272,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       throw ServerException(message: 'Failed to update streak: ${e.message}');
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException(message: 'Unexpected error updating streak: $e');
+      throw ServerException(message: 'Unexpected error updating streak');
     }
   }
 
@@ -303,7 +303,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       );
     } catch (e) {
       throw ServerException(
-        message: 'Unexpected error incrementing countries learned: $e',
+        message: 'Unexpected error incrementing countries learned',
       );
     }
   }
@@ -320,7 +320,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       );
     } catch (e) {
       throw ServerException(
-        message: 'Unexpected error incrementing quizzes completed: $e',
+        message: 'Unexpected error incrementing quizzes completed',
       );
     }
   }
@@ -342,7 +342,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       );
     } catch (e) {
       throw ServerException(
-        message: 'Unexpected error updating quiz stats: $e',
+        message: 'Unexpected error updating quiz stats',
       );
     }
   }
@@ -359,7 +359,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       );
     } catch (e) {
       throw ServerException(
-        message: 'Unexpected error unlocking achievement: $e',
+        message: 'Unexpected error unlocking achievement',
       );
     }
   }
@@ -375,7 +375,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       );
     } catch (e) {
       throw ServerException(
-        message: 'Unexpected error getting learned countries: $e',
+        message: 'Unexpected error getting learned countries',
       );
     }
   }
@@ -414,7 +414,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       );
     } catch (e) {
       throw ServerException(
-        message: 'Unexpected error getting leaderboard: $e',
+        message: 'Unexpected error getting leaderboard',
       );
     }
   }
@@ -442,7 +442,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       throw ServerException(message: 'Failed to get user rank: ${e.message}');
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException(message: 'Unexpected error getting user rank: $e');
+      throw ServerException(message: 'Unexpected error getting user rank');
     }
   }
 
@@ -464,7 +464,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       );
     } catch (e) {
       throw ServerException(
-        message: 'Unexpected error saving quiz result: $e',
+        message: 'Unexpected error saving quiz result',
       );
     }
   }
@@ -495,7 +495,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       );
     } catch (e) {
       throw ServerException(
-        message: 'Unexpected error getting quiz history: $e',
+        message: 'Unexpected error getting quiz history',
       );
     }
   }
@@ -543,7 +543,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       );
     } catch (e) {
       throw ServerException(
-        message: 'Unexpected error syncing quiz history: $e',
+        message: 'Unexpected error syncing quiz history',
       );
     }
   }

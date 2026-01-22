@@ -187,7 +187,7 @@ class QuizRepositoryImpl implements IQuizRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(QuizFailure(message: 'Failed to generate quiz: $e'));
+      return const Left(QuizFailure(message: 'Failed to generate quiz'));
     }
   }
 
@@ -535,7 +535,7 @@ class QuizRepositoryImpl implements IQuizRepository {
 
       return Right(quizAnswer);
     } catch (e) {
-      return Left(QuizFailure(message: 'Failed to submit answer: $e'));
+      return const Left(QuizFailure(message: 'Failed to submit answer'));
     }
   }
 
@@ -680,8 +680,9 @@ class QuizRepositoryImpl implements IQuizRepository {
         } catch (e) {
           // Log but don't fail - local save succeeded
           logger.warning(
-            'Failed to sync quiz result to Firestore: $e',
+            'Failed to sync quiz result to Firestore',
             tag: 'QuizRepo',
+            error: e,
           );
         }
       }
@@ -692,8 +693,9 @@ class QuizRepositoryImpl implements IQuizRepository {
           await _localDataSource.saveDailyChallengeCompletion(userId, DateTime.now());
         } catch (e) {
           logger.warning(
-            'Failed to mark daily challenge as completed: $e',
+            'Failed to mark daily challenge as completed',
             tag: 'QuizRepo',
+            error: e,
           );
         }
       }
@@ -714,7 +716,7 @@ class QuizRepositoryImpl implements IQuizRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(QuizFailure(message: 'Failed to complete quiz: $e'));
+      return const Left(QuizFailure(message: 'Failed to complete quiz'));
     }
   }
 
@@ -729,7 +731,7 @@ class QuizRepositoryImpl implements IQuizRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to get quiz history: $e'));
+      return const Left(CacheFailure(message: 'Failed to get quiz history'));
     }
   }
 
@@ -820,7 +822,7 @@ class QuizRepositoryImpl implements IQuizRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to get quiz statistics: $e'));
+      return const Left(CacheFailure(message: 'Failed to get quiz statistics'));
     }
   }
 
@@ -849,7 +851,7 @@ class QuizRepositoryImpl implements IQuizRepository {
         questionCount: 10,
       );
     } catch (e) {
-      return Left(QuizFailure(message: 'Failed to get daily challenge: $e'));
+      return const Left(QuizFailure(message: 'Failed to get daily challenge'));
     }
   }
 
@@ -864,7 +866,7 @@ class QuizRepositoryImpl implements IQuizRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to check daily challenge: $e'));
+      return const Left(CacheFailure(message: 'Failed to check daily challenge'));
     }
   }
 
@@ -876,7 +878,7 @@ class QuizRepositoryImpl implements IQuizRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to save quiz progress: $e'));
+      return const Left(CacheFailure(message: 'Failed to save quiz progress'));
     }
   }
 
@@ -888,7 +890,7 @@ class QuizRepositoryImpl implements IQuizRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to get quiz progress: $e'));
+      return const Left(CacheFailure(message: 'Failed to get quiz progress'));
     }
   }
 
@@ -900,7 +902,7 @@ class QuizRepositoryImpl implements IQuizRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to clear quiz progress: $e'));
+      return const Left(CacheFailure(message: 'Failed to clear quiz progress'));
     }
   }
 
@@ -934,7 +936,7 @@ class QuizRepositoryImpl implements IQuizRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to sync quiz history: $e'));
+      return const Left(ServerFailure(message: 'Failed to sync quiz history'));
     }
   }
 
@@ -966,8 +968,9 @@ class QuizRepositoryImpl implements IQuizRepository {
         } catch (e) {
           // Continue even if one fails
           logger.warning(
-            'Failed to save restored quiz result locally: $e',
+            'Failed to save restored quiz result locally',
             tag: 'QuizRepo',
+            error: e,
           );
         }
       }
@@ -981,8 +984,8 @@ class QuizRepositoryImpl implements IQuizRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
     } catch (e) {
-      return Left(
-        ServerFailure(message: 'Failed to restore quiz history: $e'),
+      return const Left(
+        ServerFailure(message: 'Failed to restore quiz history'),
       );
     }
   }

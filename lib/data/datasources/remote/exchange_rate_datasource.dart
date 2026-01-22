@@ -64,7 +64,7 @@ class ExchangeRateDataSource implements IExchangeRateDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'Exchange rate API error: $e');
+      throw ServerException(message: 'Exchange rate API error');
     }
   }
 

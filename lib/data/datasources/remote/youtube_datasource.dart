@@ -91,7 +91,7 @@ class YouTubeDataSource implements IYouTubeDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'YouTube API error: $e');
+      throw ServerException(message: 'YouTube API error');
     }
   }
 
@@ -128,7 +128,7 @@ class YouTubeDataSource implements IYouTubeDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'YouTube API error: $e');
+      throw ServerException(message: 'YouTube API error');
     }
   }
 

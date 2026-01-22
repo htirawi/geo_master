@@ -141,7 +141,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
       return Right(continents);
     } catch (e) {
       logger.error('Error getting continents', tag: 'WorldExplRepo', error: e);
-      return Left(ServerFailure(message: 'Failed to get continents: $e'));
+      return Left(ServerFailure(message: 'Failed to get continents'));
     }
   }
 
@@ -184,7 +184,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
 
       return _countryRepository.getCountriesByRegion(regionName);
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to get countries: $e'));
+      return Left(ServerFailure(message: 'Failed to get countries'));
     }
   }
 
@@ -263,7 +263,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
       await box.put('progress_$continentId', jsonEncode(model.toJson()));
       return const Right(null);
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to save progress: $e'));
+      return Left(CacheFailure(message: 'Failed to save progress'));
     }
   }
 
@@ -316,7 +316,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
       await box.put(progress.countryCode.toUpperCase(), jsonEncode(model.toJson()));
       return const Right(null);
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to save progress: $e'));
+      return Left(CacheFailure(message: 'Failed to save progress'));
     }
   }
 
@@ -341,7 +341,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
       await updateCountryProgress(updatedProgress);
       return Right(updatedProgress);
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to mark visited: $e'));
+      return Left(CacheFailure(message: 'Failed to mark visited'));
     }
   }
 
@@ -363,7 +363,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
       await updateCountryProgress(updatedProgress);
       return Right(updatedProgress);
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to toggle favorite: $e'));
+      return Left(CacheFailure(message: 'Failed to toggle favorite'));
     }
   }
 
@@ -388,7 +388,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
 
       return const Right(null);
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to bookmark fact: $e'));
+      return Left(CacheFailure(message: 'Failed to bookmark fact'));
     }
   }
 
@@ -413,7 +413,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
       await updateCountryProgress(updatedProgress);
       return const Right(null);
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to remove bookmark: $e'));
+      return Left(CacheFailure(message: 'Failed to remove bookmark'));
     }
   }
 
@@ -493,7 +493,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
         },
       );
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to get markers: $e'));
+      return Left(ServerFailure(message: 'Failed to get markers'));
     }
   }
 
@@ -534,7 +534,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
       final random = DateTime.now().millisecondsSinceEpoch % countries.length;
       return Right(countries[random]);
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to get random country: $e'));
+      return Left(ServerFailure(message: 'Failed to get random country'));
     }
   }
 
@@ -550,7 +550,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
         (countries) => Right(countries.take(limit).toList()),
       );
     } catch (e) {
-      return Left(ServerFailure(message: 'Search failed: $e'));
+      return Left(ServerFailure(message: 'Search failed'));
     }
   }
 
@@ -564,7 +564,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
     try {
       return _countryRepository.getCountryByCode(code);
     } catch (e) {
-      return Left(ServerFailure(message: 'Country not found: $e'));
+      return Left(ServerFailure(message: 'Country not found'));
     }
   }
 
@@ -577,7 +577,7 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
       await continentBox.clear();
       return const Right(null);
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to clear cache: $e'));
+      return Left(CacheFailure(message: 'Failed to clear cache'));
     }
   }
 

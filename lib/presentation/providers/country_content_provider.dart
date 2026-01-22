@@ -107,7 +107,7 @@ class CountryContentNotifier extends StateNotifier<AsyncValue<CountryContentStat
       ));
     } catch (e) {
       state = AsyncValue.data(CountryContentError(
-        ServerFailure(message: 'Failed to load content: $e'),
+        ServerFailure(message: 'Failed to load content'),
       ));
     }
   }

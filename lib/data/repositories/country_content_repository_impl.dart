@@ -82,7 +82,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
       logger.error('Error fetching overview', tag: 'ContentRepo', error: e);
-      return Left(ServerFailure(message: 'Failed to fetch overview: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch overview'));
     }
   }
 
@@ -127,7 +127,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
         naturalHazards: const ['Earthquakes', 'Floods'],
       ));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch geography: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch geography'));
     }
   }
 
@@ -151,7 +151,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
 
       return Right(places);
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch places: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch places'));
     }
   }
 
@@ -195,7 +195,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
       // Return placeholder data
       return const Right([]);
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch cultural items: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch cultural items'));
     }
   }
 
@@ -207,7 +207,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
       // Return placeholder data - would fetch from a food/culture API
       return const Right([]);
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch foods: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch foods'));
     }
   }
 
@@ -220,7 +220,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
       // Return placeholder data
       return const Right([]);
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch festivals: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch festivals'));
     }
   }
 
@@ -232,7 +232,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
       // Return placeholder data
       return const Right([]);
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch famous people: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch famous people'));
     }
   }
 
@@ -242,7 +242,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
       // Return placeholder data
       return const Right([]);
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch fun facts: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch fun facts'));
     }
   }
 
@@ -256,7 +256,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
       // Return placeholder data - would fetch from a language/phrases API
       return const Right([]);
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch phrases: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch phrases'));
     }
   }
 
@@ -283,7 +283,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
         },
       ));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch travel essentials: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch travel essentials'));
     }
   }
 
@@ -300,7 +300,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
         'Get travel insurance',
       ]);
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch travel tips: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch travel tips'));
     }
   }
 
@@ -318,7 +318,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
 
       return const Right(null);
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to clear cache: $e'));
+      return Left(CacheFailure(message: 'Failed to clear cache'));
     }
   }
 
@@ -329,7 +329,7 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
       await box.clear();
       return const Right(null);
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to clear cache: $e'));
+      return Left(CacheFailure(message: 'Failed to clear cache'));
     }
   }
 

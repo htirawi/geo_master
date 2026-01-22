@@ -59,7 +59,7 @@ class MediaRepositoryImpl implements IMediaRepository {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
       logger.error('Error fetching country photos', tag: 'MediaRepo', error: e);
-      return Left(ServerFailure(message: 'Failed to fetch photos: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch photos'));
     }
   }
 
@@ -81,7 +81,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch photos: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch photos'));
     }
   }
 
@@ -105,7 +105,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to search photos: $e'));
+      return Left(ServerFailure(message: 'Failed to search photos'));
     }
   }
 
@@ -125,7 +125,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to get random photos: $e'));
+      return Left(ServerFailure(message: 'Failed to get random photos'));
     }
   }
 
@@ -150,7 +150,7 @@ class MediaRepositoryImpl implements IMediaRepository {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
       logger.error('Error fetching country videos', tag: 'MediaRepo', error: e);
-      return Left(ServerFailure(message: 'Failed to fetch videos: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch videos'));
     }
   }
 
@@ -170,7 +170,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch videos: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch videos'));
     }
   }
 
@@ -192,7 +192,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to search videos: $e'));
+      return Left(ServerFailure(message: 'Failed to search videos'));
     }
   }
 
@@ -208,7 +208,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to get video details: $e'));
+      return Left(ServerFailure(message: 'Failed to get video details'));
     }
   }
 
@@ -233,7 +233,7 @@ class MediaRepositoryImpl implements IMediaRepository {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
       logger.error('Error fetching country news', tag: 'MediaRepo', error: e);
-      return Left(ServerFailure(message: 'Failed to fetch news: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch news'));
     }
   }
 
@@ -257,7 +257,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch headlines: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch headlines'));
     }
   }
 
@@ -281,7 +281,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to search news: $e'));
+      return Left(ServerFailure(message: 'Failed to search news'));
     }
   }
 
@@ -302,7 +302,7 @@ class MediaRepositoryImpl implements IMediaRepository {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
       logger.error('Error fetching exchange rates', tag: 'MediaRepo', error: e);
-      return Left(ServerFailure(message: 'Failed to fetch rates: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch rates'));
     }
   }
 
@@ -324,7 +324,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to convert currency: $e'));
+      return Left(ServerFailure(message: 'Failed to convert currency'));
     }
   }
 
@@ -341,7 +341,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to get rate: $e'));
+      return Left(ServerFailure(message: 'Failed to get rate'));
     }
   }
 
@@ -358,7 +358,7 @@ class MediaRepositoryImpl implements IMediaRepository {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
       logger.error('Error fetching timezone', tag: 'MediaRepo', error: e);
-      return Left(ServerFailure(message: 'Failed to fetch timezone: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch timezone'));
     }
   }
 
@@ -383,7 +383,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to get time difference: $e'));
+      return Left(ServerFailure(message: 'Failed to get time difference'));
     }
   }
 
@@ -411,7 +411,7 @@ class MediaRepositoryImpl implements IMediaRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to fetch Wikipedia: $e'));
+      return Left(ServerFailure(message: 'Failed to fetch Wikipedia'));
     }
   }
 

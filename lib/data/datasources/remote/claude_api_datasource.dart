@@ -158,7 +158,7 @@ class ClaudeApiDataSource implements IClaudeApiDataSource {
         error: e,
         stackTrace: stackTrace,
       );
-      throw ServerException(message: 'Failed to send message: $e');
+      throw ServerException(message: 'Failed to send message');
     }
   }
 
@@ -234,7 +234,7 @@ class ClaudeApiDataSource implements IClaudeApiDataSource {
         error: e,
         stackTrace: stackTrace,
       );
-      throw ServerException(message: 'Failed to send message: $e');
+      throw ServerException(message: 'Failed to send message');
     }
   }
 
