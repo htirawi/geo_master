@@ -167,39 +167,44 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
   @override
   Future<UserProgressModel> addXp(String userId, int xp) async {
     try {
-      final doc = await _usersCollection.doc(userId).get();
-      if (!doc.exists || doc.data() == null) {
-        throw const ServerException(message: 'User not found');
-      }
+      // Use transaction to prevent race conditions
+      return await _firestore.runTransaction<UserProgressModel>((transaction) async {
+        final docRef = _usersCollection.doc(userId);
+        final doc = await transaction.get(docRef);
 
-      final user = UserModel.fromJson({...doc.data()!, 'id': doc.id});
-      var progress = user.progress;
+        if (!doc.exists || doc.data() == null) {
+          throw const ServerException(message: 'User not found');
+        }
 
-      // Add XP
-      final newTotalXp = progress.totalXp + xp;
-      var newLevel = progress.level;
+        final user = UserModel.fromJson({...doc.data()!, 'id': doc.id});
+        var progress = user.progress;
 
-      // Check for level up
-      while (newTotalXp >= _xpForLevel(newLevel + 1)) {
-        newLevel++;
-      }
+        // Add XP
+        final newTotalXp = progress.totalXp + xp;
+        var newLevel = progress.level;
 
-      progress = UserProgressModel(
-        totalXp: newTotalXp,
-        level: newLevel,
-        currentStreak: progress.currentStreak,
-        longestStreak: progress.longestStreak,
-        lastActiveDate: DateTime.now(),
-        countriesLearned: progress.countriesLearned,
-        quizzesCompleted: progress.quizzesCompleted,
-        questionsAnswered: progress.questionsAnswered,
-        correctAnswers: progress.correctAnswers,
-        unlockedAchievements: progress.unlockedAchievements,
-        regionProgress: progress.regionProgress,
-      );
+        // Check for level up
+        while (newTotalXp >= _xpForLevel(newLevel + 1)) {
+          newLevel++;
+        }
 
-      await updateProgress(userId, progress);
-      return progress;
+        progress = UserProgressModel(
+          totalXp: newTotalXp,
+          level: newLevel,
+          currentStreak: progress.currentStreak,
+          longestStreak: progress.longestStreak,
+          lastActiveDate: DateTime.now(),
+          countriesLearned: progress.countriesLearned,
+          quizzesCompleted: progress.quizzesCompleted,
+          questionsAnswered: progress.questionsAnswered,
+          correctAnswers: progress.correctAnswers,
+          unlockedAchievements: progress.unlockedAchievements,
+          regionProgress: progress.regionProgress,
+        );
+
+        transaction.update(docRef, {'progress': progress.toJson()});
+        return progress;
+      });
     } on FirebaseException catch (e) {
       throw ServerException(message: 'Failed to add XP: ${e.message}');
     } catch (e) {
@@ -211,63 +216,68 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
   @override
   Future<UserProgressModel> updateStreak(String userId) async {
     try {
-      final doc = await _usersCollection.doc(userId).get();
-      if (!doc.exists || doc.data() == null) {
-        throw const ServerException(message: 'User not found');
-      }
+      // Use transaction to prevent race conditions
+      return await _firestore.runTransaction<UserProgressModel>((transaction) async {
+        final docRef = _usersCollection.doc(userId);
+        final doc = await transaction.get(docRef);
 
-      final user = UserModel.fromJson({...doc.data()!, 'id': doc.id});
-      var progress = user.progress;
+        if (!doc.exists || doc.data() == null) {
+          throw const ServerException(message: 'User not found');
+        }
 
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
+        final user = UserModel.fromJson({...doc.data()!, 'id': doc.id});
+        var progress = user.progress;
 
-      var newStreak = progress.currentStreak;
-      var longestStreak = progress.longestStreak;
+        final now = DateTime.now();
+        final today = DateTime(now.year, now.month, now.day);
 
-      if (progress.lastActiveDate != null) {
-        final lastActive = DateTime(
-          progress.lastActiveDate!.year,
-          progress.lastActiveDate!.month,
-          progress.lastActiveDate!.day,
-        );
+        var newStreak = progress.currentStreak;
+        var longestStreak = progress.longestStreak;
 
-        final difference = today.difference(lastActive).inDays;
+        if (progress.lastActiveDate != null) {
+          final lastActive = DateTime(
+            progress.lastActiveDate!.year,
+            progress.lastActiveDate!.month,
+            progress.lastActiveDate!.day,
+          );
 
-        if (difference == 0) {
-          // Already active today, no change
-        } else if (difference == 1) {
-          // Consecutive day, increment streak
-          newStreak++;
+          final difference = today.difference(lastActive).inDays;
+
+          if (difference == 0) {
+            // Already active today, no change
+          } else if (difference == 1) {
+            // Consecutive day, increment streak
+            newStreak++;
+          } else {
+            // Streak broken, reset to 1
+            newStreak = 1;
+          }
         } else {
-          // Streak broken, reset to 1
+          // First activity
           newStreak = 1;
         }
-      } else {
-        // First activity
-        newStreak = 1;
-      }
 
-      if (newStreak > longestStreak) {
-        longestStreak = newStreak;
-      }
+        if (newStreak > longestStreak) {
+          longestStreak = newStreak;
+        }
 
-      progress = UserProgressModel(
-        totalXp: progress.totalXp,
-        level: progress.level,
-        currentStreak: newStreak,
-        longestStreak: longestStreak,
-        lastActiveDate: now,
-        countriesLearned: progress.countriesLearned,
-        quizzesCompleted: progress.quizzesCompleted,
-        questionsAnswered: progress.questionsAnswered,
-        correctAnswers: progress.correctAnswers,
-        unlockedAchievements: progress.unlockedAchievements,
-        regionProgress: progress.regionProgress,
-      );
+        progress = UserProgressModel(
+          totalXp: progress.totalXp,
+          level: progress.level,
+          currentStreak: newStreak,
+          longestStreak: longestStreak,
+          lastActiveDate: now,
+          countriesLearned: progress.countriesLearned,
+          quizzesCompleted: progress.quizzesCompleted,
+          questionsAnswered: progress.questionsAnswered,
+          correctAnswers: progress.correctAnswers,
+          unlockedAchievements: progress.unlockedAchievements,
+          regionProgress: progress.regionProgress,
+        );
 
-      await updateProgress(userId, progress);
-      return progress;
+        transaction.update(docRef, {'progress': progress.toJson()});
+        return progress;
+      });
     } on FirebaseException catch (e) {
       throw ServerException(message: 'Failed to update streak: ${e.message}');
     } catch (e) {
@@ -282,21 +292,23 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
     String countryCode,
   ) async {
     try {
-      // Check if already learned
-      final learnedDoc =
-          await _learnedCountriesCollection(userId).doc(countryCode).get();
+      // Use transaction for atomic check-and-update
+      await _firestore.runTransaction((transaction) async {
+        final learnedDocRef = _learnedCountriesCollection(userId).doc(countryCode);
+        final learnedDoc = await transaction.get(learnedDocRef);
 
-      if (!learnedDoc.exists) {
-        // Add to learned countries
-        await _learnedCountriesCollection(userId).doc(countryCode).set({
-          'learnedAt': FieldValue.serverTimestamp(),
-        });
+        if (!learnedDoc.exists) {
+          // Add to learned countries and increment count atomically
+          transaction.set(learnedDocRef, {
+            'learnedAt': FieldValue.serverTimestamp(),
+          });
 
-        // Increment count
-        await _usersCollection.doc(userId).update({
-          'progress.countriesLearned': FieldValue.increment(1),
-        });
-      }
+          final userDocRef = _usersCollection.doc(userId);
+          transaction.update(userDocRef, {
+            'progress.countriesLearned': FieldValue.increment(1),
+          });
+        }
+      });
     } on FirebaseException catch (e) {
       throw ServerException(
         message: 'Failed to increment countries learned: ${e.message}',

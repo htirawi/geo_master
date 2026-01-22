@@ -169,10 +169,37 @@ class ChatLocalDataSource implements IChatLocalDataSource {
         return [];
       }
 
-      final decoded = jsonDecode(data) as List<dynamic>;
-      return decoded
-          .map((m) => ChatMessageModel.fromJson(m as Map<String, dynamic>))
-          .toList();
+      // Parse with error recovery for data integrity
+      try {
+        final decoded = jsonDecode(data) as List<dynamic>;
+        final messages = <ChatMessageModel>[];
+
+        for (final item in decoded) {
+          try {
+            messages.add(ChatMessageModel.fromJson(item as Map<String, dynamic>));
+          } catch (parseError) {
+            // Skip corrupted individual messages but preserve valid ones
+            logger.warning(
+              'Skipping corrupted chat message during parsing',
+              tag: 'ChatLocalDS',
+              error: parseError,
+            );
+          }
+        }
+
+        return messages;
+      } on FormatException catch (e) {
+        // JSON is completely corrupted - clear and start fresh
+        logger.error(
+          'Chat history JSON corrupted, clearing data',
+          tag: 'ChatLocalDS',
+          error: e,
+        );
+        await box.delete(key);
+        return [];
+      }
+    } on CacheException {
+      rethrow;
     } catch (e) {
       throw CacheException(message: 'Failed to get chat history');
     }

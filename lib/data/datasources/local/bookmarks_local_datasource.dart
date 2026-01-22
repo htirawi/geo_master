@@ -262,9 +262,33 @@ class BookmarksLocalDataSource implements IBookmarksLocalDataSource {
       return [];
     }
 
-    final decoded = jsonDecode(data) as List<dynamic>;
-    return decoded
-        .map((m) => BookmarkModel.fromJson(m as Map<String, dynamic>))
-        .toList();
+    try {
+      final decoded = jsonDecode(data) as List<dynamic>;
+      final bookmarks = <BookmarkModel>[];
+
+      for (final item in decoded) {
+        try {
+          bookmarks.add(BookmarkModel.fromJson(item as Map<String, dynamic>));
+        } catch (parseError) {
+          // Skip corrupted individual bookmarks but preserve valid ones
+          logger.warning(
+            'Skipping corrupted bookmark during parsing',
+            tag: 'BookmarksLocalDS',
+            error: parseError,
+          );
+        }
+      }
+
+      return bookmarks;
+    } on FormatException catch (e) {
+      // JSON is completely corrupted - clear and start fresh
+      logger.error(
+        'Bookmarks JSON corrupted, clearing data',
+        tag: 'BookmarksLocalDS',
+        error: e,
+      );
+      await box.delete(key);
+      return [];
+    }
   }
 }

@@ -237,9 +237,20 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       for (final key in keys) {
         final data = box.get(key);
         if (data != null) {
-          results.add(
-            QuizResultModel.fromJson(jsonDecode(data) as Map<String, dynamic>),
-          );
+          try {
+            results.add(
+              QuizResultModel.fromJson(jsonDecode(data) as Map<String, dynamic>),
+            );
+          } catch (parseError) {
+            // Skip corrupted entries but preserve valid ones
+            logger.warning(
+              'Skipping corrupted quiz result: $key',
+              tag: 'QuizLocalDS',
+              error: parseError,
+            );
+            // Remove corrupted entry
+            await box.delete(key);
+          }
         }
       }
 
