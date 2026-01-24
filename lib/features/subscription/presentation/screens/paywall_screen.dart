@@ -88,7 +88,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 28),
+                    const Icon(Icons.star, color: Colors.amber, size: AppDimensions.iconLG - 4),
                     const SizedBox(width: AppDimensions.spacingSM),
                     Text(
                       l10n.goPremium,
@@ -190,7 +190,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              padding: const EdgeInsets.symmetric(vertical: AppDimensions.md),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
                                   AppDimensions.radiusMD,
@@ -199,8 +199,8 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                             ),
                             child: _isLoading
                                 ? const SizedBox(
-                                    width: 24,
-                                    height: 24,
+                                    width: AppDimensions.iconMD,
+                                    height: AppDimensions.iconMD,
                                     child: CircularProgressIndicator(
                                       color: Colors.white,
                                       strokeWidth: 2,
@@ -252,12 +252,12 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(AppDimensions.xs),
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
             ),
-            child: Icon(icon, color: AppColors.primary, size: 24),
+            child: Icon(icon, color: AppColors.primary, size: AppDimensions.iconMD),
           ),
           const SizedBox(width: AppDimensions.spacingMD),
           Expanded(
@@ -343,8 +343,8 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
               children: [
                 // Radio indicator
                 Container(
-                  width: 24,
-                  height: 24,
+                  width: AppDimensions.iconMD,
+                  height: AppDimensions.iconMD,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
@@ -357,8 +357,8 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                   child: isSelected
                       ? Center(
                           child: Container(
-                            width: 12,
-                            height: 12,
+                            width: AppDimensions.sm,
+                            height: AppDimensions.sm,
                             decoration: const BoxDecoration(
                               color: AppColors.primary,
                               shape: BoxShape.circle,
@@ -386,12 +386,12 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                             const SizedBox(width: AppDimensions.spacingSM),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
+                                horizontal: AppDimensions.xs,
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
                                 color: AppColors.success,
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
                               ),
                               child: Text(
                                 savings,
@@ -433,15 +433,15 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
             // Best Value badge
             if (isBestValue)
               Positioned(
-                top: -8,
+                top: -AppDimensions.xs,
                 right: 0,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: AppDimensions.xs, vertical: AppDimensions.xxs),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [AppColors.primary, AppColors.secondary],
                     ),
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
                   ),
                   child: Text(
                     isArabic ? 'الأفضل قيمة' : 'BEST VALUE',
@@ -475,8 +475,8 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
 
             // Premium Badge
             Container(
-              width: 120,
-              height: 120,
+              width: AppDimensions.iconXXL * 2 - 8,
+              height: AppDimensions.iconXXL * 2 - 8,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   begin: Alignment.topLeft,
@@ -487,12 +487,12 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.primary.withValues(alpha: 0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
+                    blurRadius: AppDimensions.lg - 4,
+                    offset: const Offset(0, AppDimensions.sm - 2),
                   ),
                 ],
               ),
-              child: const Icon(Icons.star, color: Colors.white, size: 64),
+              child: const Icon(Icons.star, color: Colors.white, size: AppDimensions.iconXXL),
             ),
 
             const SizedBox(height: AppDimensions.spacingLG),
@@ -560,7 +560,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
 
   Widget _buildPremiumFeatureRow(ThemeData theme, IconData icon, String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: AppDimensions.xs),
       child: Row(
         children: [
           Icon(icon, color: AppColors.primary),

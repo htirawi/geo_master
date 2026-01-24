@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/cultural_item.dart';
 import '../../../../domain/entities/place_of_interest.dart';
 import '../../../../presentation/providers/country_content_provider.dart';
@@ -28,7 +29,7 @@ class CultureTab extends ConsumerWidget {
     final funFactsAsync = ref.watch(funFactsProvider(countryCode));
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -40,7 +41,7 @@ class CultureTab extends ConsumerWidget {
             loading: () => const _SectionLoading(),
             error: (_, __) => const SizedBox.shrink(),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Festivals
           festivalsAsync.when(
@@ -50,7 +51,7 @@ class CultureTab extends ConsumerWidget {
             loading: () => const _SectionLoading(),
             error: (_, __) => const SizedBox.shrink(),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // UNESCO sites
           unescoAsync.when(
@@ -60,7 +61,7 @@ class CultureTab extends ConsumerWidget {
             loading: () => const _SectionLoading(),
             error: (_, __) => const SizedBox.shrink(),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Famous people
           peopleAsync.when(
@@ -70,7 +71,7 @@ class CultureTab extends ConsumerWidget {
             loading: () => const _SectionLoading(),
             error: (_, __) => const SizedBox.shrink(),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Fun facts
           funFactsAsync.when(
@@ -93,7 +94,7 @@ class _SectionLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Card(
       child: Padding(
-        padding: EdgeInsets.all(32),
+        padding: EdgeInsets.all(AppDimensions.xl),
         child: Center(child: CircularProgressIndicator()),
       ),
     );
@@ -121,10 +122,10 @@ class _FoodSection extends StatelessWidget {
           children: [
             const Icon(
               Icons.restaurant,
-              size: 20,
+              size: AppDimensions.iconSM,
               color: Colors.orange,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               isArabic ? 'الأطباق الشهيرة' : 'Famous Foods',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -133,7 +134,7 @@ class _FoodSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
         SizedBox(
           height: 200,
           child: ListView.builder(
@@ -165,7 +166,7 @@ class _FoodCard extends StatelessWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      margin: const EdgeInsetsDirectional.only(end: 12),
+      margin: const EdgeInsetsDirectional.only(end: AppDimensions.sm),
       child: SizedBox(
         width: 160,
         child: Column(
@@ -180,19 +181,19 @@ class _FoodCard extends StatelessWidget {
                       width: double.infinity,
                       errorWidget: (_, __, ___) => Container(
                         color: theme.colorScheme.surfaceContainerHighest,
-                        child: const Icon(Icons.restaurant, size: 40),
+                        child: const Icon(Icons.restaurant, size: AppDimensions.iconXL),
                       ),
                     )
                   : Container(
                       color: theme.colorScheme.surfaceContainerHighest,
                       child: const Center(
-                        child: Icon(Icons.restaurant, size: 40),
+                        child: Icon(Icons.restaurant, size: AppDimensions.iconXL),
                       ),
                     ),
             ),
             // Info
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppDimensions.xs),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -244,10 +245,10 @@ class _FestivalsSection extends StatelessWidget {
           children: [
             const Icon(
               Icons.celebration,
-              size: 20,
+              size: AppDimensions.iconSM,
               color: Colors.purple,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               isArabic ? 'المهرجانات والأعياد' : 'Festivals & Holidays',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -256,9 +257,9 @@ class _FestivalsSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
         ...festivals.take(5).map((festival) => Card(
-              margin: const EdgeInsets.only(bottom: 8),
+              margin: const EdgeInsets.only(bottom: AppDimensions.xs),
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: Colors.purple.withValues(alpha: 0.2),
@@ -312,22 +313,22 @@ class _UnescoSection extends StatelessWidget {
           children: [
             const Icon(
               Icons.account_balance,
-              size: 20,
+              size: AppDimensions.iconSM,
               color: Color(0xFF1976D2),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               isArabic ? 'مواقع التراث العالمي' : 'UNESCO Heritage Sites',
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                 color: const Color(0xFF1976D2),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               ),
               child: Text(
                 '${sites.length}',
@@ -339,12 +340,12 @@ class _UnescoSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
         ...sites.take(5).map((site) => Card(
-              margin: const EdgeInsets.only(bottom: 8),
+              margin: const EdgeInsets.only(bottom: AppDimensions.xs),
               child: ListTile(
                 leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                   child: SizedBox(
                     width: 56,
                     height: 56,
@@ -402,10 +403,10 @@ class _FamousPeopleSection extends StatelessWidget {
           children: [
             Icon(
               Icons.person,
-              size: 20,
+              size: AppDimensions.iconSM,
               color: theme.colorScheme.primary,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               isArabic ? 'شخصيات مشهورة' : 'Famous People',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -414,7 +415,7 @@ class _FamousPeopleSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
         SizedBox(
           height: 140,
           child: ListView.builder(
@@ -445,16 +446,16 @@ class _PersonCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Card(
-      margin: const EdgeInsetsDirectional.only(end: 12),
+      margin: const EdgeInsetsDirectional.only(end: AppDimensions.sm),
       child: SizedBox(
         width: 120,
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(AppDimensions.sm),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
-                radius: 32,
+                radius: AppDimensions.iconLG,
                 backgroundColor: theme.colorScheme.primaryContainer,
                 backgroundImage: person.imageUrl != null
                     ? CachedNetworkImageProvider(person.imageUrl!)
@@ -462,12 +463,12 @@ class _PersonCard extends StatelessWidget {
                 child: person.imageUrl == null
                     ? Icon(
                         Icons.person,
-                        size: 32,
+                        size: AppDimensions.iconLG,
                         color: theme.colorScheme.onPrimaryContainer,
                       )
                     : null,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppDimensions.xs),
               Text(
                 person.getDisplayName(isArabic: isArabic),
                 style: theme.textTheme.titleSmall?.copyWith(
@@ -516,10 +517,10 @@ class _FunFactsSection extends StatelessWidget {
           children: [
             const Icon(
               Icons.lightbulb,
-              size: 20,
+              size: AppDimensions.iconSM,
               color: Colors.amber,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               isArabic ? 'حقائق ممتعة' : 'Fun Facts',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -528,21 +529,21 @@ class _FunFactsSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
         ...facts.take(5).map((fact) => Card(
-              margin: const EdgeInsets.only(bottom: 8),
+              margin: const EdgeInsets.only(bottom: AppDimensions.xs),
               color: Colors.amber.withValues(alpha: 0.1),
               child: Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppDimensions.sm),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Icon(
                       Icons.auto_awesome,
                       color: Colors.amber,
-                      size: 20,
+                      size: AppDimensions.iconSM,
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppDimensions.sm),
                     Expanded(
                       child: Text(
                         fact.getFact(isArabic: isArabic),

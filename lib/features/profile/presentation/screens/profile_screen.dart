@@ -257,18 +257,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusXL)),
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppDimensions.xs),
               decoration: BoxDecoration(
                 color: AppColors.ocean.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               ),
               child: const Icon(Icons.language, color: AppColors.ocean),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Text(l10n.language),
           ],
         ),
@@ -286,7 +286,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 Navigator.pop(dialogContext);
               },
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.xs),
             LanguageOption(
               icon: Icons.translate,
               title: l10n.arabic,
@@ -313,18 +313,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         builder: (context, dialogRef, _) {
           final userPrefs = dialogRef.watch(userPreferencesProvider);
           return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusXL)),
             title: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(AppDimensions.xs),
                   decoration: BoxDecoration(
                     color: AppColors.sunset.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                   ),
                   child: const Icon(Icons.notifications_active, color: AppColors.sunset),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppDimensions.sm),
                 Text(l10n.notifications),
               ],
             ),
@@ -341,7 +341,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     dialogRef.read(userProfileProvider.notifier).updatePreferences(updatedPrefs);
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppDimensions.sm),
                 SwitchOption(
                   icon: Icons.volume_up,
                   title: l10n.soundEffects,
@@ -352,7 +352,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     dialogRef.read(userProfileProvider.notifier).updatePreferences(updatedPrefs);
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppDimensions.sm),
                 SwitchOption(
                   icon: Icons.vibration,
                   title: l10n.hapticFeedback,
@@ -384,18 +384,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusXL)),
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppDimensions.xs),
               decoration: BoxDecoration(
                 color: AppColors.forest.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               ),
               child: const Icon(Icons.terrain, color: AppColors.forest),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Text(l10n.difficulty),
           ],
         ),
@@ -415,7 +415,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 Navigator.pop(dialogContext);
               },
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.xs),
             DifficultyOption(
               icon: Icons.sentiment_neutral,
               title: l10n.difficultyMedium,
@@ -429,7 +429,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 Navigator.pop(dialogContext);
               },
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.xs),
             DifficultyOption(
               icon: Icons.sentiment_very_dissatisfied,
               title: l10n.difficultyHard,
@@ -456,18 +456,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusXL)),
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppDimensions.xs),
               decoration: BoxDecoration(
                 color: AppColors.secondary.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               ),
               child: const Icon(Icons.flag, color: AppColors.secondary),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Text(l10n.dailyGoal),
           ],
         ),
@@ -500,18 +500,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusXL)),
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppDimensions.xs),
               decoration: BoxDecoration(
                 color: AppColors.tertiary.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               ),
               child: const Icon(Icons.person_add, color: AppColors.tertiary),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Text(l10n.createAccount),
           ],
         ),
@@ -541,18 +541,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusXL)),
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppDimensions.xs),
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               ),
               child: const Icon(Icons.help_center, color: AppColors.primary),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Text(l10n.helpAndSupport),
           ],
         ),
@@ -561,12 +561,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           children: [
             ListTile(
               leading: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppDimensions.xs),
                 decoration: BoxDecoration(
                   color: AppColors.info.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                 ),
-                child: const Icon(Icons.email, color: AppColors.info, size: 20),
+                child: const Icon(Icons.email, color: AppColors.info, size: AppDimensions.iconSM),
               ),
               title: Text(l10n.contactUs),
               subtitle: const Text(_supportEmail),
@@ -577,12 +577,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             ListTile(
               leading: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppDimensions.xs),
                 decoration: BoxDecoration(
                   color: AppColors.secondary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                 ),
-                child: const Icon(Icons.rate_review, color: AppColors.secondary, size: 20),
+                child: const Icon(Icons.rate_review, color: AppColors.secondary, size: AppDimensions.iconSM),
               ),
               title: Text(l10n.rateApp),
               onTap: () {
@@ -592,12 +592,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             ListTile(
               leading: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppDimensions.xs),
                 decoration: BoxDecoration(
                   color: AppColors.tertiary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                 ),
-                child: const Icon(Icons.share, color: AppColors.tertiary, size: 20),
+                child: const Icon(Icons.share, color: AppColors.tertiary, size: AppDimensions.iconSM),
               ),
               title: Text(l10n.shareApp),
               onTap: () {
@@ -652,18 +652,18 @@ Android: https://play.google.com/store/apps/details?id=$_androidPackageName
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusXL)),
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppDimensions.xs),
               decoration: BoxDecoration(
                 color: AppColors.mountain.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               ),
               child: const Icon(Icons.dark_mode, color: AppColors.mountain),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Text(l10n.theme),
           ],
         ),
@@ -680,7 +680,7 @@ Android: https://play.google.com/store/apps/details?id=$_androidPackageName
                 Navigator.pop(dialogContext);
               },
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.xs),
             ThemeOption(
               icon: Icons.dark_mode,
               title: l10n.darkMode,
@@ -691,7 +691,7 @@ Android: https://play.google.com/store/apps/details?id=$_androidPackageName
                 Navigator.pop(dialogContext);
               },
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.xs),
             ThemeOption(
               icon: Icons.settings_suggest,
               title: l10n.systemDefault,
@@ -715,18 +715,18 @@ Android: https://play.google.com/store/apps/details?id=$_androidPackageName
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusXL)),
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppDimensions.xs),
               decoration: BoxDecoration(
                 color: AppColors.error.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               ),
               child: const Icon(Icons.logout, color: AppColors.error),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Text(l10n.signOut),
           ],
         ),
@@ -770,14 +770,14 @@ Android: https://play.google.com/store/apps/details?id=$_androidPackageName
         content: Row(
           children: [
             const Icon(Icons.error_outline, color: Colors.white),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: AppColors.error,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusMD)),
+        margin: const EdgeInsets.all(AppDimensions.md),
       ),
     );
   }

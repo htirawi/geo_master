@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/country.dart';
 import '../../../../domain/entities/country_progress.dart';
 import '../../../../presentation/providers/country_progress_provider.dart';
@@ -23,7 +24,7 @@ class LearnTab extends ConsumerWidget {
     final progressAsync = ref.watch(progressForCountryProvider(country.code));
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,33 +42,33 @@ class LearnTab extends ConsumerWidget {
             ),
             error: (_, __) => const SizedBox.shrink(),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Quick quiz card
           _QuizCard(countryCode: country.code, isArabic: isArabic),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Learning modules
           _LearningModulesSection(
             countryCode: country.code,
             isArabic: isArabic,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // AI Tutor launcher
           _AiTutorCard(country: country, isArabic: isArabic),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Flashcards section
           _FlashcardsSection(countryCode: country.code, isArabic: isArabic),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Media gallery
           _MediaGallerySection(
             countryName: country.name,
             isArabic: isArabic,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Bookmarks section
           progressAsync.when(
@@ -104,7 +105,7 @@ class _ProgressCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -112,10 +113,10 @@ class _ProgressCard extends StatelessWidget {
               children: [
                 Icon(
                   Icons.trending_up,
-                  size: 20,
+                  size: AppDimensions.iconSM,
                   color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Text(
                   isArabic ? 'تقدمك' : 'Your Progress',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -130,7 +131,7 @@ class _ProgressCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: _getProgressColor(progressValue),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
                   ),
                   child: Text(
                     progress.progressLevel.displayName,
@@ -142,11 +143,11 @@ class _ProgressCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppDimensions.md),
 
             // Progress bar
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               child: LinearProgressIndicator(
                 value: progressValue,
                 backgroundColor: theme.colorScheme.surfaceContainerHighest,
@@ -156,7 +157,7 @@ class _ProgressCard extends StatelessWidget {
                 minHeight: 12,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.xs),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -246,7 +247,7 @@ class _StatItem extends StatelessWidget {
 
     return Column(
       children: [
-        Icon(icon, color: color, size: 24),
+        Icon(icon, color: color, size: AppDimensions.iconMD),
         const SizedBox(height: 4),
         Text(
           value,
@@ -288,9 +289,9 @@ class _QuizCard extends StatelessWidget {
             'questionCount': 3,
           });
         },
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppDimensions.md),
           child: Row(
             children: [
               Container(
@@ -298,7 +299,7 @@ class _QuizCard extends StatelessWidget {
                 height: 56,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 ),
                 child: const Icon(
                   Icons.quiz,
@@ -306,7 +307,7 @@ class _QuizCard extends StatelessWidget {
                   size: 28,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppDimensions.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -402,10 +403,10 @@ class _LearningModulesSection extends StatelessWidget {
           children: [
             Icon(
               Icons.library_books,
-              size: 20,
+              size: AppDimensions.iconSM,
               color: theme.colorScheme.primary,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               isArabic ? 'وحدات التعلم' : 'Learning Modules',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -414,7 +415,7 @@ class _LearningModulesSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
         ...modules.map((module) => _ModuleCard(module: module)),
       ],
     );
@@ -447,7 +448,7 @@ class _ModuleCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppDimensions.xs),
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: module.isLocked
@@ -513,9 +514,9 @@ class _AiTutorCard extends StatelessWidget {
             arguments: {'country': country},
           );
         },
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppDimensions.md),
           child: Row(
             children: [
               Container(
@@ -523,7 +524,7 @@ class _AiTutorCard extends StatelessWidget {
                 height: 56,
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 ),
                 child: const Icon(
                   Icons.smart_toy,
@@ -531,7 +532,7 @@ class _AiTutorCard extends StatelessWidget {
                   size: 28,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppDimensions.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -585,17 +586,17 @@ class _FlashcardsSection extends StatelessWidget {
         onTap: () {
           // Navigate to flashcards
         },
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppDimensions.md),
           child: Row(
             children: [
               Icon(
                 Icons.style,
-                size: 32,
+                size: AppDimensions.iconLG,
                 color: theme.colorScheme.primary,
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppDimensions.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -649,10 +650,10 @@ class _MediaGallerySection extends ConsumerWidget {
           children: [
             Icon(
               Icons.photo_library,
-              size: 20,
+              size: AppDimensions.iconSM,
               color: theme.colorScheme.primary,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               isArabic ? 'معرض الصور' : 'Photo Gallery',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -661,7 +662,7 @@ class _MediaGallerySection extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
         photosAsync.when(
           data: (photos) => photos.isNotEmpty
               ? SizedBox(
@@ -695,7 +696,7 @@ class _MediaGallerySection extends ConsumerWidget {
                 )
               : const Card(
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(AppDimensions.md),
                     child: Center(
                       child: Text('No photos available'),
                     ),
@@ -728,7 +729,7 @@ class _BookmarksSection extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -736,17 +737,17 @@ class _BookmarksSection extends StatelessWidget {
               children: [
                 Icon(
                   Icons.bookmark,
-                  size: 20,
+                  size: AppDimensions.iconSM,
                   color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Text(
                   isArabic ? 'المحفوظات' : 'Bookmarks',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -754,7 +755,7 @@ class _BookmarksSection extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                   ),
                   child: Text(
                     '${bookmarks.length}',
@@ -765,13 +766,13 @@ class _BookmarksSection extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDimensions.sm),
             ...bookmarks.take(3).map((bookmark) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.only(bottom: AppDimensions.xs),
                   child: Row(
                     children: [
                       const Icon(Icons.bookmark_border, size: 18),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppDimensions.xs),
                       Expanded(
                         child: Text(
                           bookmark,

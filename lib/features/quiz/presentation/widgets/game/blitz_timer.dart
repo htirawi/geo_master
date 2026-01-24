@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
 
 /// Blitz mode timer widget with animated countdown
 class BlitzTimer extends StatelessWidget {
@@ -24,7 +25,10 @@ class BlitzTimer extends StatelessWidget {
     final color = isLow ? AppColors.error : AppColors.primary;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      margin: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.md,
+        vertical: AppDimensions.xs,
+      ),
       child: Column(
         children: [
           Row(
@@ -38,12 +42,12 @@ class BlitzTimer extends StatelessWidget {
                     child: Icon(
                       Icons.timer,
                       color: color,
-                      size: 24,
+                      size: AppDimensions.iconMD,
                     ),
                   );
                 },
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppDimensions.xs),
               Text(
                 '$timeRemaining',
                 style: GoogleFonts.poppins(
@@ -61,9 +65,9 @@ class BlitzTimer extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppDimensions.xs),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(AppDimensions.xxs),
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor: color.withValues(alpha: 0.2),

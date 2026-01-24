@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/headers/explorer_hero_header.dart';
 import 'atlas_pattern_painter.dart';
 
 /// Explorer Header with search
+///
+/// Uses the design system's HeaderGradients.atlas for consistent styling.
 class ExplorerHeader extends StatelessWidget {
   const ExplorerHeader({
     super.key,
@@ -28,11 +32,7 @@ class ExplorerHeader extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF00897B), Color(0xFF00695C), Color(0xFF004D40)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: HeaderGradients.atlas,
       ),
       child: Stack(
         children: [
@@ -56,24 +56,24 @@ class ExplorerHeader extends StatelessWidget {
           // Content
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppDimensions.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppDimensions.xs),
                   // Title
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(AppDimensions.sm - 2),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusMD + 2),
                         ),
                         child: const Icon(Icons.explore,
-                            color: Colors.white, size: 24),
+                            color: Colors.white, size: AppDimensions.iconMD),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppDimensions.sm),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -97,18 +97,18 @@ class ExplorerHeader extends StatelessWidget {
                         ],
                       ),
                     ],
-                  ).animate().fadeIn(duration: 400.ms),
-                  const SizedBox(height: 20),
+                  ).animate().fadeIn(duration: AppDimensions.durationSlow),
+                  const SizedBox(height: AppDimensions.lg),
                   // Search bar
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: AppDimensions.borderRadiusLG,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                          blurRadius: AppDimensions.blurLight + 2,
+                          offset: const Offset(0, AppDimensions.xxs),
                         ),
                       ],
                     ),
@@ -132,13 +132,13 @@ class ExplorerHeader extends StatelessWidget {
                             : null,
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
+                          horizontal: AppDimensions.lg,
+                          vertical: AppDimensions.md,
                         ),
                       ),
                     ),
-                  ).animate().fadeIn(delay: 100.ms, duration: 400.ms),
-                  const SizedBox(height: 8),
+                  ).animate().fadeIn(delay: 100.ms, duration: AppDimensions.durationSlow),
+                  const SizedBox(height: AppDimensions.xs),
                 ],
               ),
             ),

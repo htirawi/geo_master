@@ -27,8 +27,8 @@ class PassportSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(icon, size: 20, color: theme.colorScheme.primary),
-            const SizedBox(width: 8),
+            Icon(icon, size: AppDimensions.iconSM, color: theme.colorScheme.primary),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               title,
               style: (isArabic
@@ -44,15 +44,15 @@ class PassportSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppDimensions.spacingSM),
+        const SizedBox(height: AppDimensions.sm),
         Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
+                blurRadius: AppDimensions.blurLight + 2,
                 offset: const Offset(0, 2),
               ),
             ],
@@ -104,20 +104,23 @@ class PassportItem extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.md,
+          vertical: AppDimensions.md - 2,
+        ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(AppDimensions.sm - 2),
               decoration: BoxDecoration(
                 color: iconColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM + 2),
               ),
-              child: Icon(icon, color: iconColor, size: 20),
+              child: Icon(icon, color: iconColor, size: AppDimensions.iconSM),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: AppDimensions.md - 2),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

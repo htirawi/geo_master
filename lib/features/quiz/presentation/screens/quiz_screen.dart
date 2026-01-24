@@ -7,9 +7,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/quiz.dart';
 import '../../../../domain/repositories/i_quiz_repository.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/headers/explorer_hero_header.dart';
 import '../../../../presentation/providers/quiz_provider.dart';
 import '../../../../presentation/providers/subscription_provider.dart';
 
@@ -79,15 +81,20 @@ class QuizScreen extends ConsumerWidget {
           // Topic Categories
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 28, 20, 16),
+              padding: const EdgeInsets.fromLTRB(
+                AppDimensions.lg - 4,
+                AppDimensions.xl - 4,
+                AppDimensions.lg - 4,
+                AppDimensions.md,
+              ),
               child: Row(
                 children: [
                   Icon(
                     Icons.category_rounded,
                     color: AppColors.primary,
-                    size: 22,
+                    size: AppDimensions.iconMD - 2,
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: AppDimensions.sm - 2),
                   Text(
                     isArabic ? 'اختر نوع السؤال' : 'Choose Topic',
                     style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -98,16 +105,16 @@ class QuizScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-            ).animate().fadeIn(delay: 450.ms, duration: 400.ms),
+            ).animate().fadeIn(delay: 450.ms, duration: AppDimensions.durationMedium),
           ),
           // Topic Cards Grid
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.lg - 4),
             sliver: SliverGrid(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 14,
-                mainAxisSpacing: 14,
+                crossAxisSpacing: AppDimensions.md - 2,
+                mainAxisSpacing: AppDimensions.md - 2,
                 childAspectRatio: 0.85,
               ),
               delegate: SliverChildListDelegate([
@@ -244,42 +251,43 @@ class _ModernHeader extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFFF6D00), Color(0xFFFF8F00)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: const BorderRadius.vertical(
-          bottom: Radius.circular(32),
+        gradient: HeaderGradients.quiz,
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(AppDimensions.radiusXL + 8),
         ),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFFFF6D00).withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            blurRadius: AppDimensions.blurHeavy,
+            offset: const Offset(0, AppDimensions.sm - 2),
           ),
         ],
       ),
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 28),
+          padding: const EdgeInsets.fromLTRB(
+            AppDimensions.lg,
+            AppDimensions.md,
+            AppDimensions.lg,
+            AppDimensions.xl - 4,
+          ),
           child: Row(
             children: [
               // Icon
               Container(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(AppDimensions.md - 2),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.25),
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 2),
                 ),
                 child: const Icon(
                   Icons.flash_on_rounded,
                   color: Colors.white,
-                  size: 28,
+                  size: AppDimensions.iconLG - 4,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppDimensions.md),
               // Title
               Expanded(
                 child: Column(
@@ -309,12 +317,12 @@ class _ModernHeader extends StatelessWidget {
               if (streak > 0)
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 10,
+                    horizontal: AppDimensions.md - 2,
+                    vertical: AppDimensions.sm - 2,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.25),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMD + 4),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -322,9 +330,9 @@ class _ModernHeader extends StatelessWidget {
                       const Icon(
                         Icons.local_fire_department_rounded,
                         color: Colors.white,
-                        size: 22,
+                        size: AppDimensions.iconMD - 2,
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: AppDimensions.xxs + 2),
                       Text(
                         '$streak',
                         style: GoogleFonts.poppins(
@@ -337,7 +345,7 @@ class _ModernHeader extends StatelessWidget {
                   ),
                 ),
             ],
-          ).animate().fadeIn(duration: 400.ms),
+          ).animate().fadeIn(duration: AppDimensions.durationMedium),
         ),
       ),
     );
@@ -356,7 +364,12 @@ class _StatsCards extends StatelessWidget {
 
     return stats.when(
       data: (statistics) => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        padding: const EdgeInsets.fromLTRB(
+          AppDimensions.lg - 4,
+          AppDimensions.lg - 4,
+          AppDimensions.lg - 4,
+          0,
+        ),
         child: Row(
           children: [
             Expanded(
@@ -367,7 +380,7 @@ class _StatsCards extends StatelessWidget {
                 color: AppColors.success,
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Expanded(
               child: _StatCard(
                 icon: Icons.gps_fixed_rounded,
@@ -376,7 +389,7 @@ class _StatsCards extends StatelessWidget {
                 color: AppColors.primary,
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Expanded(
               child: _StatCard(
                 icon: Icons.local_fire_department_rounded,
@@ -389,12 +402,17 @@ class _StatsCards extends StatelessWidget {
         ),
       ),
       loading: () => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        padding: const EdgeInsets.fromLTRB(
+          AppDimensions.lg - 4,
+          AppDimensions.lg - 4,
+          AppDimensions.lg - 4,
+          0,
+        ),
         child: Container(
           height: 100,
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXL - 4),
           ),
           child: const Center(
             child: CircularProgressIndicator(
@@ -425,29 +443,32 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppDimensions.md,
+        horizontal: AppDimensions.sm,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 2),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            blurRadius: AppDimensions.blurLight,
+            offset: const Offset(0, AppDimensions.xxs),
           ),
         ],
       ),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(AppDimensions.sm - 2),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: color, size: 22),
+            child: Icon(icon, color: color, size: AppDimensions.iconMD - 2),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppDimensions.sm - 2),
           Text(
             value,
             style: GoogleFonts.poppins(
@@ -491,7 +512,12 @@ class _GameModesGrid extends ConsumerWidget {
     final isPremium = ref.watch(isPremiumProvider);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+      padding: const EdgeInsets.fromLTRB(
+        AppDimensions.lg - 4,
+        AppDimensions.lg,
+        AppDimensions.lg - 4,
+        0,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -500,9 +526,9 @@ class _GameModesGrid extends ConsumerWidget {
               Icon(
                 Icons.sports_esports_rounded,
                 color: AppColors.primary,
-                size: 22,
+                size: AppDimensions.iconMD - 2,
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppDimensions.sm - 2),
               Text(
                 isArabic ? 'أوضاع اللعب' : 'Game Modes',
                 style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -513,14 +539,14 @@ class _GameModesGrid extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
           // Game modes in clean grid
           GridView.count(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisCount: 3,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
+            crossAxisSpacing: AppDimensions.sm,
+            mainAxisSpacing: AppDimensions.sm,
             childAspectRatio: 0.95,
             children: [
               _GameModeCard(
@@ -632,11 +658,13 @@ class _GameModesGrid extends ConsumerWidget {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppDimensions.radiusXL),
+        ),
       ),
       builder: (context) => Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppDimensions.lg - 4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -648,7 +676,7 @@ class _GameModesGrid extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppDimensions.md),
             ...continents.map((continent) => ListTile(
                   leading: const Icon(Icons.public),
                   title: Text(continent.$2),
@@ -664,7 +692,7 @@ class _GameModesGrid extends ConsumerWidget {
                     );
                   },
                 )),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppDimensions.lg - 4),
           ],
         ),
       ),
@@ -700,7 +728,7 @@ class _GameModeCard extends StatelessWidget {
           color: isCompleted
               ? Colors.grey.withValues(alpha: 0.1)
               : color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 2),
           border: Border.all(
             color: isCompleted
                 ? Colors.grey.withValues(alpha: 0.3)
@@ -711,13 +739,13 @@ class _GameModeCard extends StatelessWidget {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(AppDimensions.sm - 2),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(AppDimensions.sm - 2),
                     decoration: BoxDecoration(
                       color: isCompleted
                           ? Colors.grey.withValues(alpha: 0.2)
@@ -727,10 +755,10 @@ class _GameModeCard extends StatelessWidget {
                     child: Icon(
                       isCompleted ? Icons.check_circle_rounded : icon,
                       color: isCompleted ? Colors.grey : color,
-                      size: 26,
+                      size: AppDimensions.iconMD + 2,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppDimensions.xs),
                   Flexible(
                     child: Text(
                       label,
@@ -769,17 +797,17 @@ class _GameModeCard extends StatelessWidget {
             ),
             if (isPremium)
               Positioned(
-                top: 6,
-                right: 6,
+                top: AppDimensions.xxs + 2,
+                right: AppDimensions.xxs + 2,
                 child: Container(
-                  padding: const EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(AppDimensions.xxs),
                   decoration: BoxDecoration(
                     color: AppColors.xpGold.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.star_rounded,
-                    size: 14,
+                    size: AppDimensions.iconXS - 2,
                     color: AppColors.xpGold,
                   ),
                 ),
@@ -808,7 +836,12 @@ class _ModernDifficultySelector extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+      padding: const EdgeInsets.fromLTRB(
+        AppDimensions.lg - 4,
+        AppDimensions.lg,
+        AppDimensions.lg - 4,
+        0,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -817,9 +850,9 @@ class _ModernDifficultySelector extends StatelessWidget {
               Icon(
                 Icons.speed_rounded,
                 color: AppColors.secondary,
-                size: 22,
+                size: AppDimensions.iconMD - 2,
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppDimensions.sm - 2),
               Text(
                 l10n.difficultyLevel,
                 style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -830,7 +863,7 @@ class _ModernDifficultySelector extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
           Row(
             children: [
               Expanded(
@@ -842,7 +875,7 @@ class _ModernDifficultySelector extends StatelessWidget {
                   onTap: () => onDifficultyChanged(QuizDifficulty.easy),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppDimensions.sm),
               Expanded(
                 child: _DifficultyOption(
                   title: l10n.difficultyMedium,
@@ -852,7 +885,7 @@ class _ModernDifficultySelector extends StatelessWidget {
                   onTap: () => onDifficultyChanged(QuizDifficulty.medium),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppDimensions.sm),
               Expanded(
                 child: _DifficultyOption(
                   title: l10n.difficultyHard,
@@ -890,9 +923,12 @@ class _DifficultyOption extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
+        duration: AppDimensions.durationMedium,
         curve: Curves.easeOutCubic,
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        padding: const EdgeInsets.symmetric(
+          vertical: AppDimensions.md,
+          horizontal: AppDimensions.xs,
+        ),
         decoration: BoxDecoration(
           gradient: isSelected
               ? LinearGradient(
@@ -902,7 +938,7 @@ class _DifficultyOption extends StatelessWidget {
                 )
               : null,
           color: isSelected ? null : color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD + 4),
           border: Border.all(
             color: isSelected ? color : color.withValues(alpha: 0.25),
             width: isSelected ? 2 : 1.5,
@@ -911,8 +947,8 @@ class _DifficultyOption extends StatelessWidget {
               ? [
                   BoxShadow(
                     color: color.withValues(alpha: 0.25),
-                    blurRadius: 12,
-                    offset: const Offset(0, 6),
+                    blurRadius: AppDimensions.blurMedium,
+                    offset: const Offset(0, AppDimensions.xxs + 2),
                   ),
                 ]
               : null,
@@ -921,10 +957,10 @@ class _DifficultyOption extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 28,
+              size: AppDimensions.iconLG - 4,
               color: isSelected ? Colors.white : color,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.xs),
             Text(
               title,
               style: GoogleFonts.poppins(
@@ -968,12 +1004,12 @@ class _TopicCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           gradient: gradient,
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusXL - 2),
           boxShadow: [
             BoxShadow(
               color: accentColor.withValues(alpha: 0.25),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
+              blurRadius: AppDimensions.blurMedium,
+              offset: const Offset(0, AppDimensions.xxs + 2),
             ),
           ],
         ),
@@ -982,7 +1018,7 @@ class _TopicCard extends StatelessWidget {
             // Background pattern
             Positioned.fill(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusXL - 2),
                 child: CustomPaint(
                   painter: _TopicCardPatternPainter(),
                 ),
@@ -990,17 +1026,17 @@ class _TopicCard extends StatelessWidget {
             ),
             // Content
             Padding(
-              padding: const EdgeInsets.all(18),
+              padding: const EdgeInsets.all(AppDimensions.lg - 6),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(AppDimensions.md - 2),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.25),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusMD + 4),
                     ),
-                    child: Icon(icon, color: Colors.white, size: 32),
+                    child: Icon(icon, color: Colors.white, size: AppDimensions.iconXL),
                   ),
                   const Spacer(),
                   Text(
@@ -1014,15 +1050,15 @@ class _TopicCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: AppDimensions.xxs + 2),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
+                      horizontal: AppDimensions.sm - 2,
+                      vertical: AppDimensions.xxs + 1,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.25),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusSM + 2),
                     ),
                     child: Text(
                       subtitle,
@@ -1039,20 +1075,23 @@ class _TopicCard extends StatelessWidget {
             // Premium badge
             if (isPremium)
               Positioned(
-                top: 12,
-                right: 12,
+                top: AppDimensions.sm,
+                right: AppDimensions.sm,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.xs,
+                    vertical: AppDimensions.xxs,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusSM + 2),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(
                         Icons.star_rounded,
-                        size: 12,
+                        size: AppDimensions.iconXS - 4,
                         color: Colors.white,
                       ),
                       const SizedBox(width: 3),

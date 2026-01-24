@@ -76,8 +76,8 @@ class QuizOptionsSingle extends StatelessWidget {
                   children: [
                     // Option letter
                     Container(
-                      width: 32,
-                      height: 32,
+                      width: AppDimensions.iconXL,
+                      height: AppDimensions.iconXL,
                       decoration: BoxDecoration(
                         color: (borderColor ?? theme.colorScheme.outline)
                             .withValues(alpha: 0.1),
@@ -93,7 +93,7 @@ class QuizOptionsSingle extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppDimensions.sm),
                     Expanded(
                       child: Text(
                         option,
@@ -197,14 +197,14 @@ class QuizOptionsMulti extends StatelessWidget {
                   children: [
                     // Checkbox
                     AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      width: 24,
-                      height: 24,
+                      duration: AppDimensions.durationFast,
+                      width: AppDimensions.iconMD,
+                      height: AppDimensions.iconMD,
                       decoration: BoxDecoration(
                         color: isSelected
                             ? (borderColor ?? theme.colorScheme.primary)
                             : Colors.transparent,
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppDimensions.xxs + 2),
                         border: Border.all(
                           color: borderColor ??
                               theme.colorScheme.outline.withValues(alpha: 0.5),
@@ -214,12 +214,12 @@ class QuizOptionsMulti extends StatelessWidget {
                       child: isSelected
                           ? const Icon(
                               Icons.check,
-                              size: 16,
+                              size: AppDimensions.iconXS,
                               color: Colors.white,
                             )
                           : null,
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppDimensions.sm),
                     Expanded(
                       child: Text(
                         option,

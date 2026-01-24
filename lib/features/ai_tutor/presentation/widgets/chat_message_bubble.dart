@@ -164,12 +164,12 @@ class ChatMessageBubble extends StatelessWidget {
         ),
         codeblockDecoration: BoxDecoration(
           color: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
           border: Border.all(
             color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
           ),
         ),
-        codeblockPadding: const EdgeInsets.all(12),
+        codeblockPadding: const EdgeInsets.all(AppDimensions.sm),
         blockquote: theme.textTheme.bodyMedium?.copyWith(
           color: theme.colorScheme.onSurfaceVariant,
           fontStyle: FontStyle.italic,
@@ -182,11 +182,11 @@ class ChatMessageBubble extends StatelessWidget {
             ),
           ),
         ),
-        blockquotePadding: const EdgeInsets.only(left: 12, top: 4, bottom: 4),
+        blockquotePadding: const EdgeInsets.only(left: AppDimensions.sm, top: AppDimensions.xxs, bottom: AppDimensions.xxs),
         listBullet: theme.textTheme.bodyMedium?.copyWith(
           color: theme.colorScheme.onSurface,
         ),
-        listIndent: 16,
+        listIndent: AppDimensions.md,
         tableHead: theme.textTheme.bodyMedium?.copyWith(
           fontWeight: FontWeight.bold,
           color: theme.colorScheme.onSurface,
@@ -199,7 +199,7 @@ class ChatMessageBubble extends StatelessWidget {
           width: 1,
         ),
         tableColumnWidth: const IntrinsicColumnWidth(),
-        tableCellsPadding: const EdgeInsets.all(8),
+        tableCellsPadding: const EdgeInsets.all(AppDimensions.xs),
         horizontalRuleDecoration: BoxDecoration(
           border: Border(
             top: BorderSide(
@@ -231,8 +231,8 @@ class ChatMessageBubble extends StatelessWidget {
   Widget _buildActionButtons(BuildContext context, ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 4, // Small spacing between message and action buttons
-        left: 40, // Align with message bubble
+        top: AppDimensions.xxs, // Small spacing between message and action buttons
+        left: AppDimensions.avatarSM, // Align with message bubble
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -276,18 +276,18 @@ class ChatMessageBubble extends StatelessWidget {
   Widget _buildReactionsDisplay(ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 4, // Small spacing between message and reactions
-        left: 40,
+        top: AppDimensions.xxs, // Small spacing between message and reactions
+        left: AppDimensions.avatarSM,
       ),
       child: Wrap(
-        spacing: 4,
-        runSpacing: 4,
+        spacing: AppDimensions.xxs,
+        runSpacing: AppDimensions.xxs,
         children: reactions.map((emoji) {
           return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.xs - 2, vertical: 2),
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               border: Border.all(
                 color: theme.colorScheme.outlineVariant,
               ),
@@ -309,18 +309,18 @@ class ChatMessageBubble extends StatelessWidget {
       context: context,
       backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusLG)),
       ),
       builder: (context) => SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: AppDimensions.xs),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
+                width: AppDimensions.avatarSM,
+                height: AppDimensions.xxs,
+                margin: const EdgeInsets.only(bottom: AppDimensions.md),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(2),
@@ -385,13 +385,13 @@ class ChatMessageBubble extends StatelessWidget {
 
   Widget _buildAvatar(ThemeData theme, bool isUser) {
     return CircleAvatar(
-      radius: 16,
+      radius: AppDimensions.md,
       backgroundColor: isUser
           ? theme.colorScheme.primaryContainer
           : AppColors.secondary.withValues(alpha: 0.2),
       child: Icon(
         isUser ? Icons.person : Icons.smart_toy,
-        size: 18,
+        size: AppDimensions.iconSM - 2,
         color: isUser ? theme.colorScheme.primary : AppColors.secondary,
       ),
     );
@@ -438,12 +438,12 @@ class _ActionIconButton extends StatelessWidget {
       message: tooltip,
       child: InkWell(
         onTap: onPressed,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         child: Padding(
-          padding: const EdgeInsets.all(6),
+          padding: const EdgeInsets.all(AppDimensions.xs - 2),
           child: Icon(
             icon,
-            size: 18,
+            size: AppDimensions.iconSM - 2,
             color: isActive
                 ? theme.colorScheme.primary
                 : theme.colorScheme.onSurfaceVariant,
@@ -500,8 +500,8 @@ class _TypingDotsAnimationState extends State<TypingDotsAnimation>
               child: Opacity(
                 opacity: opacity.clamp(0.3, 1.0),
                 child: Container(
-                  width: 8,
-                  height: 8,
+                  width: AppDimensions.xs,
+                  height: AppDimensions.xs,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.onSurfaceVariant,
                     shape: BoxShape.circle,
@@ -554,7 +554,7 @@ class _StreamingCursorState extends State<StreamingCursor>
           opacity: _controller.value,
           child: Container(
             width: 2,
-            height: 16,
+            height: AppDimensions.md,
             margin: const EdgeInsetsDirectional.only(start: 2),
             color: theme.colorScheme.onSurface,
           ),

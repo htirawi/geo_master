@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/country.dart';
 import '../../../../presentation/providers/country_content_provider.dart';
 import '../../../../presentation/providers/timezone_provider.dart';
@@ -21,28 +22,28 @@ class OverviewTab extends ConsumerWidget {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Live info card (time, weather, season)
           _LiveInfoCard(country: country),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Quick facts
           _QuickFactsSection(country: country, isArabic: isArabic),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Flag deep dive
           _FlagSection(country: country, isArabic: isArabic),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Wikipedia overview
           _WikipediaOverview(
             countryCode: country.code,
             countryName: country.name,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Neighboring countries
           if (country.borders.isNotEmpty)
@@ -74,7 +75,7 @@ class _LiveInfoCard extends ConsumerWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -94,7 +95,7 @@ class _LiveInfoCard extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppDimensions.md),
             Row(
               children: [
                 // Current time
@@ -238,7 +239,7 @@ class _QuickFactsSection extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -248,7 +249,7 @@ class _QuickFactsSection extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppDimensions.md),
             _FactRow(
               icon: Icons.location_city,
               label: isArabic ? 'العاصمة' : 'Capital',
@@ -382,7 +383,7 @@ class _FlagSection extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppDimensions.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -435,7 +436,7 @@ class _WikipediaOverview extends ConsumerWidget {
 
         return Card(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppDimensions.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -455,7 +456,7 @@ class _WikipediaOverview extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppDimensions.sm),
                 Text(
                   overview.summary,
                   style: theme.textTheme.bodyMedium,
@@ -469,7 +470,7 @@ class _WikipediaOverview extends ConsumerWidget {
       },
       loading: () => const Card(
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppDimensions.md),
           child: Center(
             child: CircularProgressIndicator(),
           ),
@@ -496,7 +497,7 @@ class _NeighborsSection extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -516,7 +517,7 @@ class _NeighborsSection extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDimensions.sm),
             Wrap(
               spacing: 8,
               runSpacing: 8,

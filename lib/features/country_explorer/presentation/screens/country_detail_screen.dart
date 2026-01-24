@@ -58,13 +58,13 @@ class CountryDetailScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(AppDimensions.lg),
             decoration: BoxDecoration(
               color: AppColors.error.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child:
-                const Icon(Icons.explore_off, size: 64, color: AppColors.error),
+                const Icon(Icons.explore_off, size: AppDimensions.iconXXL, color: AppColors.error),
           ),
           const SizedBox(height: AppDimensions.spacingLG),
           Text(
@@ -81,7 +81,7 @@ class CountryDetailScreen extends ConsumerWidget {
             label: Text(l10n.back),
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.primary,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: AppDimensions.xl, vertical: AppDimensions.md),
             ),
           ),
         ],
@@ -93,18 +93,18 @@ class CountryDetailScreen extends ConsumerWidget {
       BuildContext context, Object error, AppLocalizations l10n) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(AppDimensions.xl),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppDimensions.lg),
               decoration: BoxDecoration(
                 color: AppColors.error.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.error_outline,
-                  size: 64, color: AppColors.error),
+                  size: AppDimensions.iconXXL, color: AppColors.error),
             ),
             const SizedBox(height: AppDimensions.spacingLG),
             Text(
@@ -128,7 +128,7 @@ class CountryDetailScreen extends ConsumerWidget {
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    const EdgeInsets.symmetric(horizontal: AppDimensions.xl, vertical: AppDimensions.md),
               ),
             ),
           ],
@@ -170,14 +170,14 @@ class _CountryDetailContent extends ConsumerWidget {
             leading: _buildBackButton(context, theme, isArabic),
             actions: [
               _buildShareButton(context, theme, l10n, isArabic),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppDimensions.xs),
             ],
           ),
 
           // Main Content
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppDimensions.lg - 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -189,7 +189,7 @@ class _CountryDetailContent extends ConsumerWidget {
                           begin: const Offset(0.95, 0.95),
                           end: const Offset(1, 1)),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppDimensions.lg),
 
                   // Country Name & Info
                   CountryHeader(
@@ -201,7 +201,7 @@ class _CountryDetailContent extends ConsumerWidget {
                       .fadeIn(delay: 100.ms, duration: 400.ms)
                       .slideY(begin: 0.1, end: 0),
 
-                  const SizedBox(height: 28),
+                  const SizedBox(height: AppDimensions.lg + 4),
 
                   // Flag Colors Meaning Section
                   FlagColorsMeaningSection(
@@ -212,7 +212,7 @@ class _CountryDetailContent extends ConsumerWidget {
                       .fadeIn(delay: 150.ms, duration: 400.ms)
                       .slideY(begin: 0.1, end: 0),
 
-                  const SizedBox(height: 28),
+                  const SizedBox(height: AppDimensions.lg + 4),
 
                   // Quick Stats Row
                   CountryQuickStats(country: country, isArabic: isArabic)
@@ -220,7 +220,7 @@ class _CountryDetailContent extends ConsumerWidget {
                       .fadeIn(delay: 200.ms, duration: 400.ms)
                       .slideY(begin: 0.1, end: 0),
 
-                  const SizedBox(height: 28),
+                  const SizedBox(height: AppDimensions.lg + 4),
 
                   // Weather Card
                   WeatherCard(country: country, accentColor: accentColor)
@@ -228,7 +228,7 @@ class _CountryDetailContent extends ConsumerWidget {
                       .fadeIn(delay: 300.ms, duration: 400.ms)
                       .slideY(begin: 0.1, end: 0),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppDimensions.lg - 4),
 
                   // Location Info Section
                   CountryInfoSection(
@@ -253,7 +253,7 @@ class _CountryDetailContent extends ConsumerWidget {
                       .fadeIn(delay: 400.ms, duration: 400.ms)
                       .slideY(begin: 0.1, end: 0),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppDimensions.lg - 4),
 
                   // Details Info Section
                   CountryInfoSection(
@@ -290,7 +290,7 @@ class _CountryDetailContent extends ConsumerWidget {
 
                   // Languages
                   if (country.languages.isNotEmpty) ...[
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppDimensions.lg - 4),
                     CountryLanguagesSection(country: country, isArabic: isArabic)
                         .animate()
                         .fadeIn(delay: 600.ms, duration: 400.ms)
@@ -299,7 +299,7 @@ class _CountryDetailContent extends ConsumerWidget {
 
                   // Currencies
                   if (country.currencies.isNotEmpty) ...[
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppDimensions.lg - 4),
                     CountryCurrenciesSection(
                             country: country, isArabic: isArabic)
                         .animate()
@@ -309,14 +309,14 @@ class _CountryDetailContent extends ConsumerWidget {
 
                   // Neighboring Countries
                   if (country.borders.isNotEmpty) ...[
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppDimensions.lg - 4),
                     CountryNeighborsSection(country: country, isArabic: isArabic)
                         .animate()
                         .fadeIn(delay: 700.ms, duration: 400.ms)
                         .slideY(begin: 0.1, end: 0),
                   ],
 
-                  const SizedBox(height: 28),
+                  const SizedBox(height: AppDimensions.lg + 4),
 
                   // Action Buttons
                   CountryActionButtons(
@@ -328,7 +328,7 @@ class _CountryDetailContent extends ConsumerWidget {
                       .fadeIn(delay: 800.ms, duration: 400.ms)
                       .slideY(begin: 0.1, end: 0),
 
-                  const SizedBox(height: 40),
+                  const SizedBox(height: AppDimensions.xxl - 8),
                 ],
               ),
             ),
@@ -340,18 +340,18 @@ class _CountryDetailContent extends ConsumerWidget {
 
   Widget _buildBackButton(BuildContext context, ThemeData theme, bool isArabic) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(AppDimensions.xs),
       child: Container(
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         ),
         child: IconButton(
           icon: Icon(
             isArabic
                 ? Icons.arrow_forward_ios_rounded
                 : Icons.arrow_back_ios_new_rounded,
-            size: 20,
+            size: AppDimensions.iconSM,
           ),
           onPressed: () {
             HapticFeedback.lightImpact();
@@ -369,14 +369,14 @@ class _CountryDetailContent extends ConsumerWidget {
     bool isArabic,
   ) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(AppDimensions.xs),
       child: Container(
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         ),
         child: IconButton(
-          icon: const Icon(Icons.ios_share_rounded, size: 20),
+          icon: const Icon(Icons.ios_share_rounded, size: AppDimensions.iconSM),
           onPressed: () {
             HapticFeedback.lightImpact();
             _shareCountry(context, l10n, isArabic);

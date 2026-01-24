@@ -7,7 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/headers/explorer_hero_header.dart';
 
 /// Stats and gamification screen - Explorer's Journal Theme
 /// A beautifully designed journey progress tracker
@@ -72,11 +74,7 @@ class _JournalHeader extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF5D4037), Color(0xFF795548), Color(0xFF8D6E63)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: HeaderGradients.journal,
       ),
       child: Stack(
         children: [
@@ -88,8 +86,8 @@ class _JournalHeader extends StatelessWidget {
           ),
           // Compass icon
           Positioned(
-            right: isArabic ? null : -20,
-            left: isArabic ? -20 : null,
+            right: isArabic ? null : -AppDimensions.lg,
+            left: isArabic ? -AppDimensions.lg : null,
             top: 60,
             child: Icon(
               Icons.explore,
@@ -100,26 +98,26 @@ class _JournalHeader extends StatelessWidget {
           // Content
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppDimensions.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppDimensions.xs),
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(AppDimensions.sm),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
                         ),
                         child: const Icon(
                           Icons.auto_stories,
                           color: Colors.white,
-                          size: 28,
+                          size: AppDimensions.iconLG - 4,
                         ),
                       ),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: AppDimensions.md - 2),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -150,20 +148,20 @@ class _JournalHeader extends StatelessWidget {
                           context.push(Routes.leaderboard);
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(AppDimensions.sm),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(AppDimensions.radiusMD + 2),
                           ),
                           child: const Icon(
                             Icons.leaderboard,
                             color: Colors.white,
-                            size: 24,
+                            size: AppDimensions.iconMD,
                           ),
                         ),
                       ),
                     ],
-                  ).animate().fadeIn(duration: 400.ms),
+                  ).animate().fadeIn(duration: AppDimensions.durationSlow),
                 ],
               ),
             ),
@@ -224,16 +222,16 @@ class _ExpeditionRankCard extends StatelessWidget {
     const progress = currentXP / xpForNextLevel;
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       child: Container(
         decoration: BoxDecoration(
           gradient: AppColors.primaryGradient,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: AppDimensions.borderRadiusXL,
           boxShadow: [
             BoxShadow(
               color: AppColors.primary.withValues(alpha: 0.3),
-              blurRadius: 16,
-              offset: const Offset(0, 8),
+              blurRadius: AppDimensions.blurMedium,
+              offset: const Offset(0, AppDimensions.xs),
             ),
           ],
         ),
@@ -242,7 +240,7 @@ class _ExpeditionRankCard extends StatelessWidget {
             // Background pattern
             Positioned.fill(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: AppDimensions.borderRadiusXL,
                 child: CustomPaint(
                   painter: _RankPatternPainter(),
                 ),
@@ -250,7 +248,7 @@ class _ExpeditionRankCard extends StatelessWidget {
             ),
             // Content
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppDimensions.lg),
               child: Column(
                 children: [
                   Row(
@@ -269,7 +267,7 @@ class _ExpeditionRankCard extends StatelessWidget {
                           boxShadow: [
                             BoxShadow(
                               color: AppColors.xpGold.withValues(alpha: 0.3),
-                              blurRadius: 12,
+                              blurRadius: AppDimensions.blurMedium - 4,
                             ),
                           ],
                         ),
@@ -296,7 +294,7 @@ class _ExpeditionRankCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 20),
+                      const SizedBox(width: AppDimensions.lg),
                       // XP info
                       Expanded(
                         child: Column(
@@ -310,7 +308,7 @@ class _ExpeditionRankCard extends StatelessWidget {
                                 color: Colors.white,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: AppDimensions.xxs),
                             Text(
                               '$currentXP / $xpForNextLevel XP',
                               style: GoogleFonts.poppins(
@@ -318,7 +316,7 @@ class _ExpeditionRankCard extends StatelessWidget {
                                 color: Colors.white70,
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: AppDimensions.sm - 2),
                             // Progress bar
                             Stack(
                               children: [
@@ -326,7 +324,7 @@ class _ExpeditionRankCard extends StatelessWidget {
                                   height: 10,
                                   decoration: BoxDecoration(
                                     color: Colors.white.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(AppDimensions.radiusSM - 3),
                                   ),
                                 ),
                                 FractionallySizedBox(
@@ -337,11 +335,11 @@ class _ExpeditionRankCard extends StatelessWidget {
                                       gradient: const LinearGradient(
                                         colors: [AppColors.xpGold, Color(0xFFFFE082)],
                                       ),
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: BorderRadius.circular(AppDimensions.radiusSM - 3),
                                       boxShadow: [
                                         BoxShadow(
                                           color: AppColors.xpGold.withValues(alpha: 0.5),
-                                          blurRadius: 6,
+                                          blurRadius: AppDimensions.xxs + 2,
                                         ),
                                       ],
                                     ),
@@ -354,13 +352,16 @@ class _ExpeditionRankCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppDimensions.md),
                   // XP needed
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.md,
+                      vertical: AppDimensions.sm - 2,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -370,7 +371,7 @@ class _ExpeditionRankCard extends StatelessWidget {
                           color: AppColors.xpGold,
                           size: 18,
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppDimensions.xs),
                         Text(
                           '${xpForNextLevel - currentXP} XP ${l10n.toNextLevel}',
                           style: GoogleFonts.poppins(
@@ -426,17 +427,17 @@ class _JourneyStatsSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppDimensions.lg),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: AppDimensions.borderRadiusXL,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              blurRadius: AppDimensions.blurLight + 2,
+              offset: const Offset(0, AppDimensions.xxs),
             ),
           ],
         ),
@@ -452,7 +453,7 @@ class _JourneyStatsSection extends StatelessWidget {
                     color: AppColors.tertiary,
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: AppDimensions.md),
                 Expanded(
                   child: _JourneyStatCard(
                     icon: Icons.quiz,
@@ -463,7 +464,7 @@ class _JourneyStatsSection extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppDimensions.md),
             Row(
               children: [
                 Expanded(
@@ -474,7 +475,7 @@ class _JourneyStatsSection extends StatelessWidget {
                     color: AppColors.success,
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: AppDimensions.md),
                 Expanded(
                   child: _JourneyStatCard(
                     icon: Icons.local_fire_department,
@@ -508,22 +509,22 @@ class _JourneyStatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(AppDimensions.sm - 2),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
             ),
-            child: Icon(icon, color: color, size: 22),
+            child: Icon(icon, color: color, size: AppDimensions.iconSM + 2),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppDimensions.sm),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -573,28 +574,28 @@ class _AchievementsSection extends StatelessWidget {
     ];
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Section header
           Padding(
-            padding: const EdgeInsets.only(left: 4, bottom: 12),
+            padding: const EdgeInsets.only(left: AppDimensions.xxs, bottom: AppDimensions.sm),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(AppDimensions.xs),
                   decoration: BoxDecoration(
                     color: AppColors.achievement.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusSM + 2),
                   ),
                   child: const Icon(
                     Icons.workspace_premium,
                     color: AppColors.achievement,
-                    size: 20,
+                    size: AppDimensions.iconSM,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppDimensions.sm),
                 Text(
                   l10n.recentAchievements,
                   style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -609,10 +610,13 @@ class _AchievementsSection extends StatelessWidget {
                     context.push(Routes.achievements);
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.sm,
+                      vertical: AppDimensions.xxs + 2,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.achievement.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusSM + 2),
                     ),
                     child: Text(
                       l10n.viewAll,
@@ -670,7 +674,7 @@ class _AchievementBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 90,
-      margin: const EdgeInsets.only(right: 12),
+      margin: const EdgeInsets.only(right: AppDimensions.sm),
       child: Column(
         children: [
           Container(
@@ -693,8 +697,8 @@ class _AchievementBadge extends StatelessWidget {
                   ? [
                       BoxShadow(
                         color: achievement.color.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
+                        blurRadius: AppDimensions.blurLight + 2,
+                        offset: const Offset(0, AppDimensions.xxs),
                       )
                     ]
                   : null,
@@ -702,10 +706,10 @@ class _AchievementBadge extends StatelessWidget {
             child: Icon(
               achievement.icon,
               color: achievement.isUnlocked ? Colors.white : Colors.grey[400],
-              size: 32,
+              size: AppDimensions.iconLG,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppDimensions.xs),
           Text(
             achievement.name,
             style: GoogleFonts.poppins(
@@ -747,28 +751,28 @@ class _RegionProgressSection extends StatelessWidget {
     ];
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Section header
           Padding(
-            padding: const EdgeInsets.only(left: 4, bottom: 16),
+            padding: const EdgeInsets.only(left: AppDimensions.xxs, bottom: AppDimensions.md),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(AppDimensions.xs),
                   decoration: BoxDecoration(
                     color: AppColors.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusSM + 2),
                   ),
                   child: const Icon(
                     Icons.map,
                     color: AppColors.primary,
-                    size: 20,
+                    size: AppDimensions.iconSM,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppDimensions.sm),
                 Text(
                   l10n.progressByRegion,
                   style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -781,15 +785,15 @@ class _RegionProgressSection extends StatelessWidget {
           ),
           // Region progress tiles
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppDimensions.md),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusXL - 4),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  blurRadius: AppDimensions.blurLight + 2,
+                  offset: const Offset(0, AppDimensions.xxs),
                 ),
               ],
             ),
@@ -842,7 +846,7 @@ class _RegionProgressTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
+      padding: EdgeInsets.only(bottom: isLast ? 0 : AppDimensions.md),
       child: Row(
         children: [
           // Region icon
@@ -855,11 +859,11 @@ class _RegionProgressTile extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMD + 2),
             ),
-            child: Icon(region.icon, color: Colors.white, size: 22),
+            child: Icon(region.icon, color: Colors.white, size: AppDimensions.iconSM + 2),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: AppDimensions.md - 2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -876,12 +880,12 @@ class _RegionProgressTile extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
+                        horizontal: AppDimensions.sm - 2,
+                        vertical: AppDimensions.xxs,
                       ),
                       decoration: BoxDecoration(
                         color: region.color.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusSM + 2),
                       ),
                       child: Text(
                         '${region.learned}/${region.total}',
@@ -894,21 +898,21 @@ class _RegionProgressTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppDimensions.xs),
                 // Progress bar
                 Stack(
                   children: [
                     Container(
-                      height: 8,
+                      height: AppDimensions.xs,
                       decoration: BoxDecoration(
                         color: region.color.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(AppDimensions.xxs),
                       ),
                     ),
                     FractionallySizedBox(
                       widthFactor: region.progress,
                       child: Container(
-                        height: 8,
+                        height: AppDimensions.xs,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
@@ -916,7 +920,7 @@ class _RegionProgressTile extends StatelessWidget {
                               region.color.withValues(alpha: 0.8),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(AppDimensions.xxs),
                         ),
                       ),
                     ),

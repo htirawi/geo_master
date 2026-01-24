@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 
 /// Grade display badge
@@ -19,10 +20,13 @@ class GradeBadge extends StatelessWidget {
     final color = _getGradeColor(grade);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.md,
+        vertical: AppDimensions.xs,
+      ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         border: Border.all(color: color, width: 2),
       ),
       child: Text(

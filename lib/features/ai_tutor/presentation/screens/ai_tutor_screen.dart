@@ -300,18 +300,18 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
       context: context,
       backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusLG)),
       ),
       builder: (context) => SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: AppDimensions.xs),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
+                width: AppDimensions.avatarSM,
+                height: AppDimensions.xxs,
+                margin: const EdgeInsets.only(bottom: AppDimensions.md),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(2),
@@ -356,10 +356,10 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
 
   Widget _buildPremiumBadge() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.xs, vertical: AppDimensions.xxs),
       decoration: BoxDecoration(
         color: AppColors.warning.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
       ),
       child: const Text(
         'Premium',
@@ -508,7 +508,7 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
                     children: [
                       Icon(
                         remainingMessages == 0 ? Icons.warning : Icons.info_outline,
-                        size: 16,
+                        size: AppDimensions.iconXS,
                         color:
                             remainingMessages == 0 ? AppColors.error : AppColors.warning,
                       ),
@@ -581,7 +581,7 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
                       children: [
                         const Icon(
                           Icons.error_outline,
-                          size: 48,
+                          size: AppDimensions.avatarMD,
                           color: AppColors.error,
                         ),
                         const SizedBox(height: AppDimensions.spacingMD),
@@ -639,14 +639,14 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
                           decoration: InputDecoration(
                             hintText: l10n.typeYourQuestion,
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(24),
+                              borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                               borderSide: BorderSide.none,
                             ),
                             filled: true,
                             fillColor: theme.colorScheme.surfaceContainerHighest,
                             contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
+                              horizontal: AppDimensions.md,
+                              vertical: AppDimensions.sm - 2,
                             ),
                             // Security: Hide counter to avoid UI clutter
                             counterText: '',
@@ -661,7 +661,7 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
                           onSubmitted: _sendMessage,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppDimensions.xs),
                       // Voice input or send button
                       if (_isComposing || _pendingImage != null)
                         IconButton(
@@ -686,7 +686,7 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
                                   }
                                 }
                               : () {},
-                          size: 40,
+                          size: AppDimensions.avatarSM,
                           isEnabled: !isStreaming && remainingMessages > 0,
                         ),
                     ],
@@ -735,15 +735,15 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
           const SizedBox(height: AppDimensions.spacingXL),
           // Welcome icon
           Container(
-            width: 80,
-            height: 80,
+            width: AppDimensions.iconXXL + 16,
+            height: AppDimensions.iconXXL + 16,
             decoration: BoxDecoration(
               color: theme.colorScheme.primaryContainer,
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.smart_toy,
-              size: 40,
+              size: AppDimensions.avatarSM,
               color: theme.colorScheme.primary,
             ),
           ),
@@ -768,8 +768,8 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
           const SizedBox(height: AppDimensions.spacingMD),
           // Feature hints
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: AppDimensions.xs,
+            runSpacing: AppDimensions.xs,
             alignment: WrapAlignment.center,
             children: [
               _buildFeatureChip(
@@ -803,20 +803,20 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
 
   Widget _buildFeatureChip(ThemeData theme, IconData icon, String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.sm, vertical: AppDimensions.xs - 2),
       decoration: BoxDecoration(
         color: theme.colorScheme.secondaryContainer,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             icon,
-            size: 16,
+            size: AppDimensions.iconXS,
             color: theme.colorScheme.onSecondaryContainer,
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppDimensions.xxs),
           Text(
             label,
             style: theme.textTheme.labelMedium?.copyWith(

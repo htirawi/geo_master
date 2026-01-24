@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../domain/entities/country.dart';
 
 /// Country name, capital, region tag and code display
@@ -34,7 +35,7 @@ class CountryHeader extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(height: AppDimensions.xs),
 
         // Capital City
         if (country.capital != null)
@@ -43,10 +44,10 @@ class CountryHeader extends StatelessWidget {
             children: [
               Icon(
                 Icons.location_on_rounded,
-                size: 18,
+                size: AppDimensions.iconSM - 2,
                 color: accentColor,
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppDimensions.xxs),
               Text(
                 country.getDisplayCapital(isArabic: isArabic) ?? '',
                 style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -58,7 +59,7 @@ class CountryHeader extends StatelessWidget {
             ],
           ),
 
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
 
         // Region Tag & Country Code
         Row(
@@ -66,10 +67,10 @@ class CountryHeader extends StatelessWidget {
           children: [
             // Region Chip
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: AppDimensions.sm + 2, vertical: AppDimensions.xxs + 2),
               decoration: BoxDecoration(
                 color: accentColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
                 border: Border.all(
                   color: accentColor.withValues(alpha: 0.3),
                 ),
@@ -79,10 +80,10 @@ class CountryHeader extends StatelessWidget {
                 children: [
                   Icon(
                     _getRegionIcon(country.region),
-                    size: 14,
+                    size: AppDimensions.iconXS - 2,
                     color: accentColor,
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppDimensions.xxs + 2),
                   Text(
                     country.getDisplayRegion(isArabic: isArabic),
                     style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -95,14 +96,14 @@ class CountryHeader extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(width: 10),
+            const SizedBox(width: AppDimensions.xs + 2),
 
             // Country Code
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: AppDimensions.sm, vertical: AppDimensions.xxs + 2),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               ),
               child: Text(
                 country.code,

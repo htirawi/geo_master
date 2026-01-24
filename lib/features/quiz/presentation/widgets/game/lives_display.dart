@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
 
 /// Lives display widget for marathon mode
 class LivesDisplay extends StatelessWidget {
@@ -14,7 +15,7 @@ class LivesDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 12),
+      margin: const EdgeInsets.only(left: AppDimensions.sm),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: List.generate(3, (index) {
@@ -22,7 +23,7 @@ class LivesDisplay extends StatelessWidget {
           return Icon(
             hasLife ? Icons.favorite : Icons.favorite_border,
             color: hasLife ? AppColors.error : Colors.grey,
-            size: 20,
+            size: AppDimensions.iconSM,
           );
         }),
       ),

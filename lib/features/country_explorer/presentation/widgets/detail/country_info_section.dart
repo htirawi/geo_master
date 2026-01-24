@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../../core/constants/app_dimensions.dart';
+
 /// Info item data class
 class InfoItem {
   final String label;
@@ -32,7 +34,7 @@ class CountryInfoSection extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
         border: Border.all(
           color: theme.dividerColor.withValues(alpha: 0.1),
         ),
@@ -42,18 +44,18 @@ class CountryInfoSection extends StatelessWidget {
         children: [
           // Header
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 18, 20, 12),
+            padding: const EdgeInsets.fromLTRB(AppDimensions.lg - 4, AppDimensions.md + 2, AppDimensions.lg - 4, AppDimensions.sm),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(AppDimensions.xs),
                   decoration: BoxDecoration(
                     color: accentColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppDimensions.xs + 2),
                   ),
-                  child: Icon(icon, size: 18, color: accentColor),
+                  child: Icon(icon, size: AppDimensions.iconSM - 2, color: accentColor),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppDimensions.sm),
                 Text(
                   title,
                   style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -67,11 +69,11 @@ class CountryInfoSection extends StatelessWidget {
           Divider(height: 1, color: theme.dividerColor.withValues(alpha: 0.1)),
           // Items
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+            padding: const EdgeInsets.fromLTRB(AppDimensions.lg - 4, AppDimensions.xs, AppDimensions.lg - 4, AppDimensions.md),
             child: Column(
               children: items
                   .map((item) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(vertical: AppDimensions.xs + 2),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -84,7 +86,7 @@ class CountryInfoSection extends StatelessWidget {
                                 color: Colors.grey[600],
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            const SizedBox(width: AppDimensions.md),
                             Flexible(
                               child: Text(
                                 item.value,

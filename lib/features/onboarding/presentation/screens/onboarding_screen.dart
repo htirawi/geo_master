@@ -271,14 +271,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         content: Row(
           children: [
             const Icon(Icons.error_outline, color: Colors.white),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: AppColors.error,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.all(AppDimensions.md),
       ),
     );
   }

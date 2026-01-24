@@ -102,7 +102,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
       elevation: 0,
       leading: IconButton(
         icon: Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(AppDimensions.xs),
           decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
@@ -406,14 +406,14 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppDimensions.xs),
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.lock_reset, color: AppColors.primary),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Text(l10n.resetPassword),
           ],
         ),
@@ -428,14 +428,14 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
             Container(
               decoration: BoxDecoration(
                 color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               ),
               child: TextField(
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: l10n.email,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                     borderSide: BorderSide.none,
                   ),
                   prefixIcon: const Icon(Icons.email_outlined,
@@ -458,7 +458,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.primary,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               ),
             ),
             onPressed: () async {
@@ -478,7 +478,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
                           success ? Icons.check_circle : Icons.error_outline,
                           color: Colors.white,
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: AppDimensions.sm),
                         Expanded(
                           child: Text(
                             success
@@ -492,9 +492,9 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
                         success ? AppColors.success : theme.colorScheme.error,
                     behavior: SnackBarBehavior.floating,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                     ),
-                    margin: const EdgeInsets.all(16),
+                    margin: const EdgeInsets.all(AppDimensions.md),
                   ),
                 );
               }
@@ -514,14 +514,14 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
         content: Row(
           children: [
             const Icon(Icons.error_outline, color: Colors.white),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: AppColors.error,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.all(AppDimensions.md),
       ),
     );
   }

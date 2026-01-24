@@ -175,7 +175,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                   children: [
                     Icon(
                       Icons.error_outline,
-                      size: 48,
+                      size: AppDimensions.avatarMD,
                       color: theme.colorScheme.error,
                     ),
                     const SizedBox(height: AppDimensions.spacingMD),
@@ -220,8 +220,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
         children: [
           // Rank
           Container(
-            width: 48,
-            height: 48,
+            width: AppDimensions.avatarMD,
+            height: AppDimensions.avatarMD,
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.3),
               shape: BoxShape.circle,
@@ -240,7 +240,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
           // Avatar
           CircleAvatar(
-            radius: 24,
+            radius: AppDimensions.lg,
             backgroundColor: Colors.white.withValues(alpha: 0.3),
             backgroundImage: photoUrl != null
                 ? CachedNetworkImageProvider(photoUrl)
@@ -275,7 +275,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
           // Your Rank label
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.sm, vertical: AppDimensions.xs - 2),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
@@ -313,7 +313,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
         children: [
           Icon(
             Icons.leaderboard_outlined,
-            size: 64,
+            size: AppDimensions.iconXXL,
             color: theme.colorScheme.onSurfaceVariant,
           ),
           const SizedBox(height: AppDimensions.spacingMD),
@@ -399,7 +399,7 @@ class _LeaderboardEntryCard extends StatelessWidget {
           children: [
             // Rank
             SizedBox(
-              width: 40,
+              width: AppDimensions.avatarSM,
               child: isTopThree
                   ? _buildMedalIcon(entry.rank)
                   : Text(
@@ -415,7 +415,7 @@ class _LeaderboardEntryCard extends StatelessWidget {
 
             // Avatar
             CircleAvatar(
-              radius: 20,
+              radius: AppDimensions.lg - 4,
               backgroundColor: theme.colorScheme.primaryContainer,
               backgroundImage: entry.photoUrl != null
                   ? CachedNetworkImageProvider(entry.photoUrl!)
@@ -447,7 +447,7 @@ class _LeaderboardEntryCard extends StatelessWidget {
           ),
         ),
         trailing: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.sm, vertical: AppDimensions.xs - 2),
           decoration: BoxDecoration(
             color: isTopThree
                 ? _getMedalColor(entry.rank).withValues(alpha: 0.2)
@@ -489,7 +489,7 @@ class _LeaderboardEntryCard extends StatelessWidget {
         return const SizedBox.shrink();
     }
 
-    return Icon(icon, color: color, size: 28);
+    return Icon(icon, color: color, size: AppDimensions.iconLG - 4);
   }
 
   Color _getMedalColor(int rank) {

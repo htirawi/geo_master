@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../domain/entities/quiz.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 
@@ -23,10 +24,13 @@ class SessionTypeBadge extends StatelessWidget {
     final color = _getSessionTypeColor(sessionType);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.md,
+        vertical: AppDimensions.xs,
+      ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -34,9 +38,9 @@ class SessionTypeBadge extends StatelessWidget {
           Icon(
             _getSessionTypeIcon(sessionType),
             color: color,
-            size: 18,
+            size: AppDimensions.iconSM,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppDimensions.xs),
           Text(
             sessionName,
             style: GoogleFonts.poppins(
@@ -45,13 +49,13 @@ class SessionTypeBadge extends StatelessWidget {
             ),
           ),
           if (continent != null) ...[
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Container(
               width: 1,
-              height: 16,
+              height: AppDimensions.md,
               color: color.withValues(alpha: 0.3),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               continent!,
               style: GoogleFonts.poppins(

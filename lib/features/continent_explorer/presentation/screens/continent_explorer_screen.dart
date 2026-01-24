@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/routes/routes.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/utils/responsive_utils.dart';
 import '../../../../domain/entities/continent.dart';
 import '../../../../presentation/providers/continent_provider.dart';
@@ -42,7 +43,7 @@ class ContinentExplorerScreen extends ConsumerWidget {
                 child: Row(
                   children: [
                     const Icon(Icons.sort_by_alpha, size: 20),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppDimensions.sm),
                     Text(isArabic ? 'أبجدي' : 'Alphabetical'),
                   ],
                 ),
@@ -52,7 +53,7 @@ class ContinentExplorerScreen extends ConsumerWidget {
                 child: Row(
                   children: [
                     const Icon(Icons.flag, size: 20),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppDimensions.sm),
                     Text(isArabic ? 'عدد الدول' : 'Country Count'),
                   ],
                 ),
@@ -62,7 +63,7 @@ class ContinentExplorerScreen extends ConsumerWidget {
                 child: Row(
                   children: [
                     const Icon(Icons.trending_up, size: 20),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppDimensions.sm),
                     Text(isArabic ? 'التقدم' : 'Progress'),
                   ],
                 ),
@@ -116,12 +117,12 @@ class ContinentExplorerScreen extends ConsumerWidget {
                 size: 64,
                 color: theme.colorScheme.error,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppDimensions.md),
               Text(
                 isArabic ? 'حدث خطأ' : 'An error occurred',
                 style: theme.textTheme.titleMedium,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppDimensions.xs),
               TextButton.icon(
                 onPressed: () {
                   ref.invalidate(continentListProvider);
@@ -195,7 +196,7 @@ class ContinentExplorerScreen extends ConsumerWidget {
     WidgetRef ref,
   ) {
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: AppDimensions.xs),
       itemCount: continents.length,
       itemBuilder: (context, index) {
         final continent = continents[index];
@@ -258,8 +259,8 @@ class ContinentExplorerHeader extends ConsumerWidget {
             (continents.length * 100);
 
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(AppDimensions.md),
+      padding: const EdgeInsets.all(AppDimensions.lg - 4),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -269,7 +270,7 @@ class ContinentExplorerHeader extends ConsumerWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
         boxShadow: [
           BoxShadow(
             color: theme.colorScheme.primary.withValues(alpha: 0.2),
@@ -288,7 +289,7 @@ class ContinentExplorerHeader extends ConsumerWidget {
               color: theme.colorScheme.onPrimaryContainer,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -309,7 +310,7 @@ class ContinentExplorerHeader extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: LinearProgressIndicator(
@@ -321,7 +322,7 @@ class ContinentExplorerHeader extends ConsumerWidget {
               minHeight: 8,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppDimensions.xs),
           Text(
             isArabic
                 ? '${(overallProgress * 100).toInt()}% من العالم مستكشف'

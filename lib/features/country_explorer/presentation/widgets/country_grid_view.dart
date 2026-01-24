@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/country_provider.dart';
 import 'country_grid_card.dart';
@@ -39,7 +40,7 @@ class CountryGridView extends ConsumerWidget {
                 child: Column(
                   children: [
                     const Icon(Icons.search_off, size: 64, color: Colors.grey),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppDimensions.md),
                     Text(l10n.noCountriesFound),
                   ],
                 ),
@@ -49,12 +50,12 @@ class CountryGridView extends ConsumerWidget {
         }
 
         return SliverPadding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppDimensions.md),
           sliver: SliverGrid(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
+              mainAxisSpacing: AppDimensions.sm,
+              crossAxisSpacing: AppDimensions.sm,
               childAspectRatio: 0.85,
             ),
             delegate: SliverChildBuilderDelegate(

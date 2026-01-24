@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 
 /// Bonuses and penalties section
@@ -79,10 +80,10 @@ class BonusesSection extends StatelessWidget {
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppDimensions.xs),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: AppDimensions.xs,
+          runSpacing: AppDimensions.xs,
           children: bonuses,
         ),
       ],
@@ -110,17 +111,20 @@ class BonusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.sm,
+        vertical: AppDimensions.xs - 2,
+      ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: color),
-          const SizedBox(width: 6),
+          Icon(icon, size: AppDimensions.iconXS, color: color),
+          const SizedBox(width: AppDimensions.xs - 2),
           Text(
             label,
             style: GoogleFonts.poppins(
@@ -128,12 +132,15 @@ class BonusChip extends StatelessWidget {
               color: color,
             ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: AppDimensions.xs - 2),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.xs - 2,
+              vertical: AppDimensions.xxs,
+            ),
             decoration: BoxDecoration(
               color: color,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
             ),
             child: Text(
               value,

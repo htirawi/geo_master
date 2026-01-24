@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
 
 /// Result icon based on accuracy or game over
 class ResultIconDisplay extends StatelessWidget {
@@ -23,15 +24,15 @@ class ResultIconDisplay extends StatelessWidget {
 
   Widget _buildGameOverIcon() {
     return Container(
-      width: 120,
-      height: 120,
+      width: AppDimensions.resultIconContainerSize,
+      height: AppDimensions.resultIconContainerSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: AppColors.error.withValues(alpha: 0.1),
       ),
       child: const Icon(
         Icons.sentiment_dissatisfied,
-        size: 60,
+        size: AppDimensions.resultIconSize,
         color: AppColors.error,
       ),
     );
@@ -59,13 +60,13 @@ class ResultIconDisplay extends StatelessWidget {
     }
 
     return Container(
-      width: 120,
-      height: 120,
+      width: AppDimensions.resultIconContainerSize,
+      height: AppDimensions.resultIconContainerSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: color.withValues(alpha: 0.1),
       ),
-      child: Icon(icon, size: 60, color: color),
+      child: Icon(icon, size: AppDimensions.resultIconSize, color: color),
     );
   }
 }

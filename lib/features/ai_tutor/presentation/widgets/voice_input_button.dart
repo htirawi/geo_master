@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/services/speech_service.dart';
 
 /// Animated voice input button for speech-to-text
@@ -141,11 +142,11 @@ class VoiceInputOverlay extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(AppDimensions.md),
+      padding: const EdgeInsets.all(AppDimensions.lg - 4),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.15),
@@ -162,7 +163,7 @@ class VoiceInputOverlay extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _PulsingDot(isActive: status == SpeechStatus.listening),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppDimensions.xs),
               Text(
                 status == SpeechStatus.listening
                     ? 'Listening...'
@@ -175,7 +176,7 @@ class VoiceInputOverlay extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Transcription
           Container(
@@ -184,10 +185,10 @@ class VoiceInputOverlay extends StatelessWidget {
               maxHeight: 200,
             ),
             width: double.infinity,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppDimensions.sm),
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
             ),
             child: SingleChildScrollView(
               child: Text(
@@ -208,7 +209,7 @@ class VoiceInputOverlay extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Actions
           Row(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 
 /// Performance analysis showing strong and weak areas
@@ -31,7 +32,7 @@ class PerformanceAnalysisSection extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
         // Strong areas
         if (strongAreas.isNotEmpty) ...[
           _AreaSection(
@@ -41,7 +42,7 @@ class PerformanceAnalysisSection extends StatelessWidget {
             color: AppColors.success,
             isArabic: isArabic,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppDimensions.sm),
         ],
         // Weak areas
         if (weakAreas.isNotEmpty)
@@ -78,18 +79,18 @@ class _AreaSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppDimensions.sm),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, color: color, size: 18),
-              const SizedBox(width: 8),
+              Icon(icon, color: color, size: AppDimensions.iconSM),
+              const SizedBox(width: AppDimensions.xs),
               Text(
                 title,
                 style: GoogleFonts.poppins(
@@ -99,17 +100,19 @@ class _AreaSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppDimensions.xs),
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: AppDimensions.xs,
+            runSpacing: AppDimensions.xs,
             children: areas.map((area) {
               return Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.sm,
+                  vertical: AppDimensions.xxs,
+                ),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 ),
                 child: Text(
                   _getAreaDisplayName(area, l10n),

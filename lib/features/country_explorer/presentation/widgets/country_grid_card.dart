@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/country.dart';
 
 /// Country Grid Card - Professional flag display with proper aspect ratio
@@ -34,12 +35,12 @@ class CountryGridCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: AppDimensions.borderRadiusXL,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              blurRadius: AppDimensions.blurMedium - 4,
+              offset: const Offset(0, AppDimensions.xxs),
             ),
           ],
         ),
@@ -51,7 +52,7 @@ class CountryGridCard extends StatelessWidget {
               flex: 3,
               child: ClipRRect(
                 borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(20)),
+                    const BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusXL)),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -70,7 +71,7 @@ class CountryGridCard extends StatelessWidget {
                     ),
                     // Flag image - contain to show full flag
                     Padding(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(AppDimensions.sm),
                       child: CachedNetworkImage(
                         imageUrl: country.flagUrl,
                         fit: BoxFit.contain,
@@ -92,7 +93,7 @@ class CountryGridCard extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius:
-                            const BorderRadius.vertical(top: Radius.circular(20)),
+                            const BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusXL)),
                         border: Border.all(
                           color: Colors.black.withValues(alpha: 0.05),
                           width: 1,
@@ -101,27 +102,27 @@ class CountryGridCard extends StatelessWidget {
                     ),
                     // Region badge
                     Positioned(
-                      top: 8,
-                      right: 8,
+                      top: AppDimensions.xs,
+                      right: AppDimensions.xs,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
+                          horizontal: AppDimensions.xs,
+                          vertical: AppDimensions.xxs,
                         ),
                         decoration: BoxDecoration(
                           color: regionColor,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                           boxShadow: [
                             BoxShadow(
                               color: regionColor.withValues(alpha: 0.3),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
+                              blurRadius: AppDimensions.xxs,
+                              offset: const Offset(0, AppDimensions.xxs / 2),
                             ),
                           ],
                         ),
                         child: Icon(
                           _getRegionIcon(country.region),
-                          size: 14,
+                          size: AppDimensions.iconXS - 2,
                           color: Colors.white,
                         ),
                       ),
@@ -134,7 +135,7 @@ class CountryGridCard extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppDimensions.sm),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -148,15 +149,15 @@ class CountryGridCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: AppDimensions.xxs),
                     Row(
                       children: [
                         Icon(
                           Icons.location_on,
-                          size: 12,
+                          size: AppDimensions.sm,
                           color: regionColor,
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: AppDimensions.xxs),
                         Expanded(
                           child: Text(
                             country.getDisplayCapital(isArabic: isArabic) ?? '-',

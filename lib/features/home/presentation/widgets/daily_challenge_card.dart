@@ -6,11 +6,17 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/cards/explorer_card.dart';
+import '../../../../presentation/components/headers/explorer_hero_header.dart';
 import '../../../../presentation/providers/user_preferences_provider.dart'
     show LocalLearningPreferences, localLearningPreferencesProvider;
 
 /// Daily Challenge Card with adventure theme - personalized based on user interests
+///
+/// Uses the ExplorerCard.gradient component with HeaderGradients.quiz for
+/// consistent styling with the design system.
 class DailyChallengeCard extends ConsumerWidget {
   const DailyChallengeCard({super.key});
 
@@ -39,23 +45,12 @@ class DailyChallengeCard extends ConsumerWidget {
     final quizMode = _getPreferredQuizMode(userPrefs);
     final difficulty = _getDifficulty(userPrefs);
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF6A1B9A), Color(0xFF8E24AA), Color(0xFFAB47BC)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF6A1B9A).withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+    return ExplorerCard.gradient(
+      gradient: HeaderGradients.quiz,
+      padding: const EdgeInsets.all(AppDimensions.lg),
+      borderRadius: AppDimensions.borderRadiusXL,
+      shadowColor: const Color(0xFF6A1B9A).withValues(alpha: 0.3),
+      elevation: AppDimensions.elevation3,
       child: Row(
         children: [
           // Challenge info
@@ -66,14 +61,14 @@ class DailyChallengeCard extends ConsumerWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(AppDimensions.xs),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: AppDimensions.borderRadiusMD,
                       ),
-                      child: const Icon(Icons.bolt, color: AppColors.xpGold, size: 20),
+                      child: const Icon(Icons.bolt, color: AppColors.xpGold, size: AppDimensions.iconSM),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: AppDimensions.sm - 2),
                     Text(
                       l10n.dailyChallenge,
                       style: GoogleFonts.poppins(
@@ -84,7 +79,7 @@ class DailyChallengeCard extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppDimensions.sm),
                 Text(
                   l10n.dailyChallengeDescription,
                   style: GoogleFonts.poppins(
@@ -92,19 +87,22 @@ class DailyChallengeCard extends ConsumerWidget {
                     color: Colors.white.withValues(alpha: 0.85),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppDimensions.md),
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppDimensions.sm,
+                        vertical: AppDimensions.xxs + 2,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.xpGold,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: AppDimensions.borderRadiusMD,
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.star, color: Colors.white, size: 16),
-                          const SizedBox(width: 4),
+                          const Icon(Icons.star, color: Colors.white, size: AppDimensions.iconXS),
+                          const SizedBox(width: AppDimensions.xxs),
                           Text(
                             '+100 XP',
                             style: GoogleFonts.poppins(
@@ -121,7 +119,7 @@ class DailyChallengeCard extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: AppDimensions.md),
           // Start button - uses personalized quiz mode and difficulty
           GestureDetector(
             onTap: () {
@@ -133,19 +131,19 @@ class DailyChallengeCard extends ConsumerWidget {
               height: 60,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(AppDimensions.lg),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.15),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+                    blurRadius: AppDimensions.blurLight + 2,
+                    offset: const Offset(0, AppDimensions.xxs),
                   ),
                 ],
               ),
               child: const Icon(
                 Icons.play_arrow_rounded,
                 color: Color(0xFF6A1B9A),
-                size: 32,
+                size: AppDimensions.iconLG,
               ),
             ),
           ),

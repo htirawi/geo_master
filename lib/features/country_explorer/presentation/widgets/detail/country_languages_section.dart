@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../domain/entities/country.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 
@@ -27,10 +28,10 @@ class CountryLanguagesSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppDimensions.lg - 4),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
         border: Border.all(
           color: theme.dividerColor.withValues(alpha: 0.1),
         ),
@@ -41,15 +42,15 @@ class CountryLanguagesSection extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppDimensions.xs),
                 decoration: BoxDecoration(
                   color: AppColors.tertiary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppDimensions.xs + 2),
                 ),
                 child: const Icon(Icons.translate_rounded,
-                    size: 18, color: AppColors.tertiary),
+                    size: AppDimensions.iconSM - 2, color: AppColors.tertiary),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppDimensions.sm),
               Text(
                 l10n.languages,
                 style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -59,17 +60,17 @@ class CountryLanguagesSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: AppDimensions.xs,
+            runSpacing: AppDimensions.xs,
             children: country.languages
                 .map((lang) => Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 8),
+                          horizontal: AppDimensions.sm + 2, vertical: AppDimensions.xs),
                       decoration: BoxDecoration(
                         color: AppColors.tertiary.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                       ),
                       child: Text(
                         lang,

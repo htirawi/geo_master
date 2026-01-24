@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/phrase.dart';
 import '../../../../domain/entities/place_of_interest.dart';
 import '../../../../domain/repositories/i_country_content_repository.dart';
@@ -28,7 +29,7 @@ class TravelTab extends ConsumerWidget {
     final tipsAsync = ref.watch(travelTipsProvider(countryCode));
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -40,7 +41,7 @@ class TravelTab extends ConsumerWidget {
             loading: () => const _SectionLoading(),
             error: (_, __) => const SizedBox.shrink(),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Travel essentials
           essentialsAsync.when(
@@ -50,7 +51,7 @@ class TravelTab extends ConsumerWidget {
             loading: () => const _SectionLoading(),
             error: (_, __) => const SizedBox.shrink(),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Essential phrases
           phrasesAsync.when(
@@ -60,7 +61,7 @@ class TravelTab extends ConsumerWidget {
             loading: () => const _SectionLoading(),
             error: (_, __) => const SizedBox.shrink(),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Travel tips
           tipsAsync.when(
@@ -111,10 +112,10 @@ class _PlacesSection extends StatelessWidget {
           children: [
             Icon(
               Icons.place,
-              size: 20,
+              size: AppDimensions.iconSM,
               color: theme.colorScheme.primary,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               isArabic ? 'أماكن تستحق الزيارة' : 'Top Places to Visit',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -123,7 +124,7 @@ class _PlacesSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
         SizedBox(
           height: 220,
           child: ListView.builder(
@@ -155,7 +156,7 @@ class _PlaceCard extends StatelessWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      margin: const EdgeInsetsDirectional.only(end: 12),
+      margin: const EdgeInsetsDirectional.only(end: AppDimensions.sm),
       child: SizedBox(
         width: 180,
         child: Column(
@@ -193,7 +194,7 @@ class _PlaceCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: _getTypeColor(place.type).withValues(alpha: 0.9),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                       ),
                       child: Text(
                         _getTypeName(place.type, isArabic),
@@ -211,7 +212,7 @@ class _PlaceCard extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppDimensions.xs),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -359,7 +360,7 @@ class _EssentialsSection extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -367,10 +368,10 @@ class _EssentialsSection extends StatelessWidget {
               children: [
                 Icon(
                   Icons.luggage,
-                  size: 20,
+                  size: AppDimensions.iconSM,
                   color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Text(
                   isArabic ? 'أساسيات السفر' : 'Travel Essentials',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -379,7 +380,7 @@ class _EssentialsSection extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppDimensions.md),
             // Grid of essentials
             Row(
               children: [
@@ -393,7 +394,7 @@ class _EssentialsSection extends StatelessWidget {
                     color: (essentials.visaRequired ?? false) ? Colors.orange : Colors.green,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppDimensions.sm),
                 Expanded(
                   child: _EssentialItem(
                     icon: Icons.electrical_services,
@@ -406,7 +407,7 @@ class _EssentialsSection extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDimensions.sm),
             Row(
               children: [
                 Expanded(
@@ -419,7 +420,7 @@ class _EssentialsSection extends StatelessWidget {
                     color: const Color(0xFF9C27B0),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppDimensions.sm),
                 Expanded(
                   child: _EssentialItem(
                     icon: Icons.bolt,
@@ -441,7 +442,7 @@ class _EssentialsSection extends StatelessWidget {
                     size: 18,
                     color: theme.colorScheme.primary,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppDimensions.xs),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -489,14 +490,14 @@ class _EssentialItem extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppDimensions.sm),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
       ),
       child: Column(
         children: [
-          Icon(icon, color: color, size: 24),
+          Icon(icon, color: color, size: AppDimensions.iconMD),
           const SizedBox(height: 6),
           Text(
             value,
@@ -538,10 +539,10 @@ class _PhrasesSection extends StatelessWidget {
           children: [
             const Icon(
               Icons.record_voice_over,
-              size: 20,
+              size: AppDimensions.iconSM,
               color: Color(0xFF4CAF50),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               isArabic ? 'عبارات أساسية' : 'Essential Phrases',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -550,9 +551,9 @@ class _PhrasesSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
         ...phrases.take(8).map((phrase) => Card(
-              margin: const EdgeInsets.only(bottom: 8),
+              margin: const EdgeInsets.only(bottom: AppDimensions.xs),
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor:
@@ -560,7 +561,7 @@ class _PhrasesSection extends StatelessWidget {
                   child: const Icon(
                     Icons.translate,
                     color: Color(0xFF4CAF50),
-                    size: 20,
+                    size: AppDimensions.iconSM,
                   ),
                 ),
                 title: Text(
@@ -612,7 +613,7 @@ class _TipsSection extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -620,10 +621,10 @@ class _TipsSection extends StatelessWidget {
               children: [
                 const Icon(
                   Icons.tips_and_updates,
-                  size: 20,
+                  size: AppDimensions.iconSM,
                   color: Colors.amber,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Text(
                   isArabic ? 'نصائح السفر' : 'Travel Tips',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -632,9 +633,9 @@ class _TipsSection extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDimensions.sm),
             ...tips.take(5).toList().asMap().entries.map((entry) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.only(bottom: AppDimensions.xs),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -655,7 +656,7 @@ class _TipsSection extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppDimensions.sm),
                       Expanded(
                         child: Text(
                           entry.value,

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../app/routes/routes.dart';
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../domain/entities/country.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../../../presentation/providers/country_provider.dart';
@@ -32,10 +33,10 @@ class CountryNeighborsSection extends ConsumerWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppDimensions.lg - 4),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
         border: Border.all(
           color: theme.dividerColor.withValues(alpha: 0.1),
         ),
@@ -46,15 +47,15 @@ class CountryNeighborsSection extends ConsumerWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppDimensions.xs),
                 decoration: BoxDecoration(
                   color: AppColors.forest.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppDimensions.xs + 2),
                 ),
                 child: const Icon(Icons.handshake_rounded,
-                    size: 18, color: AppColors.forest),
+                    size: AppDimensions.iconSM - 2, color: AppColors.forest),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppDimensions.sm),
               Text(
                 l10n.borders,
                 style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -65,10 +66,10 @@ class CountryNeighborsSection extends ConsumerWidget {
               const Spacer(),
               Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    const EdgeInsets.symmetric(horizontal: AppDimensions.xs + 2, vertical: AppDimensions.xxs),
                 decoration: BoxDecoration(
                   color: AppColors.forest.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 ),
                 child: Text(
                   '${country.borders.length}',
@@ -81,13 +82,13 @@ class CountryNeighborsSection extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
           SizedBox(
             height: 90,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: country.borders.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              separatorBuilder: (_, __) => const SizedBox(width: AppDimensions.sm),
               itemBuilder: (context, index) {
                 final borderCode = country.borders[index];
                 final neighborAsync =
@@ -149,12 +150,12 @@ class NeighborCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 80,
-        padding: const EdgeInsets.all(12),
+        width: AppDimensions.flagWidthLG,
+        padding: const EdgeInsets.all(AppDimensions.sm),
         decoration: BoxDecoration(
           color:
               theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
           border: Border.all(
             color: theme.dividerColor.withValues(alpha: 0.1),
           ),
@@ -164,9 +165,9 @@ class NeighborCard extends StatelessWidget {
           children: [
             Text(
               flagEmoji ?? '🏳️',
-              style: const TextStyle(fontSize: 32),
+              style: const TextStyle(fontSize: AppDimensions.avatarSM),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: AppDimensions.xxs + 2),
             Text(
               name ?? code,
               style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(

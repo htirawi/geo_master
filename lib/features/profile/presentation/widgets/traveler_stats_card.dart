@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 /// Traveler stats card showing exploration progress
@@ -24,7 +25,7 @@ class TravelerStatsCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppDimensions.lg),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
@@ -34,12 +35,12 @@ class TravelerStatsCard extends StatelessWidget {
             AppColors.tertiaryDark,
           ],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppDimensions.borderRadiusXL,
         boxShadow: [
           BoxShadow(
             color: AppColors.tertiary.withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+            blurRadius: AppDimensions.blurMedium - 1,
+            offset: const Offset(0, AppDimensions.xxs + 1),
           ),
         ],
       ),
@@ -47,8 +48,8 @@ class TravelerStatsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.flight_takeoff, color: Colors.white, size: 24),
-              const SizedBox(width: 12),
+              const Icon(Icons.flight_takeoff, color: Colors.white, size: AppDimensions.iconMD),
+              const SizedBox(width: AppDimensions.sm),
               Text(
                 l10n.journeyStats,
                 style: (isArabic
@@ -64,7 +65,7 @@ class TravelerStatsCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppDimensions.lg),
           Row(
             children: [
               Expanded(
@@ -126,8 +127,8 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, color: Colors.white.withValues(alpha: 0.8), size: 20),
-        const SizedBox(height: 6),
+        Icon(icon, color: Colors.white.withValues(alpha: 0.8), size: AppDimensions.iconSM),
+        const SizedBox(height: AppDimensions.xxs + 2),
         Text(
           value,
           style: GoogleFonts.poppins(

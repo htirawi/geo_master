@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/routes/routes.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/continent.dart';
 import '../../../../presentation/providers/continent_provider.dart';
 import '../../../../presentation/providers/country_progress_provider.dart';
@@ -57,12 +58,12 @@ class _ContinentDetailScreenState extends ConsumerState<ContinentDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppDimensions.md),
             Text(
               isArabic ? 'القارة غير موجودة' : 'Continent not found',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppDimensions.lg),
             FilledButton(
               onPressed: () => context.pop(),
               child: Text(isArabic ? 'رجوع' : 'Go Back'),
@@ -81,14 +82,14 @@ class _ContinentDetailScreenState extends ConsumerState<ContinentDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppDimensions.md),
             Text(
               isArabic ? 'حدث خطأ' : 'An error occurred',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.xs),
             Text(error.toString()),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppDimensions.lg),
             FilledButton(
               onPressed: () => context.pop(),
               child: Text(isArabic ? 'رجوع' : 'Go Back'),
@@ -204,7 +205,7 @@ class _ContinentDetailScreenState extends ConsumerState<ContinentDetailScreen> {
     bool isArabic,
   ) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -257,7 +258,7 @@ class _ContinentDetailScreenState extends ConsumerState<ContinentDetailScreen> {
                     .onSurfaceVariant
                     .withValues(alpha: 0.5),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppDimensions.md),
               Text(
                 isArabic ? 'لا توجد نتائج' : 'No results found',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -271,7 +272,7 @@ class _ContinentDetailScreenState extends ConsumerState<ContinentDetailScreen> {
     }
 
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
@@ -351,7 +352,7 @@ class _StatChip extends StatelessWidget {
           height: 48,
           decoration: BoxDecoration(
             color: chipColor.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           ),
           child: Icon(icon, color: chipColor),
         ),
@@ -398,7 +399,7 @@ class _SearchHeaderDelegate extends SliverPersistentHeaderDelegate {
 
     return Container(
       color: theme.colorScheme.surface,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       child: Column(
         children: [
           // Search bar
@@ -413,7 +414,7 @@ class _SearchHeaderDelegate extends SliverPersistentHeaderDelegate {
                     )
                   : null,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 borderSide: BorderSide.none,
               ),
               filled: true,
@@ -425,7 +426,7 @@ class _SearchHeaderDelegate extends SliverPersistentHeaderDelegate {
             ),
             onChanged: onSearchChanged,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppDimensions.sm),
 
           // Filter chips
           SingleChildScrollView(
@@ -437,21 +438,21 @@ class _SearchHeaderDelegate extends SliverPersistentHeaderDelegate {
                   isSelected: filterMode == CountryFilterMode.all,
                   onTap: () => onFilterChanged(CountryFilterMode.all),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 _FilterChip(
                   label: isArabic ? 'مستكشفة' : 'Explored',
                   icon: Icons.check_circle_outline,
                   isSelected: filterMode == CountryFilterMode.explored,
                   onTap: () => onFilterChanged(CountryFilterMode.explored),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 _FilterChip(
                   label: isArabic ? 'لم يبدأ' : 'Not Started',
                   icon: Icons.circle_outlined,
                   isSelected: filterMode == CountryFilterMode.notStarted,
                   onTap: () => onFilterChanged(CountryFilterMode.notStarted),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 _FilterChip(
                   label: isArabic ? 'مفضلة' : 'Favorites',
                   icon: Icons.favorite_outline,
@@ -533,12 +534,12 @@ class _CountryListItem extends ConsumerWidget {
     final progressAsync = ref.watch(progressForCountryProvider(countryCode));
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppDimensions.xs),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(AppDimensions.sm),
           child: Row(
             children: [
               // Flag placeholder
@@ -558,7 +559,7 @@ class _CountryListItem extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppDimensions.sm),
 
               // Country info
               Expanded(
@@ -587,7 +588,7 @@ class _CountryListItem extends ConsumerWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppDimensions.xs),
                           Text(
                             '${progress.completionPercentage.toInt()}%',
                             style: theme.textTheme.labelSmall,

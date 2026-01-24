@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/country.dart';
 import '../../../../domain/repositories/i_country_content_repository.dart';
 import '../../../../presentation/providers/country_content_provider.dart';
@@ -21,13 +22,13 @@ class GeographyTab extends ConsumerWidget {
     final geographyAsync = ref.watch(geographyInfoProvider(country.code));
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Location card
           _LocationCard(country: country, isArabic: isArabic),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Geography info from API
           geographyAsync.when(
@@ -39,12 +40,12 @@ class GeographyTab extends ConsumerWidget {
                   // Terrain section
                   if (info.terrainTypes.isNotEmpty)
                     _TerrainCard(terrainTypes: info.terrainTypes, isArabic: isArabic),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppDimensions.md),
 
                   // Climate section
                   if (info.climateZones.isNotEmpty)
                     _ClimateCard(climateZones: info.climateZones, isArabic: isArabic),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppDimensions.md),
 
                   // Natural hazards
                   if (info.naturalHazards.isNotEmpty)
@@ -52,7 +53,7 @@ class GeographyTab extends ConsumerWidget {
                       hazards: info.naturalHazards,
                       isArabic: isArabic,
                     ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppDimensions.md),
 
                   // Water bodies
                   if (info.waterBodies.isNotEmpty)
@@ -91,7 +92,7 @@ class GeographyTab extends ConsumerWidget {
           ],
           isArabic: isArabic,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppDimensions.md),
         _ClimateCard(
           climateZones: [
             ClimateZone(
@@ -121,7 +122,7 @@ class _LocationCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -129,10 +130,10 @@ class _LocationCard extends StatelessWidget {
               children: [
                 Icon(
                   Icons.location_on,
-                  size: 20,
+                  size: AppDimensions.iconSM,
                   color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Text(
                   isArabic ? 'الموقع' : 'Location',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -141,7 +142,7 @@ class _LocationCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppDimensions.md),
             _InfoRow(
               label: isArabic ? 'القارة' : 'Continent',
               value: country.continents.join(', '),
@@ -228,7 +229,7 @@ class _TerrainCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -236,10 +237,10 @@ class _TerrainCard extends StatelessWidget {
               children: [
                 const Icon(
                   Icons.terrain,
-                  size: 20,
+                  size: AppDimensions.iconSM,
                   color: Color(0xFF4CAF50),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Text(
                   isArabic ? 'التضاريس' : 'Terrain',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -248,7 +249,7 @@ class _TerrainCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDimensions.sm),
             ...terrainTypes.map((terrain) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Row(
@@ -268,7 +269,7 @@ class _TerrainCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Color(terrain.color ?? 0xFF4CAF50)
                                 .withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                           ),
                           child: Text(
                             '${terrain.percentage.toInt()}%',
@@ -303,7 +304,7 @@ class _ClimateCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -311,10 +312,10 @@ class _ClimateCard extends StatelessWidget {
               children: [
                 const Icon(
                   Icons.wb_sunny,
-                  size: 20,
+                  size: AppDimensions.iconSM,
                   color: Colors.orange,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Text(
                   isArabic ? 'المناخ' : 'Climate',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -323,12 +324,12 @@ class _ClimateCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDimensions.sm),
             ...climateZones.map((climate) => Card(
-                  margin: const EdgeInsets.only(bottom: 8),
+                  margin: const EdgeInsets.only(bottom: AppDimensions.xs),
                   color: theme.colorScheme.surfaceContainerHighest,
                   child: Padding(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(AppDimensions.sm),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -349,7 +350,7 @@ class _ClimateCard extends StatelessWidget {
                         ],
                         if (climate.averageTempCelsius != null ||
                             climate.rainfallMm != null) ...[
-                          const SizedBox(height: 8),
+                          const SizedBox(height: AppDimensions.xs),
                           Row(
                             children: [
                               if (climate.averageTempCelsius != null) ...[
@@ -363,7 +364,7 @@ class _ClimateCard extends StatelessWidget {
                                   '${climate.averageTempCelsius!.toInt()}°C',
                                   style: theme.textTheme.labelMedium,
                                 ),
-                                const SizedBox(width: 16),
+                                const SizedBox(width: AppDimensions.md),
                               ],
                               if (climate.rainfallMm != null) ...[
                                 const Icon(
@@ -407,7 +408,7 @@ class _NaturalHazardsCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -415,10 +416,10 @@ class _NaturalHazardsCard extends StatelessWidget {
               children: [
                 const Icon(
                   Icons.warning_amber,
-                  size: 20,
+                  size: AppDimensions.iconSM,
                   color: Colors.red,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Text(
                   isArabic ? 'المخاطر الطبيعية' : 'Natural Hazards',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -427,10 +428,10 @@ class _NaturalHazardsCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDimensions.sm),
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: AppDimensions.xs,
+              runSpacing: AppDimensions.xs,
               children: hazards.map((hazard) {
                 return Chip(
                   avatar: Icon(
@@ -479,7 +480,7 @@ class _WaterBodiesCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -487,10 +488,10 @@ class _WaterBodiesCard extends StatelessWidget {
               children: [
                 const Icon(
                   Icons.water,
-                  size: 20,
+                  size: AppDimensions.iconSM,
                   color: Colors.blue,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Text(
                   isArabic ? 'المسطحات المائية' : 'Water Bodies',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -499,10 +500,10 @@ class _WaterBodiesCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDimensions.sm),
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: AppDimensions.xs,
+              runSpacing: AppDimensions.xs,
               children: waterBodies.take(10).map((body) {
                 return Chip(
                   avatar: const Icon(Icons.waves, size: 16, color: Colors.blue),
@@ -513,7 +514,7 @@ class _WaterBodiesCard extends StatelessWidget {
             ),
             if (waterBodies.length > 10)
               Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: AppDimensions.xs),
                 child: Text(
                   isArabic
                       ? '+ ${waterBodies.length - 10} أخرى'
@@ -548,7 +549,7 @@ class _TimezonesCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -556,17 +557,17 @@ class _TimezonesCard extends StatelessWidget {
               children: [
                 Icon(
                   Icons.access_time,
-                  size: 20,
+                  size: AppDimensions.iconSM,
                   color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Text(
                   isArabic ? 'المناطق الزمنية' : 'Timezones',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -574,7 +575,7 @@ class _TimezonesCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                   ),
                   child: Text(
                     '${country.timezones.length}',
@@ -586,10 +587,10 @@ class _TimezonesCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDimensions.sm),
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: AppDimensions.xs,
+              runSpacing: AppDimensions.xs,
               children: country.timezones.take(6).map((tz) {
                 return Chip(
                   avatar: const Icon(Icons.schedule, size: 16),
@@ -599,7 +600,7 @@ class _TimezonesCard extends StatelessWidget {
             ),
             if (country.timezones.length > 6)
               Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: AppDimensions.xs),
                 child: Text(
                   isArabic
                       ? '+ ${country.timezones.length - 6} أخرى'

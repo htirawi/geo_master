@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../domain/entities/flag_meaning.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 
@@ -31,22 +32,22 @@ class FlagColorsMeaningSection extends StatelessWidget {
       children: [
         // Section Header
         Padding(
-          padding: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.only(bottom: AppDimensions.md),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(AppDimensions.xs + 2),
                 decoration: BoxDecoration(
                   color: accentColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 ),
                 child: Icon(
                   Icons.palette_outlined,
-                  size: 22,
+                  size: AppDimensions.iconMD - 2,
                   color: accentColor,
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppDimensions.sm),
               Expanded(
                 child: Text(
                   isArabic ? 'ألوان العلم ومعانيها' : 'Flag Colors & Meanings',
@@ -66,7 +67,7 @@ class FlagColorsMeaningSection extends StatelessWidget {
           final flagColor = entry.value;
           return Padding(
             padding: EdgeInsets.only(
-              bottom: index < flagMeaning.colors.length - 1 ? 12 : 0,
+              bottom: index < flagMeaning.colors.length - 1 ? AppDimensions.sm : 0,
             ),
             child: FlagColorCard(
               flagColor: flagColor,
@@ -80,7 +81,7 @@ class FlagColorsMeaningSection extends StatelessWidget {
 
         // Symbols Section (if available)
         if (flagMeaning.additionalInfo != null) ...[
-          const SizedBox(height: 20),
+          const SizedBox(height: AppDimensions.lg - 4),
           SymbolsCard(
             flagMeaning: flagMeaning,
             isArabic: isArabic,
@@ -115,14 +116,14 @@ class FlagColorCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         border: Border.all(
           color: theme.dividerColor.withValues(alpha: 0.1),
         ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
+            blurRadius: AppDimensions.xs + 2,
             offset: const Offset(0, 2),
           ),
         ],
@@ -131,7 +132,7 @@ class FlagColorCard extends StatelessWidget {
         children: [
           // Color swatch (RTL-aware)
           Container(
-            width: 56,
+            width: AppDimensions.buttonHeightLG,
             height: 72,
             decoration: ShapeDecoration(
               color: flagColor.color,
@@ -149,7 +150,7 @@ class FlagColorCard extends StatelessWidget {
           // Content
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: AppDimensions.sm + 2, vertical: AppDimensions.sm),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -170,11 +171,11 @@ class FlagColorCard extends StatelessWidget {
                         onTap: () => _copyHexCode(context, flagColor.hexCode, l10n),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                              horizontal: AppDimensions.xs, vertical: AppDimensions.xxs),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.surfaceContainerHighest
                                 .withValues(alpha: 0.7),
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(AppDimensions.xxs + 2),
                           ),
                           child: Text(
                             flagColor.hexCode,
@@ -188,7 +189,7 @@ class FlagColorCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppDimensions.xxs),
                   // Meaning
                   Text(
                     flagColor.getMeaning(isArabic: isArabic),
@@ -218,7 +219,7 @@ class FlagColorCard extends StatelessWidget {
         content: Text('${l10n.copiedToClipboard}: $hexCode'),
         behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.grey[850],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.xs + 2)),
         duration: const Duration(seconds: 2),
       ),
     );
@@ -244,10 +245,10 @@ class SymbolsCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
         color: accentColor.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         border: Border.all(
           color: accentColor.withValues(alpha: 0.15),
         ),
@@ -259,10 +260,10 @@ class SymbolsCard extends StatelessWidget {
             children: [
               Icon(
                 Icons.auto_awesome_outlined,
-                size: 18,
+                size: AppDimensions.iconSM - 2,
                 color: accentColor,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppDimensions.xs),
               Text(
                 isArabic ? 'الرموز والمعاني' : 'Symbols & Meanings',
                 style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -273,7 +274,7 @@ class SymbolsCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppDimensions.xs + 2),
           Text(
             isArabic
                 ? (flagMeaning.additionalInfoAr ?? flagMeaning.additionalInfo!)

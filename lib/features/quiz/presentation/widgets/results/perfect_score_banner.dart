@@ -26,8 +26,8 @@ class PerfectScoreBanner extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.star, color: Colors.white, size: 20),
-          const SizedBox(width: 8),
+          const Icon(Icons.star, color: Colors.white, size: AppDimensions.iconSM),
+          const SizedBox(width: AppDimensions.xs),
           Text(
             l10n.perfectScoreTitle,
             style: GoogleFonts.poppins(
@@ -36,8 +36,8 @@ class PerfectScoreBanner extends StatelessWidget {
               fontSize: 16,
             ),
           ),
-          const SizedBox(width: 8),
-          const Icon(Icons.star, color: Colors.white, size: 20),
+          const SizedBox(width: AppDimensions.xs),
+          const Icon(Icons.star, color: Colors.white, size: AppDimensions.iconSM),
         ],
       ),
     );

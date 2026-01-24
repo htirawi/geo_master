@@ -100,8 +100,8 @@ class StatCard extends StatelessWidget {
         padding: const EdgeInsets.all(AppDimensions.paddingMD),
         child: Column(
           children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 4),
+            Icon(icon, color: color, size: AppDimensions.iconMD),
+            const SizedBox(height: AppDimensions.xxs),
             Text(
               value,
               style: GoogleFonts.poppins(

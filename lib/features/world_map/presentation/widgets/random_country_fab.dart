@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/country.dart';
 import '../../../../presentation/providers/world_map_provider.dart';
 
@@ -236,15 +237,15 @@ class RandomCountryTooltip extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         decoration: BoxDecoration(
           color: theme.colorScheme.primaryContainer,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              blurRadius: AppDimensions.sm,
+              offset: const Offset(0, AppDimensions.xxs),
             ),
           ],
         ),
@@ -257,9 +258,9 @@ class RandomCountryTooltip extends StatelessWidget {
                 Icon(
                   Icons.casino,
                   color: theme.colorScheme.primary,
-                  size: 20,
+                  size: AppDimensions.iconSM,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppDimensions.xs),
                 Text(
                   isArabic ? 'اكتشف!' : 'Discover!',
                   style: theme.textTheme.labelMedium?.copyWith(
@@ -270,7 +271,7 @@ class RandomCountryTooltip extends StatelessWidget {
                 const Spacer(),
                 IconButton(
                   onPressed: onDismiss,
-                  icon: const Icon(Icons.close, size: 18),
+                  icon: const Icon(Icons.close, size: AppDimensions.iconSM - 2),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   style: IconButton.styleFrom(
@@ -279,7 +280,7 @@ class RandomCountryTooltip extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.xs),
             Text(
               countryName,
               style: theme.textTheme.titleMedium?.copyWith(
@@ -288,7 +289,7 @@ class RandomCountryTooltip extends StatelessWidget {
               ),
             ),
             if (country.capital != null) ...[
-              const SizedBox(height: 4),
+              const SizedBox(height: AppDimensions.xxs),
               Text(
                 country.capital!,
                 style: theme.textTheme.bodySmall?.copyWith(
@@ -296,7 +297,7 @@ class RandomCountryTooltip extends StatelessWidget {
                 ),
               ),
             ],
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDimensions.sm),
             SizedBox(
               width: double.infinity,
               child: FilledButton(
@@ -366,7 +367,7 @@ class _DiceRollAnimationState extends State<DiceRollAnimation>
               scale: 1 + _controller.value,
               child: const Icon(
                 Icons.casino,
-                size: 80,
+                size: AppDimensions.iconXXL + 16,
                 color: Colors.white,
               ),
             ),

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../domain/entities/country.dart';
 
 /// Hero flag card for country detail screen
@@ -23,17 +24,17 @@ class FlagCard extends StatelessWidget {
       child: Container(
         width: size.width * 0.7,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.12),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
+              blurRadius: AppDimensions.lg,
+              offset: const Offset(0, AppDimensions.xs),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           child: CachedNetworkImage(
             imageUrl: country.flagUrl,
             fit: BoxFit.contain,
@@ -42,7 +43,7 @@ class FlagCard extends StatelessWidget {
               child: Container(
                 color: theme.colorScheme.surfaceContainerHighest,
                 child: Center(
-                  child: Text(country.flagEmoji, style: const TextStyle(fontSize: 48)),
+                  child: Text(country.flagEmoji, style: const TextStyle(fontSize: AppDimensions.avatarMD)),
                 ),
               ),
             ),
@@ -51,7 +52,7 @@ class FlagCard extends StatelessWidget {
               child: Container(
                 color: theme.colorScheme.surfaceContainerHighest,
                 child: Center(
-                  child: Text(country.flagEmoji, style: const TextStyle(fontSize: 64)),
+                  child: Text(country.flagEmoji, style: const TextStyle(fontSize: AppDimensions.iconXXL)),
                 ),
               ),
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../domain/entities/country.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 
@@ -27,10 +28,10 @@ class CountryCurrenciesSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppDimensions.lg - 4),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
         border: Border.all(
           color: theme.dividerColor.withValues(alpha: 0.1),
         ),
@@ -41,15 +42,15 @@ class CountryCurrenciesSection extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppDimensions.xs),
                 decoration: BoxDecoration(
                   color: AppColors.xpGold.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppDimensions.xs + 2),
                 ),
                 child: const Icon(Icons.payments_rounded,
-                    size: 18, color: AppColors.xpGold),
+                    size: AppDimensions.iconSM - 2, color: AppColors.xpGold),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppDimensions.sm),
               Text(
                 l10n.currencies,
                 style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -59,21 +60,21 @@ class CountryCurrenciesSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
           ...country.currencies.map((currency) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.only(bottom: AppDimensions.sm),
                 child: Row(
                   children: [
                     Container(
-                      width: 48,
-                      height: 48,
+                      width: AppDimensions.avatarMD,
+                      height: AppDimensions.avatarMD,
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                         ),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                       ),
                       child: Center(
                         child: Text(
@@ -86,7 +87,7 @@ class CountryCurrenciesSection extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: AppDimensions.sm + 2),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

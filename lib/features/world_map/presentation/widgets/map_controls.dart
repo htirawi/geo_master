@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../presentation/providers/world_map_provider.dart';
 
 /// Map control buttons (zoom, reset, layer selector)
@@ -31,11 +32,11 @@ class MapControls extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
+            blurRadius: AppDimensions.xs,
             offset: const Offset(0, 2),
           ),
         ],
@@ -48,7 +49,7 @@ class MapControls extends ConsumerWidget {
             icon: Icons.add,
             onTap: onZoomIn,
             tooltip: 'Zoom in',
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusMD)),
           ),
           _Divider(),
 
@@ -86,7 +87,7 @@ class MapControls extends ConsumerWidget {
               tooltip: is3DEnabled ? 'Disable 3D' : 'Enable 3D',
               isActive: is3DEnabled,
               borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(12)),
+                  const BorderRadius.vertical(bottom: Radius.circular(AppDimensions.radiusMD)),
             ),
           ],
         ],
@@ -123,11 +124,11 @@ class _ControlButton extends StatelessWidget {
           onTap: onTap,
           borderRadius: borderRadius,
           child: SizedBox(
-            width: 44,
-            height: 44,
+            width: AppDimensions.buttonHeightMD,
+            height: AppDimensions.buttonHeightMD,
             child: Icon(
               icon,
-              size: 22,
+              size: AppDimensions.iconMD - 2,
               color: isActive
                   ? theme.colorScheme.primary
                   : theme.colorScheme.onSurface,
@@ -171,23 +172,23 @@ class MapLayerSelector extends ConsumerWidget {
         onLayerChanged?.call(mode);
       },
       position: PopupMenuPosition.under,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusMD)),
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(AppDimensions.xs + 2),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 8,
+              blurRadius: AppDimensions.xs,
               offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Icon(
           _getIconForMode(currentMode),
-          size: 22,
+          size: AppDimensions.iconMD - 2,
           color: theme.colorScheme.onSurface,
         ),
       ),
@@ -252,12 +253,12 @@ class MapLayerSelector extends ConsumerWidget {
         children: [
           Icon(
             icon,
-            size: 20,
+            size: AppDimensions.iconSM,
             color: isSelected
                 ? theme.colorScheme.primary
                 : theme.colorScheme.onSurface,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppDimensions.sm),
           Text(
             label,
             style: TextStyle(
@@ -271,7 +272,7 @@ class MapLayerSelector extends ConsumerWidget {
             const Spacer(),
             Icon(
               Icons.check,
-              size: 18,
+              size: AppDimensions.iconSM - 2,
               color: theme.colorScheme.primary,
             ),
           ],
@@ -304,15 +305,15 @@ class MapCompass extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 44,
-        height: 44,
+        width: AppDimensions.buttonHeightMD,
+        height: AppDimensions.buttonHeightMD,
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 8,
+              blurRadius: AppDimensions.xs,
               offset: const Offset(0, 2),
             ),
           ],
@@ -321,7 +322,7 @@ class MapCompass extends StatelessWidget {
           angle: -bearing * (3.14159 / 180),
           child: Icon(
             Icons.navigation,
-            size: 24,
+            size: AppDimensions.iconMD,
             color: theme.colorScheme.error,
           ),
         ),
@@ -345,17 +346,17 @@ class MapScaleIndicator extends StatelessWidget {
     final (value, unit, width) = _calculateScale();
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.xs, vertical: AppDimensions.xxs),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface.withValues(alpha: 0.9),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             width: width,
-            height: 4,
+            height: AppDimensions.xxs,
             decoration: BoxDecoration(
               border: Border(
                 top: BorderSide(color: theme.colorScheme.onSurface, width: 2),
@@ -418,14 +419,14 @@ class MapStatsBar extends ConsumerWidget {
     final stats = ref.watch(mapStatsProvider);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.sm, vertical: AppDimensions.xs),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface.withValues(alpha: 0.95),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 6,
+            blurRadius: AppDimensions.xxs + 2,
             offset: const Offset(0, 2),
           ),
         ],
@@ -439,14 +440,14 @@ class MapStatsBar extends ConsumerWidget {
             icon: Icons.public,
             color: theme.colorScheme.primary,
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: AppDimensions.md),
           _StatItem(
             value: stats.explored,
             label: isArabic ? 'مستكشفة' : 'Explored',
             icon: Icons.check_circle_outline,
             color: const Color(0xFF4CAF50),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: AppDimensions.md),
           _StatItem(
             value: stats.favorites,
             label: isArabic ? 'مفضلة' : 'Favorites',
@@ -479,8 +480,8 @@ class _StatItem extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: color),
-        const SizedBox(width: 4),
+        Icon(icon, size: AppDimensions.iconXS, color: color),
+        const SizedBox(width: AppDimensions.xxs),
         Text(
           '$value',
           style: theme.textTheme.titleSmall?.copyWith(
@@ -488,7 +489,7 @@ class _StatItem extends StatelessWidget {
             color: color,
           ),
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppDimensions.xxs),
         Text(
           label,
           style: theme.textTheme.labelSmall?.copyWith(

@@ -3,13 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/cards/explorer_card.dart';
 import '../../../../presentation/providers/auth_provider.dart';
 import '../../../../presentation/providers/user_provider.dart';
 import 'week_progress_bar.dart';
 import 'mini_stat_item.dart';
 
 /// Expedition Progress Card - Streak + Stats
+///
+/// Uses the ExplorerCard component for consistent card styling.
 class ExpeditionProgressCard extends ConsumerWidget {
   const ExpeditionProgressCard({super.key});
 
@@ -37,19 +41,9 @@ class ExpeditionProgressCard extends ConsumerWidget {
     final user = ref.watch(currentUserProvider);
     final firstName = _getFirstName(user?.displayName, l10n);
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return ExplorerCard.elevated(
+      padding: const EdgeInsets.all(AppDimensions.lg),
+      borderRadius: AppDimensions.borderRadiusXL,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -57,15 +51,15 @@ class ExpeditionProgressCard extends ConsumerWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(AppDimensions.sm - 2),
                 decoration: BoxDecoration(
                   color: AppColors.streak.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD + 2),
                 ),
                 child: const Icon(Icons.local_fire_department,
-                  color: AppColors.streak, size: 24),
+                  color: AppColors.streak, size: AppDimensions.iconMD),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppDimensions.sm),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,12 +88,15 @@ class ExpeditionProgressCard extends ConsumerWidget {
               ),
               // Streak number
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.md,
+                  vertical: AppDimensions.xs,
+                ),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [AppColors.streak, Color(0xFFFF8A65)],
                   ),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: AppDimensions.borderRadiusLG,
                 ),
                 child: Row(
                   children: [
@@ -111,7 +108,7 @@ class ExpeditionProgressCard extends ConsumerWidget {
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppDimensions.xxs),
                     Text(
                       l10n.days,
                       style: GoogleFonts.poppins(
@@ -124,10 +121,10 @@ class ExpeditionProgressCard extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppDimensions.lg),
           // Week progress visualization
           WeekProgressBar(streak: streak),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppDimensions.lg),
           // Stats row
           Row(
             children: [

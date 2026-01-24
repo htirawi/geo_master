@@ -5,9 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/headers/explorer_hero_header.dart';
 
 /// Compass-style Quick Actions
+///
+/// Uses the design system's AppDimensions and HeaderGradients for consistency.
 class CompassActions extends StatelessWidget {
   const CompassActions({super.key});
 
@@ -29,43 +33,39 @@ class CompassActions extends StatelessWidget {
             },
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppDimensions.sm),
         Expanded(
           child: CompassActionItem(
             icon: Icons.explore_rounded,
             label: l10n.explore,
             color: AppColors.tertiary,
-            gradient: AppColors.forestGradient,
+            gradient: HeaderGradients.atlas,
             onTap: () {
               HapticFeedback.lightImpact();
               context.go(Routes.explore);
             },
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppDimensions.sm),
         Expanded(
           child: CompassActionItem(
             icon: Icons.smart_toy_rounded,
             label: l10n.aiTutor,
             color: AppColors.primary,
-            gradient: AppColors.oceanGradient,
+            gradient: HeaderGradients.explorer,
             onTap: () {
               HapticFeedback.lightImpact();
               context.push(Routes.aiTutor);
             },
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppDimensions.sm),
         Expanded(
           child: CompassActionItem(
             icon: Icons.emoji_events_rounded,
             label: l10n.achievements,
             color: AppColors.xpGold,
-            gradient: const LinearGradient(
-              colors: [Color(0xFFFF8F00), Color(0xFFFFD54F)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            gradient: HeaderGradients.achievement,
             onTap: () {
               HapticFeedback.lightImpact();
               context.push(Routes.achievements);
@@ -99,22 +99,22 @@ class CompassActionItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: AppDimensions.md),
         decoration: BoxDecoration(
           gradient: gradient,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppDimensions.lg),
           boxShadow: [
             BoxShadow(
               color: color.withValues(alpha: 0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              blurRadius: AppDimensions.blurLight,
+              offset: const Offset(0, AppDimensions.xxs),
             ),
           ],
         ),
         child: Column(
           children: [
             Icon(icon, color: Colors.white, size: 28),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.xs),
             Text(
               label,
               style: GoogleFonts.poppins(

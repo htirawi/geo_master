@@ -36,7 +36,7 @@ class XpEarnedCard extends StatelessWidget {
                 const Icon(
                   Icons.star,
                   color: AppColors.xpGold,
-                  size: 40,
+                  size: AppDimensions.iconXXL,
                 ),
                 const SizedBox(width: AppDimensions.spacingMD),
                 Column(
@@ -62,12 +62,12 @@ class XpEarnedCard extends StatelessWidget {
             ),
             // XP breakdown
             if (sessionType != QuizSessionType.standard) ...[
-              const SizedBox(height: 12),
+              const SizedBox(height: AppDimensions.sm),
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppDimensions.xs),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                 ),
                 child: Text(
                   _getXpMultiplierText(sessionType, l10n),

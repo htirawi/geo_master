@@ -218,14 +218,14 @@ class _PersonalizationScreenState extends ConsumerState<PersonalizationScreen> {
         content: Row(
           children: [
             const Icon(Icons.error_outline, color: Colors.white),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: AppColors.error,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.all(AppDimensions.md),
       ),
     );
   }
@@ -388,7 +388,7 @@ class _InterestCardState extends State<_InterestCard>
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
             border: Border.all(
               color: isSelected ? color : Colors.white.withValues(alpha: 0.15),
               width: isSelected ? 2.5 : 1,
@@ -663,9 +663,9 @@ class _DifficultyCardState extends State<_DifficultyCard> {
         duration: const Duration(milliseconds: 150),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppDimensions.md),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
             border: Border.all(
               color: isSelected ? color : Colors.white.withValues(alpha: 0.15),
               width: isSelected ? 2 : 1,
@@ -718,7 +718,7 @@ class _DifficultyCardState extends State<_DifficultyCard> {
                   size: 26,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppDimensions.md),
               // Text content
               Expanded(
                 child: Column(
@@ -917,7 +917,7 @@ class _GoalCardState extends State<_GoalCard> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
             border: Border.all(
               color: isSelected ? color : Colors.white.withValues(alpha: 0.15),
               width: isSelected ? 2 : 1,
@@ -953,7 +953,7 @@ class _GoalCardState extends State<_GoalCard> {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                   color: isSelected
                       ? color.withValues(alpha: 0.2)
                       : Colors.white.withValues(alpha: 0.1),

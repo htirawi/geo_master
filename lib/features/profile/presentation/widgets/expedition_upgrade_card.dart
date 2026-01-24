@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 /// Expedition upgrade card for premium subscription
@@ -23,35 +24,35 @@ class ExpeditionUpgradeCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppDimensions.borderRadiusXL,
         child: Ink(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppDimensions.lg),
           decoration: BoxDecoration(
             gradient: AppColors.premiumGradient,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: AppDimensions.borderRadiusXL,
             boxShadow: [
               BoxShadow(
                 color: AppColors.premium.withValues(alpha: 0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
+                blurRadius: AppDimensions.blurMedium - 1,
+                offset: const Offset(0, AppDimensions.xxs + 1),
               ),
             ],
           ),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppDimensions.sm),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 ),
                 child: const Icon(
                   Icons.rocket_launch,
                   color: Colors.white,
-                  size: 28,
+                  size: AppDimensions.iconLG - 4,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppDimensions.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +70,7 @@ class ExpeditionUpgradeCard extends StatelessWidget {
                                 ))
                           .copyWith(color: Colors.white),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: AppDimensions.xxs),
                     Text(
                       l10n.unlockAllFeatures,
                       style: (isArabic
@@ -80,12 +81,15 @@ class ExpeditionUpgradeCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppDimensions.sm),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.md,
+                  vertical: AppDimensions.sm - 2,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 ),
                 child: Text(
                   l10n.upgrade,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 /// Privacy Policy screen with professional GDPR-compliant content
@@ -26,7 +27,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppDimensions.lg - 4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -133,12 +134,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
       ),
       child: Row(
         children: [
           const Icon(Icons.update, size: 18, color: AppColors.primary),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppDimensions.xs),
           Text(
             isArabic ? 'آخر تحديث: يناير 2026' : 'Last updated: January 2026',
             style: TextStyle(
@@ -156,17 +157,17 @@ class PrivacyPolicyScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.md),
         decoration: BoxDecoration(
           color: AppColors.tertiary.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           border: Border.all(color: AppColors.tertiary.withValues(alpha: 0.3)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Icon(Icons.shield_outlined, color: AppColors.tertiary, size: 24),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Expanded(
               child: Text(
                 isArabic
@@ -216,7 +217,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                     color: AppColors.textPrimaryLight,
                   ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppDimensions.sm),
           Text(
             content,
             style: isArabic

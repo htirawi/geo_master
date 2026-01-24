@@ -7,10 +7,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/country.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 /// Country List Card - Professional flag display with proper aspect ratio
+///
+/// Uses the design system's AppDimensions for consistent styling.
 class CountryListCard extends StatelessWidget {
   const CountryListCard({
     super.key,
@@ -29,7 +32,10 @@ class CountryListCard extends StatelessWidget {
     final regionColor = _getRegionColor(country.region);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.md,
+        vertical: AppDimensions.xxs + 2,
+      ),
       child: GestureDetector(
         onTap: () {
           HapticFeedback.lightImpact();
@@ -39,12 +45,12 @@ class CountryListCard extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: 100),
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: AppDimensions.borderRadiusXL,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.06),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
+                blurRadius: AppDimensions.blurMedium - 4,
+                offset: const Offset(0, AppDimensions.xxs),
               ),
             ],
           ),
@@ -56,13 +62,13 @@ class CountryListCard extends StatelessWidget {
                 constraints: const BoxConstraints(minHeight: 90, maxHeight: 110),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadiusDirectional.horizontal(
-                    start: Radius.circular(20),
+                    start: Radius.circular(AppDimensions.radiusXL),
                   ),
                   color: Colors.grey[100],
                 ),
                 child: ClipRRect(
                   borderRadius: const BorderRadiusDirectional.horizontal(
-                    start: Radius.circular(20),
+                    start: Radius.circular(AppDimensions.radiusXL),
                   ),
                   child: Stack(
                     children: [
@@ -82,7 +88,7 @@ class CountryListCard extends StatelessWidget {
                       // Flag image with contain to show full flag
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(AppDimensions.xs),
                           child: CachedNetworkImage(
                             imageUrl: country.flagUrl,
                             fit: BoxFit.contain,
@@ -109,7 +115,7 @@ class CountryListCard extends StatelessWidget {
                             width: 1,
                           ),
                           borderRadius: const BorderRadiusDirectional.horizontal(
-                            start: Radius.circular(20),
+                            start: Radius.circular(AppDimensions.radiusXL),
                           ),
                         ),
                       ),
@@ -120,7 +126,7 @@ class CountryListCard extends StatelessWidget {
               // Info Section
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(AppDimensions.md - 2),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -136,16 +142,16 @@ class CountryListCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: AppDimensions.xxs + 2),
                       // Capital with icon
                       Row(
                         children: [
                           Icon(
                             Icons.location_on,
-                            size: 14,
+                            size: AppDimensions.iconXS - 2,
                             color: regionColor,
                           ),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: AppDimensions.xxs),
                           Expanded(
                             child: Text(
                               country.getDisplayCapital(isArabic: isArabic) ?? '-',
@@ -159,11 +165,11 @@ class CountryListCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: AppDimensions.xxs + 2),
                       // Info chips - using Wrap for responsiveness
                       Wrap(
-                        spacing: 6,
-                        runSpacing: 4,
+                        spacing: AppDimensions.xxs + 2,
+                        runSpacing: AppDimensions.xxs,
                         children: [
                           _InfoChip(
                             label: country.formattedPopulation,
@@ -181,15 +187,15 @@ class CountryListCard extends StatelessWidget {
               ),
               // Arrow indicator
               Container(
-                margin: const EdgeInsetsDirectional.only(end: 12),
-                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsetsDirectional.only(end: AppDimensions.sm),
+                padding: const EdgeInsets.all(AppDimensions.sm - 2),
                 decoration: BoxDecoration(
                   color: regionColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 ),
                 child: Icon(
                   isArabic ? Icons.arrow_back_ios : Icons.arrow_forward_ios,
-                  size: 14,
+                  size: AppDimensions.iconXS - 2,
                   color: regionColor,
                 ),
               ),
@@ -247,11 +253,14 @@ class _InfoChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.xxs + 1,
+        vertical: AppDimensions.xxs - 1,
+      ),
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusSM - 2),
       ),
       child: Text(
         label,

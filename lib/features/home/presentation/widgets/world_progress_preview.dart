@@ -5,10 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/cards/explorer_card.dart';
 import 'region_progress_item.dart';
 
 /// World Progress Preview - Mini world map with region progress
+///
+/// Uses the ExplorerCard component for consistent card styling.
 class WorldProgressPreview extends ConsumerWidget {
   const WorldProgressPreview({super.key});
 
@@ -24,33 +28,23 @@ class WorldProgressPreview extends ConsumerWidget {
       RegionData(l10n.oceania, 5, 14, AppColors.regionOceania, Icons.waves),
     ];
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return ExplorerCard.elevated(
+      padding: const EdgeInsets.all(AppDimensions.lg),
+      borderRadius: AppDimensions.borderRadiusXL,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(AppDimensions.sm - 2),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD + 2),
                 ),
-                child: const Icon(Icons.public, color: AppColors.primary, size: 24),
+                child: const Icon(Icons.public, color: AppColors.primary, size: AppDimensions.iconMD),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppDimensions.sm),
               Expanded(
                 child: Text(
                   l10n.worldProgress,
@@ -74,7 +68,7 @@ class WorldProgressPreview extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
           // Region progress bars
           ...regions.map((region) => RegionProgressItem(region: region)),
         ],

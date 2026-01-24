@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../domain/entities/country.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 
@@ -21,10 +22,10 @@ class CountryQuickStats extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(AppDimensions.xxs),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
       ),
       child: Row(
         children: [
@@ -38,7 +39,7 @@ class CountryQuickStats extends StatelessWidget {
           ),
           Container(
             width: 1,
-            height: 40,
+            height: AppDimensions.avatarSM + 8,
             color: theme.dividerColor.withValues(alpha: 0.3),
           ),
           Expanded(
@@ -51,7 +52,7 @@ class CountryQuickStats extends StatelessWidget {
           ),
           Container(
             width: 1,
-            height: 40,
+            height: AppDimensions.avatarSM + 8,
             color: theme.dividerColor.withValues(alpha: 0.3),
           ),
           Expanded(
@@ -88,11 +89,11 @@ class QuickStatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      padding: const EdgeInsets.symmetric(vertical: AppDimensions.sm, horizontal: AppDimensions.xs),
       child: Column(
         children: [
-          Icon(icon, size: 20, color: Colors.grey[600]),
-          const SizedBox(height: 6),
+          Icon(icon, size: AppDimensions.iconSM, color: Colors.grey[600]),
+          const SizedBox(height: AppDimensions.xxs + 2),
           Text(
             value,
             style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(

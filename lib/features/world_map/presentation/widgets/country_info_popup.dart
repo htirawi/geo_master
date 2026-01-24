@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/country.dart';
 import '../../../../domain/entities/country_progress.dart';
 import '../../../../presentation/providers/country_progress_provider.dart';
@@ -33,12 +34,12 @@ class CountryInfoPopup extends ConsumerWidget {
         width: 280,
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.15),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
+              blurRadius: AppDimensions.lg - 4,
+              offset: const Offset(0, AppDimensions.xs),
             ),
           ],
         ),
@@ -51,13 +52,13 @@ class CountryInfoPopup extends ConsumerWidget {
 
             // Content
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppDimensions.md),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Quick stats
                   _buildQuickStats(context, theme, isArabic),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppDimensions.sm),
 
                   // Progress indicator
                   progressAsync.when(
@@ -70,14 +71,14 @@ class CountryInfoPopup extends ConsumerWidget {
                     loading: () => const LinearProgressIndicator(),
                     error: (_, __) => const SizedBox.shrink(),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppDimensions.md),
 
                   // Action button
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton.icon(
                       onPressed: onTap,
-                      icon: const Icon(Icons.explore, size: 18),
+                      icon: const Icon(Icons.explore, size: AppDimensions.iconSM - 2),
                       label: Text(isArabic ? 'استكشف' : 'Explore'),
                     ),
                   ),
@@ -95,9 +96,9 @@ class CountryInfoPopup extends ConsumerWidget {
       children: [
         // Flag background
         ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusLG)),
           child: SizedBox(
-            height: 80,
+            height: AppDimensions.flagWidthLG / AppDimensions.flagAspectRatio,
             width: double.infinity,
             child: CachedNetworkImage(
               imageUrl: country.flagUrl,
@@ -116,7 +117,7 @@ class CountryInfoPopup extends ConsumerWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
+                  const BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusLG)),
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -131,15 +132,15 @@ class CountryInfoPopup extends ConsumerWidget {
 
         // Close button
         Positioned(
-          top: 8,
-          right: 8,
+          top: AppDimensions.xs,
+          right: AppDimensions.xs,
           child: IconButton.filled(
             onPressed: onClose,
-            icon: const Icon(Icons.close, size: 18),
+            icon: const Icon(Icons.close, size: AppDimensions.iconSM - 2),
             style: IconButton.styleFrom(
               backgroundColor: Colors.black.withValues(alpha: 0.3),
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(AppDimensions.xxs),
               minimumSize: const Size(28, 28),
             ),
           ),
@@ -147,9 +148,9 @@ class CountryInfoPopup extends ConsumerWidget {
 
         // Country name
         Positioned(
-          bottom: 12,
-          left: 12,
-          right: 12,
+          bottom: AppDimensions.sm,
+          left: AppDimensions.sm,
+          right: AppDimensions.sm,
           child: Text(
             country.getDisplayName(isArabic: isArabic),
             style: theme.textTheme.titleMedium?.copyWith(
@@ -158,7 +159,7 @@ class CountryInfoPopup extends ConsumerWidget {
               shadows: [
                 Shadow(
                   color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 4,
+                  blurRadius: AppDimensions.xxs,
                 ),
               ],
             ),
@@ -181,10 +182,10 @@ class CountryInfoPopup extends ConsumerWidget {
         if (country.capital != null) ...[
           Icon(
             Icons.location_city,
-            size: 14,
+            size: AppDimensions.iconXS - 2,
             color: theme.colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppDimensions.xxs),
           Expanded(
             child: Text(
               country.capital!,
@@ -199,13 +200,13 @@ class CountryInfoPopup extends ConsumerWidget {
 
         // Continent
         if (country.continents.isNotEmpty) ...[
-          const SizedBox(width: 12),
+          const SizedBox(width: AppDimensions.sm),
           Icon(
             Icons.public,
-            size: 14,
+            size: AppDimensions.iconXS - 2,
             color: theme.colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppDimensions.xxs),
           Text(
             country.continents.first,
             style: theme.textTheme.bodySmall?.copyWith(
@@ -240,14 +241,14 @@ class CountryInfoPopup extends ConsumerWidget {
             Row(
               children: [
                 Container(
-                  width: 8,
-                  height: 8,
+                  width: AppDimensions.xs,
+                  height: AppDimensions.xs,
                   decoration: BoxDecoration(
                     color: progressColor,
                     shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: AppDimensions.xxs),
                 Text(
                   progressLabel,
                   style: theme.textTheme.labelSmall?.copyWith(
@@ -259,17 +260,17 @@ class CountryInfoPopup extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppDimensions.xs),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
           child: LinearProgressIndicator(
             value: progressValue,
             backgroundColor: theme.colorScheme.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation(progressColor),
-            minHeight: 6,
+            minHeight: AppDimensions.xxs + 2,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppDimensions.xs),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -286,7 +287,7 @@ class CountryInfoPopup extends ConsumerWidget {
             if (progress.isFavorite)
               const Icon(
                 Icons.favorite,
-                size: 18,
+                size: AppDimensions.iconSM - 2,
                 color: Color(ProgressColors.favorite),
               ),
           ],
@@ -316,10 +317,10 @@ class _StatChip extends StatelessWidget {
       children: [
         Icon(
           icon,
-          size: 14,
+          size: AppDimensions.iconXS - 2,
           color: theme.colorScheme.primary,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppDimensions.xxs),
         Text(
           '$value $label',
           style: theme.textTheme.labelSmall,
@@ -366,34 +367,34 @@ class CountryInfoBottomSheet extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusXL)),
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppDimensions.lg - 4),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Drag handle
               Container(
-                width: 40,
-                height: 4,
+                width: AppDimensions.avatarSM + 8,
+                height: AppDimensions.xxs,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXS - 2),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppDimensions.lg - 4),
 
               // Country header
               Row(
                 children: [
                   // Flag
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                     child: SizedBox(
-                      width: 60,
-                      height: 40,
+                      width: AppDimensions.flagWidthMD,
+                      height: AppDimensions.flagWidthMD / AppDimensions.flagAspectRatio,
                       child: CachedNetworkImage(
                         imageUrl: country.flagUrl,
                         fit: BoxFit.cover,
@@ -410,7 +411,7 @@ class CountryInfoBottomSheet extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: AppDimensions.md),
 
                   // Name and capital
                   Expanded(
@@ -482,10 +483,10 @@ class CountryInfoBottomSheet extends ConsumerWidget {
     final progressColor = Color(ProgressColors.getColorForProgress(progressValue));
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
       ),
       child: Column(
         children: [
@@ -505,17 +506,17 @@ class CountryInfoBottomSheet extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppDimensions.sm),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
             child: LinearProgressIndicator(
               value: progressValue,
               backgroundColor: theme.colorScheme.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation(progressColor),
-              minHeight: 8,
+              minHeight: AppDimensions.xs,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -561,10 +562,10 @@ class _BottomSheetStat extends StatelessWidget {
       children: [
         Icon(
           icon,
-          size: 24,
+          size: AppDimensions.iconMD,
           color: theme.colorScheme.primary,
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppDimensions.xxs),
         Text(
           value,
           style: theme.textTheme.titleMedium?.copyWith(

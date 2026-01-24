@@ -25,7 +25,7 @@ class HintButton extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppDimensions.spacingMD),
       child: OutlinedButton.icon(
         onPressed: onPressed,
-        icon: const Icon(Icons.lightbulb_outline, size: 18),
+        icon: const Icon(Icons.lightbulb_outline, size: AppDimensions.iconSM),
         label: Text(
           l10n.useHint,
           style: GoogleFonts.poppins(fontSize: 13),
@@ -61,8 +61,12 @@ class HintDisplay extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.lightbulb, color: AppColors.xpGold, size: 20),
-          const SizedBox(width: 12),
+          const Icon(
+            Icons.lightbulb,
+            color: AppColors.xpGold,
+            size: AppDimensions.iconSM,
+          ),
+          const SizedBox(width: AppDimensions.sm),
           Expanded(
             child: Text(
               hint,

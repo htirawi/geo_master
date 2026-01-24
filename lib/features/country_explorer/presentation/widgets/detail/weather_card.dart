@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../domain/entities/country.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../../../presentation/providers/weather_provider.dart';
@@ -26,7 +27,7 @@ class WeatherCard extends ConsumerWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppDimensions.lg - 4),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
@@ -36,12 +37,12 @@ class WeatherCard extends ConsumerWidget {
             Color(0xFF67B8DE),
           ],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF4A90D9).withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            blurRadius: AppDimensions.lg - 4,
+            offset: const Offset(0, AppDimensions.xs),
           ),
         ],
       ),
@@ -53,7 +54,7 @@ class WeatherCard extends ConsumerWidget {
           return _buildWeatherContent(context, weatherData, l10n, isArabic);
         },
         loading: () => const Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(AppDimensions.lg - 4),
           child: Center(
             child: CircularProgressIndicator(
               strokeWidth: 2,
@@ -70,8 +71,8 @@ class WeatherCard extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(Icons.cloud_off_rounded, size: 28, color: Colors.white70),
-        const SizedBox(width: 12),
+        const Icon(Icons.cloud_off_rounded, size: AppDimensions.iconMD + 4, color: Colors.white70),
+        const SizedBox(width: AppDimensions.sm),
         Text(
           l10n.weatherUnavailable,
           style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -100,16 +101,16 @@ class WeatherCard extends ConsumerWidget {
               CachedNetworkImage(
                 imageUrl:
                     'https://openweathermap.org/img/wn/${weather.icon}@2x.png',
-                width: 64,
-                height: 64,
-                placeholder: (_, __) => const SizedBox(width: 64, height: 64),
+                width: AppDimensions.iconXXL,
+                height: AppDimensions.iconXXL,
+                placeholder: (_, __) => const SizedBox(width: AppDimensions.iconXXL, height: AppDimensions.iconXXL),
                 errorWidget: (_, __, ___) => Icon(
                   _getWeatherIcon(weather.condition),
-                  size: 48,
+                  size: AppDimensions.iconXL,
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppDimensions.xs),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -136,10 +137,10 @@ class WeatherCard extends ConsumerWidget {
         ),
         // Additional Stats
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(AppDimensions.sm),
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMD + 2),
           ),
           child: Column(
             children: [
@@ -147,7 +148,7 @@ class WeatherCard extends ConsumerWidget {
                 icon: Icons.water_drop_rounded,
                 value: '${weather.humidity}%',
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppDimensions.xs + 2),
               _WeatherStat(
                 icon: Icons.air_rounded,
                 value: '${weather.windSpeed.toStringAsFixed(0)} m/s',
@@ -192,8 +193,8 @@ class _WeatherStat extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 14, color: Colors.white),
-        const SizedBox(width: 6),
+        Icon(icon, size: AppDimensions.iconXS - 2, color: Colors.white),
+        const SizedBox(width: AppDimensions.xxs + 2),
         Text(
           value,
           style: GoogleFonts.poppins(

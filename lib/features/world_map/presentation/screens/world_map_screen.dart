@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gm;
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/country.dart' hide LatLng;
 import '../../../../presentation/providers/subscription_provider.dart';
 import '../../../../presentation/providers/world_map_provider.dart';
@@ -103,7 +104,7 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
               children: [
                 // Search bar
                 Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppDimensions.md),
                   child: CountrySearchAutocomplete(
                     onCountrySelected: _onCountrySelected,
                     onSearchFocusChanged: (focused) {
@@ -123,7 +124,7 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
 
           // Map controls (right side)
           Positioned(
-            right: 16,
+            right: AppDimensions.md,
             top: MediaQuery.of(context).size.height * 0.35,
             child: Column(
               children: [
@@ -131,7 +132,7 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
                 MapLayerSelector(
                   onLayerChanged: (_) => setState(() {}),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppDimensions.sm),
 
                 // Zoom and other controls
                 MapControls(
@@ -148,7 +149,7 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
 
           // Compass (shows when map is rotated)
           Positioned(
-            right: 16,
+            right: AppDimensions.md,
             top: MediaQuery.of(context).padding.top + 150,
             child: MapCompass(
               bearing: _currentBearing,
@@ -158,7 +159,7 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
 
           // Legend (bottom left)
           Positioned(
-            left: 16,
+            left: AppDimensions.md,
             bottom: 100,
             child: MapLegend(
               isExpanded: _isLegendExpanded,
@@ -182,8 +183,8 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
           if (_selectedCountry != null)
             Positioned(
               bottom: 180,
-              left: 16,
-              right: 16,
+              left: AppDimensions.md,
+              right: AppDimensions.md,
               child: Center(
                 child: CountryInfoPopup(
                   country: _selectedCountry!,

@@ -293,6 +293,16 @@ abstract final class AppDimensions {
   static const double quizQuestionMinHeight = 120.0;
 
   // ============================================================================
+  // QUIZ RESULT DIMENSIONS
+  // ============================================================================
+
+  /// Result icon container size (circle)
+  static const double resultIconContainerSize = 120.0;
+
+  /// Result icon size (inside container)
+  static const double resultIconSize = 60.0;
+
+  // ============================================================================
   // PROGRESS INDICATORS
   // ============================================================================
 

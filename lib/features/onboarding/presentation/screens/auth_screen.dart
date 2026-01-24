@@ -68,7 +68,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     maxWidth: 500,
                     child: Column(
                       children: [
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppDimensions.lg - 4),
 
                         // Animated logo
                         const AnimatedGlobeLogo(size: 90),
@@ -106,7 +106,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         // Guest mode button
                         _buildGuestButton(l10n),
 
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppDimensions.lg - 4),
                       ],
                     ),
                   ),
@@ -331,7 +331,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         height: 56,
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
           border: borderColor != null
               ? Border.all(color: borderColor, width: 1.5)
               : null,
@@ -408,7 +408,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
               border: Border.all(
                 color: Colors.white.withValues(alpha: 0.2),
                 width: 1,
@@ -456,7 +456,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           color: canProceed
               ? Colors.white.withValues(alpha: 0.15)
               : Colors.white.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
           border: Border.all(
             color: canProceed
                 ? Colors.white.withValues(alpha: 0.4)
@@ -482,7 +482,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     : Colors.white.withValues(alpha: 0.5),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -562,14 +562,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         HapticFeedback.selectionClick();
         setState(() => _termsAccepted = !_termsAccepted);
       },
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: _termsAccepted
               ? AppColors.success.withValues(alpha: 0.15)
               : Colors.white.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           border: Border.all(
             color: _termsAccepted
                 ? AppColors.success.withValues(alpha: 0.5)
@@ -670,14 +670,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         content: Row(
           children: [
             const Icon(Icons.info_outline, color: Colors.white),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Expanded(child: Text(l10n.pleaseAcceptTerms)),
           ],
         ),
         backgroundColor: AppColors.warning,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.all(AppDimensions.md),
         duration: const Duration(seconds: 3),
       ),
     );
@@ -743,14 +743,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         content: Row(
           children: [
             const Icon(Icons.error_outline, color: Colors.white),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppDimensions.sm),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: AppColors.error,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.all(AppDimensions.md),
       ),
     );
   }

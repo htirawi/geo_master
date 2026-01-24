@@ -54,7 +54,7 @@ class QuizFeedbackSection extends StatelessWidget {
                 Icon(
                   isCorrect ? Icons.celebration : Icons.info_outline,
                   color: isCorrect ? AppColors.success : AppColors.error,
-                  size: 32,
+                  size: AppDimensions.iconXL,
                 ),
                 const SizedBox(width: AppDimensions.spacingMD),
                 Expanded(
@@ -77,14 +77,15 @@ class QuizFeedbackSection extends StatelessWidget {
                           // Speed bonus badge
                           if (isCorrect && speedBonus != null && speedBonus! > 1.0)
                             Container(
-                              margin: const EdgeInsets.only(left: 8),
+                              margin: const EdgeInsets.only(left: AppDimensions.xs),
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
+                                horizontal: AppDimensions.xs,
+                                vertical: AppDimensions.xxs,
                               ),
                               decoration: BoxDecoration(
                                 color: AppColors.xpGold,
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius:
+                                    BorderRadius.circular(AppDimensions.radiusSM),
                               ),
                               child: Text(
                                 '${speedBonus!.toStringAsFixed(1)}x',
@@ -134,8 +135,8 @@ class QuizFeedbackSection extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.school, size: 18),
-                      const SizedBox(width: 8),
+                      const Icon(Icons.school, size: AppDimensions.iconSM),
+                      const SizedBox(width: AppDimensions.xs),
                       Text(
                         l10n.explanation,
                         style: GoogleFonts.poppins(
@@ -145,7 +146,7 @@ class QuizFeedbackSection extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppDimensions.xs),
                   Text(
                     explanation,
                     style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -177,10 +178,10 @@ class QuizFeedbackSection extends StatelessWidget {
                     children: [
                       const Icon(
                         Icons.lightbulb,
-                        size: 18,
+                        size: AppDimensions.iconSM,
                         color: AppColors.secondary,
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppDimensions.xs),
                       Text(
                         l10n.didYouKnow,
                         style: GoogleFonts.poppins(
@@ -191,7 +192,7 @@ class QuizFeedbackSection extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppDimensions.xs),
                   Text(
                     funFact,
                     style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(

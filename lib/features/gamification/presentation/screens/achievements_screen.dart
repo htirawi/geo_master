@@ -185,7 +185,7 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
                     const Icon(
                       Icons.check_circle,
                       color: AppColors.success,
-                      size: 20,
+                      size: AppDimensions.iconSM,
                     ),
                     const SizedBox(width: AppDimensions.spacingSM),
                     Text(
@@ -240,7 +240,7 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
                     Icon(
                       Icons.lock,
                       color: theme.colorScheme.onSurfaceVariant,
-                      size: 20,
+                      size: AppDimensions.iconSM,
                     ),
                     const SizedBox(width: AppDimensions.spacingSM),
                     Text(
@@ -292,7 +292,7 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
                   children: [
                     Icon(
                       Icons.emoji_events_outlined,
-                      size: 64,
+                      size: AppDimensions.iconXXL,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(height: AppDimensions.spacingMD),
@@ -326,8 +326,8 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
         ),
         child: Column(
           children: [
-            Icon(icon, color: Colors.white, size: 24),
-            const SizedBox(height: 4),
+            Icon(icon, color: Colors.white, size: AppDimensions.iconMD),
+            const SizedBox(height: AppDimensions.xxs),
             Text(
               value,
               style: theme.textTheme.titleMedium?.copyWith(
@@ -412,8 +412,8 @@ class _AchievementCard extends StatelessWidget {
             ? [
                 BoxShadow(
                   color: _getTierColor(achievement.tier).withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
+                  blurRadius: AppDimensions.xs,
+                  offset: const Offset(0, AppDimensions.xxs),
                 ),
               ]
             : null,
@@ -442,7 +442,7 @@ class _AchievementCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppDimensions.xxs),
 
                 // Description
                 Text(
@@ -461,7 +461,7 @@ class _AchievementCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimensions.paddingSM,
-                      vertical: 4,
+                      vertical: AppDimensions.xxs,
                     ),
                     decoration: BoxDecoration(
                       color: _getTierColor(achievement.tier).withValues(alpha: 0.2),
@@ -483,11 +483,11 @@ class _AchievementCard extends StatelessWidget {
 
           // Tier Badge
           Positioned(
-            top: 8,
-            right: isArabic ? null : 8,
-            left: isArabic ? 8 : null,
+            top: AppDimensions.xs,
+            right: isArabic ? null : AppDimensions.xs,
+            left: isArabic ? AppDimensions.xs : null,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: AppDimensions.xs - 2, vertical: 2),
               decoration: BoxDecoration(
                 color: _getTierColor(achievement.tier),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
@@ -524,8 +524,8 @@ class _AchievementCard extends StatelessWidget {
         : theme.colorScheme.onSurfaceVariant;
 
     return Container(
-      width: 56,
-      height: 56,
+      width: AppDimensions.avatarLG - 8,
+      height: AppDimensions.avatarLG - 8,
       decoration: BoxDecoration(
         color: iconColor.withValues(alpha: isUnlocked ? 0.2 : 0.1),
         shape: BoxShape.circle,
@@ -536,7 +536,7 @@ class _AchievementCard extends StatelessWidget {
       child: Icon(
         _getCategoryIcon(achievement.category),
         color: iconColor,
-        size: 28,
+        size: AppDimensions.iconLG - 4,
       ),
     );
   }
@@ -555,7 +555,7 @@ class _AchievementCard extends StatelessWidget {
           valueColor: AlwaysStoppedAnimation(_getTierColor(achievement.tier)),
           borderRadius: BorderRadius.circular(2),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppDimensions.xxs),
         Text(
           '$currentValue / ${achievement.requiredValue}',
           style: theme.textTheme.labelSmall?.copyWith(

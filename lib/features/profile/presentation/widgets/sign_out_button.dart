@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 /// Sign out button widget
@@ -29,9 +30,9 @@ class SignOutButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.error,
           side: const BorderSide(color: AppColors.error),
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: const EdgeInsets.symmetric(vertical: AppDimensions.md - 2),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           ),
         ),
         child: Row(
@@ -39,16 +40,16 @@ class SignOutButton extends StatelessWidget {
           children: [
             if (isSigningOut)
               SizedBox(
-                width: 20,
-                height: 20,
+                width: AppDimensions.iconSM,
+                height: AppDimensions.iconSM,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   color: theme.colorScheme.error,
                 ),
               )
             else
-              const Icon(Icons.logout, size: 20),
-            const SizedBox(width: 10),
+              const Icon(Icons.logout, size: AppDimensions.iconSM),
+            const SizedBox(width: AppDimensions.sm - 2),
             Text(
               isSigningOut ? l10n.signingOut : l10n.signOut,
               style: (isArabic

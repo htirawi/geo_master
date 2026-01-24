@@ -3,10 +3,14 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/headers/explorer_hero_header.dart';
 import 'world_pattern_painter.dart';
 
 /// Immersive explorer header with greeting and world visual
+///
+/// Uses the design system's Explorer gradient and consistent spacing.
 class ExplorerHeader extends StatelessWidget {
   const ExplorerHeader({
     super.key,
@@ -64,11 +68,7 @@ class ExplorerHeader extends StatelessWidget {
     return Container(
       height: 270,
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF1565C0), Color(0xFF0D47A1), Color(0xFF002171)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: HeaderGradients.explorer,
       ),
       child: Stack(
         children: [
@@ -83,34 +83,34 @@ class ExplorerHeader extends StatelessWidget {
           // Content
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppDimensions.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(AppDimensions.xs),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: AppDimensions.borderRadiusMD,
                         ),
-                        child: Icon(timeIcon, color: AppColors.sunrise, size: 24),
+                        child: Icon(timeIcon, color: AppColors.sunrise, size: AppDimensions.iconMD),
                       ),
                       const Spacer(),
                       // Notification bell
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(AppDimensions.xs),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: AppDimensions.borderRadiusMD,
                         ),
                         child: const Icon(Icons.notifications_outlined,
-                          color: Colors.white, size: 24),
+                          color: Colors.white, size: AppDimensions.iconMD),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppDimensions.lg),
                   Text(
                     '$greeting,',
                     style: GoogleFonts.poppins(
@@ -118,8 +118,8 @@ class ExplorerHeader extends StatelessWidget {
                       color: Colors.white70,
                       fontWeight: FontWeight.w400,
                     ),
-                  ).animate().fadeIn(duration: 400.ms),
-                  const SizedBox(height: 4),
+                  ).animate().fadeIn(duration: AppDimensions.durationSlow),
+                  const SizedBox(height: AppDimensions.xxs),
                   Text(
                     firstName,
                     style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -127,20 +127,23 @@ class ExplorerHeader extends StatelessWidget {
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
-                  ).animate().fadeIn(delay: 100.ms, duration: 400.ms),
-                  const SizedBox(height: 8),
+                  ).animate().fadeIn(delay: 100.ms, duration: AppDimensions.durationSlow),
+                  const SizedBox(height: AppDimensions.xs),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.sm,
+                      vertical: AppDimensions.xxs + 2,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.sunrise.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                       border: Border.all(color: AppColors.sunrise.withValues(alpha: 0.3)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.explore, color: AppColors.sunrise, size: 16),
-                        const SizedBox(width: 6),
+                        const Icon(Icons.explore, color: AppColors.sunrise, size: AppDimensions.iconXS),
+                        const SizedBox(width: AppDimensions.xxs + 2),
                         Flexible(
                           child: Text(
                             motivationalMessage,
@@ -155,7 +158,7 @@ class ExplorerHeader extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
+                  ).animate().fadeIn(delay: 200.ms, duration: AppDimensions.durationSlow),
                 ],
               ),
             ),
@@ -177,8 +180,8 @@ class ExplorerHeader extends StatelessWidget {
         ),
       ),
       Positioned(
-        left: 20,
-        bottom: 20,
+        left: AppDimensions.lg,
+        bottom: AppDimensions.lg,
         child: Icon(
           Icons.flight_takeoff,
           size: 30,

@@ -7,10 +7,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/country_provider.dart';
 
 /// Today's Destination - Featured Country Card
+///
+/// Uses the design system's AppDimensions for consistent spacing.
 class TodaysDestinationCard extends ConsumerWidget {
   const TodaysDestinationCard({super.key, required this.isArabic});
 
@@ -33,17 +36,17 @@ class TodaysDestinationCard extends ConsumerWidget {
           child: Container(
             height: 220,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: AppDimensions.borderRadiusXL,
               boxShadow: [
                 BoxShadow(
                   color: AppColors.primary.withValues(alpha: 0.3),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
+                  blurRadius: AppDimensions.blurHeavy - 4,
+                  offset: const Offset(0, AppDimensions.sm - 2),
                 ),
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: AppDimensions.borderRadiusXL,
               child: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -70,7 +73,7 @@ class TodaysDestinationCard extends ConsumerWidget {
                   ),
                   // Content
                   Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(AppDimensions.lg),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -78,16 +81,19 @@ class TodaysDestinationCard extends ConsumerWidget {
                         Align(
                           alignment: isArabic ? Alignment.topRight : Alignment.topLeft,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppDimensions.sm,
+                              vertical: AppDimensions.xxs + 2,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.sunrise,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Icons.pin_drop, color: Colors.white, size: 14),
-                                const SizedBox(width: 4),
+                                const SizedBox(width: AppDimensions.xxs),
                                 Text(
                                   l10n.countryOfTheDay,
                                   style: GoogleFonts.poppins(
@@ -119,17 +125,17 @@ class TodaysDestinationCard extends ConsumerWidget {
                                       shadows: [
                                         Shadow(
                                           color: Colors.black.withValues(alpha: 0.3),
-                                          blurRadius: 10,
+                                          blurRadius: AppDimensions.blurLight + 2,
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: AppDimensions.xxs),
                                   Row(
                                     children: [
                                       Icon(Icons.people,
-                                        color: Colors.white.withValues(alpha: 0.8), size: 16),
-                                      const SizedBox(width: 4),
+                                        color: Colors.white.withValues(alpha: 0.8), size: AppDimensions.iconXS),
+                                      const SizedBox(width: AppDimensions.xxs),
                                       Text(
                                         country.formattedPopulation,
                                         style: GoogleFonts.poppins(
@@ -137,10 +143,10 @@ class TodaysDestinationCard extends ConsumerWidget {
                                           color: Colors.white.withValues(alpha: 0.8),
                                         ),
                                       ),
-                                      const SizedBox(width: 16),
+                                      const SizedBox(width: AppDimensions.md),
                                       Icon(Icons.location_on,
-                                        color: Colors.white.withValues(alpha: 0.8), size: 16),
-                                      const SizedBox(width: 4),
+                                        color: Colors.white.withValues(alpha: 0.8), size: AppDimensions.iconXS),
+                                      const SizedBox(width: AppDimensions.xxs),
                                       Text(
                                         country.getDisplayRegion(isArabic: isArabic),
                                         style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
@@ -155,22 +161,22 @@ class TodaysDestinationCard extends ConsumerWidget {
                             ),
                             // Explore arrow - now part of the row, not overlapping
                             Container(
-                              padding: const EdgeInsets.all(12),
+                              padding: const EdgeInsets.all(AppDimensions.sm),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: AppDimensions.borderRadiusLG,
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withValues(alpha: 0.2),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
+                                    blurRadius: AppDimensions.blurLight,
+                                    offset: const Offset(0, AppDimensions.elevation1),
                                   ),
                                 ],
                               ),
                               child: Icon(
                                 isArabic ? Icons.arrow_back : Icons.arrow_forward,
                                 color: AppColors.primary,
-                                size: 20,
+                                size: AppDimensions.iconSM,
                               ),
                             ),
                           ],
@@ -188,7 +194,7 @@ class TodaysDestinationCard extends ConsumerWidget {
         height: 200,
         decoration: BoxDecoration(
           color: AppColors.primary.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: AppDimensions.borderRadiusXL,
         ),
         child: const Center(
           child: CircularProgressIndicator(color: AppColors.primary),

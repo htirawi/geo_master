@@ -44,14 +44,14 @@ class QuizGameHeader extends StatelessWidget {
                     if (quiz.sessionType != QuizSessionType.standard)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
+                          horizontal: AppDimensions.sm,
+                          vertical: AppDimensions.xxs,
                         ),
-                        margin: const EdgeInsets.only(bottom: 8),
+                        margin: const EdgeInsets.only(bottom: AppDimensions.xs),
                         decoration: BoxDecoration(
                           color: _getSessionTypeColor(quiz.sessionType)
                               .withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                         ),
                         child: Text(
                           _getSessionTypeName(quiz.sessionType, l10n),
@@ -71,7 +71,7 @@ class QuizGameHeader extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppDimensions.xs),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(
                         AppDimensions.progressBarHeight / 2,
@@ -93,14 +93,14 @@ class QuizGameHeader extends StatelessWidget {
               // Score display
               if (quiz.sessionType != QuizSessionType.studyMode)
                 Container(
-                  margin: const EdgeInsets.only(left: 12),
+                  margin: const EdgeInsets.only(left: AppDimensions.sm),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 6,
+                    horizontal: AppDimensions.sm - 2,
+                    vertical: AppDimensions.xxs + 2,
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.xpGold.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -108,9 +108,9 @@ class QuizGameHeader extends StatelessWidget {
                       const Icon(
                         Icons.star,
                         color: AppColors.xpGold,
-                        size: 16,
+                        size: AppDimensions.iconXS,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: AppDimensions.xxs),
                       Text(
                         '${quiz.score}',
                         style: GoogleFonts.poppins(

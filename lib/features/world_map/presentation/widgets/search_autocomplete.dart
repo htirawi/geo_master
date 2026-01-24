@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/country.dart';
 import '../../../../presentation/providers/world_map_provider.dart';
 
@@ -63,12 +64,12 @@ class _CountrySearchAutocompleteState
         Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXL + 4),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+                blurRadius: AppDimensions.sm - 2,
+                offset: const Offset(0, AppDimensions.xxs),
               ),
             ],
           ),
@@ -89,14 +90,14 @@ class _CountrySearchAutocompleteState
                     )
                   : null,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(28),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusXL + 4),
                 borderSide: BorderSide.none,
               ),
               filled: true,
               fillColor: theme.colorScheme.surface,
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 14,
+                horizontal: AppDimensions.lg - 4,
+                vertical: AppDimensions.sm + 2,
               ),
             ),
             onChanged: (value) {
@@ -114,21 +115,21 @@ class _CountrySearchAutocompleteState
         // Suggestions dropdown
         if (_showSuggestions && searchResults.isNotEmpty)
           Container(
-            margin: const EdgeInsets.only(top: 8),
+            margin: const EdgeInsets.only(top: AppDimensions.xs),
             constraints: const BoxConstraints(maxHeight: 300),
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  blurRadius: AppDimensions.sm - 2,
+                  offset: const Offset(0, AppDimensions.xxs),
                 ),
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
               child: ListView.builder(
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
@@ -181,15 +182,15 @@ class _CountrySearchItem extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md, vertical: AppDimensions.sm),
           child: Row(
             children: [
               // Flag
               ClipRRect(
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
                 child: SizedBox(
-                  width: 32,
-                  height: 22,
+                  width: AppDimensions.xl,
+                  height: AppDimensions.lg - 2,
                   child: CachedNetworkImage(
                     imageUrl: country.flagUrl,
                     fit: BoxFit.cover,
@@ -197,14 +198,14 @@ class _CountrySearchItem extends StatelessWidget {
                       color: theme.colorScheme.surfaceContainerHighest,
                       child: Icon(
                         Icons.flag,
-                        size: 14,
+                        size: AppDimensions.iconXS - 2,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppDimensions.sm),
 
               // Country info
               Expanded(
@@ -237,12 +238,12 @@ class _CountrySearchItem extends StatelessWidget {
               if (country.continents.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
+                    horizontal: AppDimensions.xs,
+                    vertical: AppDimensions.xxs,
                   ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                   ),
                   child: Text(
                     country.continents.first,
@@ -324,22 +325,22 @@ class _CompactSearchBarState extends State<CompactSearchBar> {
 
     return Material(
       color: theme.colorScheme.surface,
-      borderRadius: BorderRadius.circular(28),
+      borderRadius: BorderRadius.circular(AppDimensions.radiusXL + 4),
       elevation: 2,
       child: InkWell(
         onTap: widget.onExpand,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXL + 4),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md, vertical: AppDimensions.sm),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.search,
                 color: theme.colorScheme.onSurfaceVariant,
-                size: 20,
+                size: AppDimensions.iconSM,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppDimensions.xs),
               Text(
                 isArabic ? 'بحث...' : 'Search...',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -435,10 +436,10 @@ class _FullScreenSearchState extends ConsumerState<FullScreenSearch> {
                 children: [
                   Icon(
                     Icons.search_off,
-                    size: 64,
+                    size: AppDimensions.iconXXL,
                     color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppDimensions.md),
                   Text(
                     isArabic ? 'لا توجد نتائج' : 'No results found',
                     style: theme.textTheme.titleMedium?.copyWith(
@@ -455,10 +456,10 @@ class _FullScreenSearchState extends ConsumerState<FullScreenSearch> {
                     children: [
                       Icon(
                         Icons.public,
-                        size: 64,
+                        size: AppDimensions.iconXXL,
                         color: theme.colorScheme.primary.withValues(alpha: 0.5),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppDimensions.md),
                       Text(
                         isArabic
                             ? 'ابحث عن أي دولة في العالم'

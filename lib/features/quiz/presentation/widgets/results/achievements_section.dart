@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 
 /// New achievements section
@@ -25,7 +26,7 @@ class AchievementsSection extends StatelessWidget {
         Row(
           children: [
             const Icon(Icons.emoji_events, color: AppColors.achievement),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppDimensions.xs),
             Text(
               l10n.newAchievements,
               style: GoogleFonts.poppins(
@@ -35,21 +36,21 @@ class AchievementsSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppDimensions.sm),
         ...achievements.map((achievement) {
           return Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.only(bottom: AppDimensions.xs),
+            padding: const EdgeInsets.all(AppDimensions.sm),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
               ),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
             ),
             child: Row(
               children: [
                 const Icon(Icons.star, color: Colors.white),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppDimensions.sm),
                 Expanded(
                   child: Text(
                     _getAchievementName(achievement, l10n),

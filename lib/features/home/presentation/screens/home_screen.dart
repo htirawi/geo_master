@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../presentation/providers/auth_provider.dart';
 import '../widgets/compass_actions.dart';
 import '../widgets/daily_challenge_card.dart';
@@ -34,40 +35,40 @@ class HomeScreen extends ConsumerWidget {
           ),
           // Main Content
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingMD),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                const SizedBox(height: 20),
+                const SizedBox(height: AppDimensions.spacingLG),
                 // Today's Destination (Country of the Day) - Most prominent
                 TodaysDestinationCard(isArabic: isArabic)
                     .animate()
                     .fadeIn(delay: 200.ms, duration: 500.ms)
                     .slideY(begin: 0.1, end: 0),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppDimensions.spacingLG),
                 // Quick Actions - Compass Style
                 const CompassActions()
                     .animate()
                     .fadeIn(delay: 300.ms, duration: 500.ms)
                     .slideY(begin: 0.1, end: 0),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppDimensions.spacingLG),
                 // Daily Challenge Card
                 const DailyChallengeCard()
                     .animate()
                     .fadeIn(delay: 400.ms, duration: 500.ms)
                     .slideY(begin: 0.1, end: 0),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppDimensions.spacingLG),
                 // Expedition Progress (Streak + Stats)
                 const ExpeditionProgressCard()
                     .animate()
                     .fadeIn(delay: 500.ms, duration: 500.ms)
                     .slideY(begin: 0.1, end: 0),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppDimensions.spacingLG),
                 // World Progress Map Preview
                 const WorldProgressPreview()
                     .animate()
                     .fadeIn(delay: 600.ms, duration: 500.ms)
                     .slideY(begin: 0.1, end: 0),
-                const SizedBox(height: 100), // Bottom padding for nav bar
+                const SizedBox(height: AppDimensions.bottomNavHeight), // Bottom padding for nav bar
               ]),
             ),
           ),

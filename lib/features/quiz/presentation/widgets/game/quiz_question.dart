@@ -76,12 +76,15 @@ class QuizQuestionDisplay extends StatelessWidget {
 
         // Multi-select indicator
         if (question.isMultiSelect) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: AppDimensions.xs),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.sm,
+              vertical: AppDimensions.xs - 2,
+            ),
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
             ),
             child: Text(
               l10n.selectAnswersCount(question.correctAnswers?.length ?? 0),

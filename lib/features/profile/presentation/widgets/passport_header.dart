@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/headers/explorer_hero_header.dart';
 
 /// Passport Header with stamps pattern
 class PassportHeader extends StatelessWidget {
@@ -32,15 +33,7 @@ class PassportHeader extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.oceanDeep,
-            AppColors.ocean,
-            AppColors.primary,
-          ],
-        ),
+        gradient: HeaderGradients.passport,
       ),
       child: Stack(
         children: [
@@ -54,25 +47,25 @@ class PassportHeader extends StatelessWidget {
           SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.all(AppDimensions.paddingLG),
+              padding: const EdgeInsets.all(AppDimensions.lg),
               child: Column(
                 children: [
                   // Title row
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(AppDimensions.sm - 2),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                         ),
                         child: const Icon(
                           Icons.badge,
                           color: Colors.white,
-                          size: 24,
+                          size: AppDimensions.iconMD,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppDimensions.sm),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +96,7 @@ class PassportHeader extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppDimensions.lg),
                   // Passport Card
                   _PassportCard(
                     displayName: displayName,
@@ -113,9 +106,9 @@ class PassportHeader extends StatelessWidget {
                     isArabic: isArabic,
                   )
                       .animate()
-                      .fadeIn(duration: 600.ms)
+                      .fadeIn(duration: AppDimensions.durationSlow + 200.ms)
                       .scale(begin: const Offset(0.9, 0.9), end: const Offset(1, 1)),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppDimensions.md),
                 ],
               ),
             ),
@@ -146,15 +139,15 @@ class _PassportCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppDimensions.lg),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            blurRadius: AppDimensions.blurHeavy - 4,
+            offset: const Offset(0, AppDimensions.sm - 2),
           ),
         ],
       ),
@@ -168,7 +161,7 @@ class _PassportCard extends StatelessWidget {
                 height: 100,
                 decoration: BoxDecoration(
                   color: AppColors.backgroundLight,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                   border: Border.all(
                     color: AppColors.dividerLight,
                     width: 2,
@@ -183,17 +176,17 @@ class _PassportCard extends StatelessWidget {
                 child: photoUrl == null
                     ? const Icon(
                         Icons.person,
-                        size: 40,
+                        size: AppDimensions.iconXL + 8,
                         color: AppColors.textTertiaryLight,
                       )
                     : null,
               ),
               if (isPremium)
                 Positioned(
-                  right: -4,
-                  bottom: -4,
+                  right: -AppDimensions.xxs,
+                  bottom: -AppDimensions.xxs,
                   child: Container(
-                    padding: const EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(AppDimensions.xxs),
                     decoration: BoxDecoration(
                       gradient: AppColors.premiumGradient,
                       shape: BoxShape.circle,
@@ -204,14 +197,14 @@ class _PassportCard extends StatelessWidget {
                     ),
                     child: const Icon(
                       Icons.workspace_premium,
-                      size: 14,
+                      size: AppDimensions.iconXS - 2,
                       color: Colors.white,
                     ),
                   ),
                 ),
             ],
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: AppDimensions.md),
           // Info
           Expanded(
             child: Column(
@@ -239,7 +232,7 @@ class _PassportCard extends StatelessWidget {
                             ))
                       .copyWith(color: AppColors.textPrimaryLight),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppDimensions.xs),
                 if (email != null) ...[
                   Text(
                     l10n.contactEmail.toUpperCase(),
@@ -259,16 +252,16 @@ class _PassportCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
-                const SizedBox(height: 8),
+                const SizedBox(height: AppDimensions.xs),
                 if (isPremium)
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
+                      horizontal: AppDimensions.sm - 2,
+                      vertical: AppDimensions.xxs,
                     ),
                     decoration: BoxDecoration(
                       gradient: AppColors.premiumGradient,
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(AppDimensions.xxs),
                     ),
                     child: Text(
                       l10n.premiumExplorer.toUpperCase(),

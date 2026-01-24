@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../utils/map_style.dart';
 
 /// Map legend showing progress color meanings
@@ -23,11 +24,11 @@ class MapLegend extends ConsumerWidget {
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
+            blurRadius: AppDimensions.xs,
             offset: const Offset(0, 2),
           ),
         ],
@@ -36,9 +37,9 @@ class MapLegend extends ConsumerWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onToggle,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppDimensions.sm),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,22 +50,22 @@ class MapLegend extends ConsumerWidget {
                   children: [
                     Icon(
                       Icons.info_outline,
-                      size: 16,
+                      size: AppDimensions.iconXS,
                       color: theme.colorScheme.primary,
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: AppDimensions.xxs + 2),
                     Text(
                       isArabic ? 'دليل الألوان' : 'Legend',
                       style: theme.textTheme.labelMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppDimensions.xxs),
                     Icon(
                       isExpanded
                           ? Icons.keyboard_arrow_up
                           : Icons.keyboard_arrow_down,
-                      size: 16,
+                      size: AppDimensions.iconXS,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ],
@@ -72,27 +73,27 @@ class MapLegend extends ConsumerWidget {
 
                 // Legend items
                 if (isExpanded) ...[
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppDimensions.sm),
                   _LegendItem(
                     color: const Color(ProgressColors.completed),
                     label: isArabic ? 'مكتمل (100%)' : 'Completed (100%)',
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppDimensions.xs),
                   _LegendItem(
                     color: const Color(ProgressColors.inProgress),
                     label: isArabic ? 'قيد التقدم (50-99%)' : 'In Progress (50-99%)',
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppDimensions.xs),
                   _LegendItem(
                     color: const Color(ProgressColors.started),
                     label: isArabic ? 'بدأت (1-49%)' : 'Started (1-49%)',
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppDimensions.xs),
                   _LegendItem(
                     color: const Color(ProgressColors.notStarted),
                     label: isArabic ? 'لم يبدأ (0%)' : 'Not Started (0%)',
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppDimensions.xs),
                   _LegendItem(
                     color: const Color(ProgressColors.favorite),
                     icon: Icons.favorite,
@@ -125,11 +126,11 @@ class _LegendItem extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (icon != null)
-          Icon(icon, size: 14, color: color)
+          Icon(icon, size: AppDimensions.iconXS - 2, color: color)
         else
           Container(
-            width: 14,
-            height: 14,
+            width: AppDimensions.iconXS - 2,
+            height: AppDimensions.iconXS - 2,
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
@@ -140,12 +141,12 @@ class _LegendItem extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: color.withValues(alpha: 0.4),
-                  blurRadius: 4,
+                  blurRadius: AppDimensions.xxs,
                 ),
               ],
             ),
           ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppDimensions.xs),
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall,
@@ -162,10 +163,10 @@ class CompactMapLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.xs, vertical: AppDimensions.xxs),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
       ),
       child: const Row(
         mainAxisSize: MainAxisSize.min,
@@ -188,8 +189,8 @@ class _CompactLegendDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 10,
-      height: 10,
+      width: AppDimensions.xs + 2,
+      height: AppDimensions.xs + 2,
       margin: const EdgeInsets.symmetric(horizontal: 3),
       decoration: BoxDecoration(
         color: color,
@@ -209,14 +210,14 @@ class MapStatsBar extends ConsumerWidget {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md, vertical: AppDimensions.xs),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface.withValues(alpha: 0.95),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
+            blurRadius: AppDimensions.xs,
             offset: const Offset(0, 2),
           ),
         ],
@@ -226,10 +227,10 @@ class MapStatsBar extends ConsumerWidget {
         children: [
           Icon(
             Icons.public,
-            size: 16,
+            size: AppDimensions.iconXS,
             color: theme.colorScheme.primary,
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: AppDimensions.xxs + 2),
           Text(
             isArabic ? 'استكشف العالم' : 'Explore the World',
             style: theme.textTheme.labelMedium?.copyWith(

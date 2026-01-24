@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_dimensions.dart';
 import '../../../../domain/entities/continent.dart';
 import '../../../../presentation/providers/world_map_provider.dart';
 import '../utils/map_style.dart';
@@ -24,8 +25,8 @@ class MapFilterBar extends ConsumerWidget {
     final showFavoritesOnly = ref.watch(showFavoritesOnlyProvider);
 
     return Container(
-      height: 44,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      height: AppDimensions.buttonHeightMD,
+      margin: const EdgeInsets.symmetric(horizontal: AppDimensions.md),
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
@@ -38,11 +39,11 @@ class MapFilterBar extends ConsumerWidget {
               onContinentSelected?.call(null);
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppDimensions.xs),
 
           // Continent chips
           ...ContinentIds.all.map((id) => Padding(
-                padding: const EdgeInsetsDirectional.only(end: 8),
+                padding: const EdgeInsetsDirectional.only(end: AppDimensions.xs),
                 child: _FilterChip(
                   label: _getContinentName(id, isArabic),
                   isSelected: selectedContinent == id,
@@ -53,15 +54,15 @@ class MapFilterBar extends ConsumerWidget {
                 ),
               )),
 
-          const SizedBox(width: 8),
+          const SizedBox(width: AppDimensions.xs),
           // Divider
           Container(
             width: 1,
-            height: 24,
-            margin: const EdgeInsets.symmetric(vertical: 10),
+            height: AppDimensions.lg,
+            margin: const EdgeInsets.symmetric(vertical: AppDimensions.xs + 2),
             color: theme.colorScheme.outlineVariant,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppDimensions.xs),
 
           // Progress filters
           _FilterChip(
@@ -76,7 +77,7 @@ class MapFilterBar extends ConsumerWidget {
                   : MapProgressFilter.completed;
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppDimensions.xs),
 
           _FilterChip(
             icon: Icons.pending,
@@ -90,7 +91,7 @@ class MapFilterBar extends ConsumerWidget {
                   : MapProgressFilter.inProgress;
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppDimensions.xs),
 
           _FilterChip(
             icon: Icons.circle_outlined,
@@ -104,7 +105,7 @@ class MapFilterBar extends ConsumerWidget {
                   : MapProgressFilter.notStarted;
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppDimensions.xs),
 
           // Favorites filter
           _FilterChip(
@@ -116,7 +117,7 @@ class MapFilterBar extends ConsumerWidget {
               ref.read(showFavoritesOnlyProvider.notifier).state = !showFavoritesOnly;
             },
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: AppDimensions.md),
         ],
       ),
     );
@@ -161,14 +162,14 @@ class _FilterChip extends StatelessWidget {
       color: isSelected
           ? theme.colorScheme.primaryContainer
           : theme.colorScheme.surface,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.sm + 2, vertical: AppDimensions.xs),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 4),
             border: Border.all(
               color: isSelected
                   ? theme.colorScheme.primary
@@ -182,12 +183,12 @@ class _FilterChip extends StatelessWidget {
               if (icon != null) ...[
                 Icon(
                   icon,
-                  size: 16,
+                  size: AppDimensions.iconXS,
                   color: isSelected
                       ? theme.colorScheme.primary
                       : (iconColor ?? theme.colorScheme.onSurface),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: AppDimensions.xxs + 2),
               ],
               Text(
                 label,
@@ -230,15 +231,15 @@ class _MapFilterPanelState extends ConsumerState<MapFilterPanel> {
     final selectedContinent = ref.watch(selectedContinentFilterProvider);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            blurRadius: AppDimensions.xs + 2,
+            offset: const Offset(0, AppDimensions.xxs),
           ),
         ],
       ),
@@ -299,17 +300,17 @@ class _MapFilterPanelState extends ConsumerState<MapFilterPanel> {
                   )),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Progress section
           Text(
             isArabic ? 'حالة التقدم' : 'Progress Status',
             style: theme.textTheme.labelLarge,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppDimensions.xs),
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: AppDimensions.xs,
+            runSpacing: AppDimensions.xs,
             children: MapProgressFilter.values.map((filter) {
               return _SelectableChip(
                 label: _getFilterName(filter, isArabic),
@@ -322,7 +323,7 @@ class _MapFilterPanelState extends ConsumerState<MapFilterPanel> {
               );
             }).toList(),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppDimensions.md),
 
           // Favorites toggle
           SwitchListTile(
@@ -433,10 +434,10 @@ class _SelectableChip extends StatelessWidget {
           if (icon != null) ...[
             Icon(
               icon,
-              size: 16,
+              size: AppDimensions.iconXS,
               color: iconColor ?? theme.colorScheme.onSurface,
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: AppDimensions.xxs),
           ],
           Text(label),
         ],
