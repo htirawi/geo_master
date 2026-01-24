@@ -9,6 +9,7 @@ import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/backgrounds/onboarding_background.dart';
 import '../../../../presentation/providers/onboarding_provider.dart';
 import '../../../../presentation/providers/user_preferences_provider.dart'
     show localLearningPreferencesProvider;
@@ -117,19 +118,8 @@ class _PersonalizationScreenState extends ConsumerState<PersonalizationScreen> {
           ),
         ],
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0D1B2A),
-              Color(0xFF1B263B),
-              Color(0xFF415A77),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
+      body: OnboardingBackground(
+        showFlags: false,
         child: SafeArea(
           child: Column(
             children: [

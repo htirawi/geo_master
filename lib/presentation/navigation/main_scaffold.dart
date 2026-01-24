@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/routes/routes.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_dimensions.dart';
 import '../../core/extensions/context_extensions.dart';
+import '../components/navigation/explorer_bottom_nav.dart';
 
-/// Main scaffold with bottom navigation
+/// Main scaffold with Explorer's Journey themed bottom navigation
+///
+/// Wraps the main app screens with a persistent glass-morphism
+/// bottom navigation bar following the "Explorer's Compass" design.
 class MainScaffold extends ConsumerWidget {
   const MainScaffold({
     required this.child,
@@ -20,78 +22,55 @@ class MainScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: child,
-      bottomNavigationBar: const _BottomNavBar(),
+      extendBody: true, // Allow content to extend behind bottom nav
+      bottomNavigationBar: const _ExplorerBottomNavWrapper(),
     );
   }
 }
 
-class _BottomNavBar extends ConsumerWidget {
-  const _BottomNavBar();
+/// Wrapper that provides localized labels and routing to ExplorerBottomNav
+class _ExplorerBottomNavWrapper extends ConsumerWidget {
+  const _ExplorerBottomNavWrapper();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = _calculateSelectedIndex(context);
+    final l10n = context.l10n;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: context.theme.scaffoldBackgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
+    // Build navigation items with localized labels
+    final items = [
+      ExplorerNavItem(
+        icon: Icons.home_outlined,
+        activeIcon: Icons.home_rounded,
+        label: l10n.home,
       ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingS,
-            vertical: AppDimensions.paddingXS,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _NavItem(
-                icon: Icons.home_outlined,
-                activeIcon: Icons.home,
-                label: context.l10n.home,
-                isSelected: currentIndex == 0,
-                onTap: () => _onItemTapped(context, 0),
-              ),
-              _NavItem(
-                icon: Icons.explore_outlined,
-                activeIcon: Icons.explore,
-                label: context.l10n.explore,
-                isSelected: currentIndex == 1,
-                onTap: () => _onItemTapped(context, 1),
-              ),
-              _NavItem(
-                icon: Icons.quiz_outlined,
-                activeIcon: Icons.quiz,
-                label: context.l10n.quiz,
-                isSelected: currentIndex == 2,
-                onTap: () => _onItemTapped(context, 2),
-                isCenter: true,
-              ),
-              _NavItem(
-                icon: Icons.leaderboard_outlined,
-                activeIcon: Icons.leaderboard,
-                label: context.l10n.stats,
-                isSelected: currentIndex == 3,
-                onTap: () => _onItemTapped(context, 3),
-              ),
-              _NavItem(
-                icon: Icons.person_outline,
-                activeIcon: Icons.person,
-                label: context.l10n.profile,
-                isSelected: currentIndex == 4,
-                onTap: () => _onItemTapped(context, 4),
-              ),
-            ],
-          ),
-        ),
+      ExplorerNavItem(
+        icon: Icons.public_outlined,
+        activeIcon: Icons.public_rounded,
+        label: l10n.explore,
       ),
+      ExplorerNavItem(
+        icon: Icons.explore_outlined,
+        activeIcon: Icons.explore_rounded,
+        label: l10n.quiz,
+        isElevated: true, // Center elevated button
+      ),
+      ExplorerNavItem(
+        icon: Icons.insights_outlined,
+        activeIcon: Icons.insights_rounded,
+        label: l10n.stats,
+      ),
+      ExplorerNavItem(
+        icon: Icons.person_outline_rounded,
+        activeIcon: Icons.person_rounded,
+        label: l10n.profile,
+      ),
+    ];
+
+    return ExplorerBottomNav(
+      currentIndex: currentIndex,
+      items: items,
+      onTap: (index) => _onItemTapped(context, index),
     );
   }
 
@@ -118,100 +97,5 @@ class _BottomNavBar extends ConsumerWidget {
       case 4:
         context.go(Routes.profile);
     }
-  }
-}
-
-class _NavItem extends StatelessWidget {
-  const _NavItem({
-    required this.icon,
-    required this.activeIcon,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-    this.isCenter = false,
-  });
-
-  final IconData icon;
-  final IconData activeIcon;
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final bool isCenter;
-
-  @override
-  Widget build(BuildContext context) {
-    final color =
-        isSelected ? AppColors.primary : context.theme.iconTheme.color;
-
-    if (isCenter) {
-      return Semantics(
-        button: true,
-        selected: isSelected,
-        label: label,
-        child: GestureDetector(
-          excludeFromSemantics: true,
-          onTap: onTap,
-          child: Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              gradient: isSelected
-                  ? AppColors.primaryGradient
-                  : const LinearGradient(
-                      colors: [AppColors.primary, AppColors.primaryDark],
-                    ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Icon(
-              isSelected ? activeIcon : icon,
-              color: Colors.white,
-              size: AppDimensions.iconL,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Semantics(
-      button: true,
-      selected: isSelected,
-      label: label,
-      child: GestureDetector(
-        excludeFromSemantics: true,
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingS,
-            vertical: AppDimensions.paddingXS,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                isSelected ? activeIcon : icon,
-                color: color,
-                size: AppDimensions.iconM,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                style: context.textTheme.labelSmall?.copyWith(
-                  color: color,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

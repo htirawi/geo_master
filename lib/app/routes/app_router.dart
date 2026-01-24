@@ -31,6 +31,7 @@ import '../../features/stats/presentation/screens/stats_screen.dart';
 import '../../features/subscription/presentation/screens/paywall_screen.dart';
 import '../../features/world_map/presentation/screens/world_map_screen.dart';
 import '../../presentation/navigation/main_scaffold.dart';
+import '../../presentation/navigation/page_transitions.dart';
 import '../../presentation/providers/auth_provider.dart';
 import '../../presentation/providers/onboarding_provider.dart';
 import 'routes.dart';
@@ -97,34 +98,44 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SplashScreen(),
       ),
 
-      // Onboarding routes
+      // Onboarding routes - Fade transitions for smooth flow
       GoRoute(
         path: Routes.languageSelection,
         name: RouteNames.languageSelection,
-        builder: (context, state) => const LanguageSelectionScreen(),
+        pageBuilder: (context, state) => FadeTransitionPage(
+          child: const LanguageSelectionScreen(),
+        ),
       ),
       GoRoute(
         path: Routes.onboarding,
         name: RouteNames.onboarding,
-        builder: (context, state) => const OnboardingScreen(),
+        pageBuilder: (context, state) => FadeTransitionPage(
+          child: const OnboardingScreen(),
+        ),
       ),
       GoRoute(
         path: Routes.auth,
         name: RouteNames.auth,
-        builder: (context, state) => const AuthScreen(),
+        pageBuilder: (context, state) => FadeTransitionPage(
+          child: const AuthScreen(),
+        ),
       ),
       GoRoute(
         path: Routes.emailAuth,
         name: RouteNames.emailAuth,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final isSignUp = state.uri.queryParameters['signup'] == 'true';
-          return EmailAuthScreen(isSignUp: isSignUp);
+          return SlideUpTransitionPage(
+            child: EmailAuthScreen(isSignUp: isSignUp),
+          );
         },
       ),
       GoRoute(
         path: Routes.personalization,
         name: RouteNames.personalization,
-        builder: (context, state) => const PersonalizationScreen(),
+        pageBuilder: (context, state) => FadeTransitionPage(
+          child: const PersonalizationScreen(),
+        ),
       ),
 
       // Main app shell with bottom navigation
@@ -169,13 +180,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      // Country detail screen (simple version)
+      // Country detail screen (simple version) - Hero transition for shared element
       GoRoute(
         path: Routes.countryDetail,
         name: RouteNames.countryDetail,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final code = state.pathParameters['code']!;
-          return CountryDetailScreen(countryCode: code);
+          return HeroTransitionPage(
+            child: CountryDetailScreen(countryCode: code),
+          );
         },
       ),
 
@@ -183,24 +196,28 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.countryDetailTabbed,
         name: RouteNames.countryDetailTabbed,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final code = state.pathParameters['code']!;
           final tabString = state.uri.queryParameters['tab'];
           final initialTab = tabString != null ? int.tryParse(tabString) ?? 0 : 0;
-          return CountryDetailTabbedScreen(
-            countryCode: code,
-            initialTab: initialTab,
+          return SlideUpTransitionPage(
+            child: CountryDetailTabbedScreen(
+              countryCode: code,
+              initialTab: initialTab,
+            ),
           );
         },
       ),
 
-      // World map screen (full screen for immersive experience)
+      // World map screen (full screen for immersive experience) - Zoom transition
       GoRoute(
         path: Routes.worldMap,
         name: RouteNames.worldMap,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final continentFilter = state.uri.queryParameters['continent'];
-          return WorldMapScreen(initialContinent: continentFilter);
+          return ZoomFadeTransitionPage(
+            child: WorldMapScreen(initialContinent: continentFilter),
+          );
         },
       ),
 
@@ -208,16 +225,20 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.continentExplorer,
         name: RouteNames.continentExplorer,
-        builder: (context, state) => const ContinentExplorerScreen(),
+        pageBuilder: (context, state) => SlideUpTransitionPage(
+          child: const ContinentExplorerScreen(),
+        ),
       ),
 
       // Continent detail screen
       GoRoute(
         path: Routes.continentDetail,
         name: RouteNames.continentDetail,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final continentId = state.pathParameters['id']!;
-          return ContinentDetailScreen(continentId: continentId);
+          return SlideUpTransitionPage(
+            child: ContinentDetailScreen(continentId: continentId),
+          );
         },
       ),
 
@@ -225,12 +246,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.quizModeSelection,
         name: RouteNames.quizModeSelection,
-        builder: (context, state) => const QuizScreen(),
+        pageBuilder: (context, state) => SlideUpTransitionPage(
+          child: const QuizScreen(),
+        ),
       ),
       GoRoute(
         path: Routes.quizGame,
         name: RouteNames.quizGame,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           // Parse mode and difficulty from query parameters
           final modeString = state.uri.queryParameters['mode'] ?? 'capitals';
           final difficultyString = state.uri.queryParameters['difficulty'] ?? 'medium';
@@ -246,26 +269,32 @@ final routerProvider = Provider<GoRouter>((ref) {
             orElse: () => QuizDifficulty.medium,
           );
 
-          return QuizGameScreen(
-            mode: mode,
-            difficulty: difficulty,
-            region: region,
+          return ZoomFadeTransitionPage(
+            child: QuizGameScreen(
+              mode: mode,
+              difficulty: difficulty,
+              region: region,
+            ),
           );
         },
       ),
       GoRoute(
         path: Routes.quizResults,
         name: RouteNames.quizResults,
-        builder: (context, state) => const QuizResultsScreen(),
+        pageBuilder: (context, state) => ZoomFadeTransitionPage(
+          child: const QuizResultsScreen(),
+        ),
       ),
 
-      // AI Tutor chat screen
+      // AI Tutor chat screen - Slide up for modal-like feel
       GoRoute(
         path: Routes.aiTutor,
         name: RouteNames.aiTutor,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final countryCode = state.uri.queryParameters['country'];
-          return AiTutorScreen(initialCountryCode: countryCode);
+          return SlideUpTransitionPage(
+            child: AiTutorScreen(initialCountryCode: countryCode),
+          );
         },
       ),
 
@@ -273,36 +302,50 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.achievements,
         name: RouteNames.achievements,
-        builder: (context, state) => const AchievementsScreen(),
+        pageBuilder: (context, state) => ZoomFadeTransitionPage(
+          child: const AchievementsScreen(),
+        ),
       ),
       GoRoute(
         path: Routes.leaderboard,
         name: RouteNames.leaderboard,
-        builder: (context, state) => const LeaderboardScreen(),
+        pageBuilder: (context, state) => SlideUpTransitionPage(
+          child: const LeaderboardScreen(),
+        ),
       ),
 
       // Settings screen
       GoRoute(
         path: Routes.settings,
         name: RouteNames.settings,
-        builder: (context, state) => const SettingsScreen(),
+        pageBuilder: (context, state) => SlideHorizontalTransitionPage(
+          child: const SettingsScreen(),
+        ),
       ),
 
-      // Subscription screen
+      // Subscription screen - Modal-style for paywall
       GoRoute(
         path: Routes.paywall,
         name: RouteNames.paywall,
-        builder: (context, state) => const PaywallScreen(),
+        pageBuilder: (context, state) => ModalTransitionPage(
+          child: const PaywallScreen(),
+        ),
       ),
 
-      // Legal screens
+      // Legal screens - Slide up for modal-like document view
       GoRoute(
         path: Routes.termsOfService,
-        builder: (context, state) => const TermsOfServiceScreen(),
+        name: RouteNames.termsOfService,
+        pageBuilder: (context, state) => SlideUpTransitionPage(
+          child: const TermsOfServiceScreen(),
+        ),
       ),
       GoRoute(
         path: Routes.privacyPolicy,
-        builder: (context, state) => const PrivacyPolicyScreen(),
+        name: RouteNames.privacyPolicy,
+        pageBuilder: (context, state) => SlideUpTransitionPage(
+          child: const PrivacyPolicyScreen(),
+        ),
       ),
     ],
     errorBuilder: (context, state) => ErrorScreen(error: state.error),

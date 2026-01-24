@@ -97,4 +97,6 @@ abstract final class RouteNames {
   static const String settings = 'settings';
   static const String subscription = 'subscription';
   static const String paywall = 'paywall';
+  static const String termsOfService = 'termsOfService';
+  static const String privacyPolicy = 'privacyPolicy';
 }

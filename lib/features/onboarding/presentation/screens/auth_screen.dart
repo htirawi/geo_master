@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'dart:math' as math;
 
-import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -14,10 +12,17 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/utils/responsive_utils.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/backgrounds/onboarding_background.dart';
 import '../../../../presentation/providers/auth_provider.dart';
 import '../../../../presentation/widgets/decorative_background.dart';
 
-/// Premium auth screen with social login options and animations
+/// Premium auth screen with social login options and Explorer's Journey theme.
+///
+/// Features:
+/// - Social login (Google, Apple on iOS, Email)
+/// - Guest mode option
+/// - Terms acceptance requirement
+/// - Animated floating flags background
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
 
@@ -25,33 +30,10 @@ class AuthScreen extends ConsumerStatefulWidget {
   ConsumerState<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends ConsumerState<AuthScreen>
-    with SingleTickerProviderStateMixin {
+class _AuthScreenState extends ConsumerState<AuthScreen> {
   bool _isLoading = false;
   String? _loadingProvider;
   bool _termsAccepted = false;
-  late AnimationController _flagsController;
-
-  // Country codes for floating flags - matching splash screen
-  static const List<String> _flagCodes = [
-    'JO', 'PS', 'SA', 'AE', 'KW', 'EG', 'US', 'GB',
-    'FR', 'DE', 'JP', 'CN', 'BR', 'IN', 'AU', 'CA',
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _flagsController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 12),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _flagsController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,257 +46,79 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         if (state is AuthAuthenticated) {
           context.go(Routes.personalization);
         } else if (state is AuthError) {
-          _showErrorSnackBar(context, state.failure.message);
+          _showErrorSnackBar(state.failure.message);
         }
       });
     });
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          // Dark gradient matching splash screen
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0D1B2A),
-              Color(0xFF1B263B),
-              Color(0xFF415A77),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
-        child: Stack(
-          children: [
-            // Subtle floating flags in background
-            ..._buildFloatingFlags(),
+      body: OnboardingBackground(
+        showFlags: true,
+        flagCount: 10,
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Main scrollable content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.responsivePadding,
+                  ),
+                  child: ResponsiveCenter(
+                    maxWidth: 500,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
 
-            // Gradient orbs for depth
-            _buildGradientOrbs(),
+                        // Animated logo
+                        const AnimatedGlobeLogo(size: 90),
 
-            // Main content
-            SafeArea(
-              child: Column(
-                children: [
-                  // Main scrollable content
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.responsivePadding,
-                      ),
-                      child: ResponsiveCenter(
-                        maxWidth: 500,
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 20),
+                        const SizedBox(height: 12),
 
-                            // Animated logo
-                            const AnimatedGlobeLogo(size: 90),
+                        // App title
+                        _buildAppTitle(theme, l10n),
 
-                            const SizedBox(height: 12),
+                        const SizedBox(height: 4),
 
-                            // App title
-                            _buildAppTitle(theme, l10n),
+                        // Welcome message
+                        _buildWelcomeMessage(l10n),
 
-                            const SizedBox(height: 4),
+                        const SizedBox(height: 24),
 
-                            // Welcome message
-                            Builder(
-                              builder: (context) {
-                                final locale = Localizations.localeOf(context);
-                                final isArabic = locale.languageCode == 'ar';
-                                return Text(
-                                  l10n.welcomeBack,
-                                  style: isArabic
-                                      ? GoogleFonts.cairo(
-                                          fontSize: 14,
-                                          color: Colors.white.withValues(alpha: 0.7),
-                                        )
-                                      : GoogleFonts.poppins(
-                                          fontSize: 14,
-                                          color: Colors.white.withValues(alpha: 0.7),
-                                        ),
-                                );
-                              },
-                            )
-                                .animate()
-                                .fadeIn(delay: 400.ms, duration: 500.ms)
-                                .slideY(
-                                    begin: 0.2, end: 0, delay: 400.ms, duration: 500.ms),
+                        // Social login buttons
+                        _buildGoogleButton(l10n),
+                        const SizedBox(height: 14),
 
-                            const SizedBox(height: 24),
+                        if (Platform.isIOS) ...[
+                          _buildAppleButton(l10n),
+                          const SizedBox(height: 14),
+                        ],
 
-                            // Social login buttons
-                            _buildGoogleButton(l10n),
-                            const SizedBox(height: 14),
+                        _buildEmailButton(l10n),
 
-                            if (Platform.isIOS) ...[
-                              _buildAppleButton(l10n),
-                              const SizedBox(height: 14),
-                            ],
+                        const SizedBox(height: 24),
 
-                            _buildEmailButton(context, l10n),
+                        // Divider with "or"
+                        _buildDivider(l10n, theme),
 
-                            const SizedBox(height: 24),
+                        const SizedBox(height: 24),
 
-                            // Divider with "or"
-                            _buildDivider(l10n, theme),
+                        // Guest mode button
+                        _buildGuestButton(l10n),
 
-                            const SizedBox(height: 24),
-
-                            // Guest mode button
-                            _buildGuestButton(l10n),
-
-                            const SizedBox(height: 20),
-                          ],
-                        ),
-                      ),
+                        const SizedBox(height: 20),
+                      ],
                     ),
                   ),
-
-                  // Terms fixed at bottom with glassmorphism effect
-                  Container(
-                    padding: EdgeInsets.fromLTRB(
-                      context.responsivePadding,
-                      12,
-                      context.responsivePadding,
-                      12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
-                      border: Border(
-                        top: BorderSide(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    child: ResponsiveCenter(
-                      maxWidth: 500,
-                      child: _buildTerms(l10n, theme),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+
+              // Terms fixed at bottom with glassmorphism effect
+              _buildTermsContainer(l10n, theme),
+            ],
+          ),
         ),
       ),
-    );
-  }
-
-  // Floating flags positioned around edges
-  List<Widget> _buildFloatingFlags() {
-    final random = math.Random(42);
-    return List.generate(10, (index) {
-      // Position flags around edges, avoiding center content area
-      final isLeftSide = index % 2 == 0;
-      final verticalPosition = 0.1 + (index / 10) * 0.8;
-      final flagSize = 20 + random.nextDouble() * 10;
-      final flagCode = _flagCodes[index % _flagCodes.length];
-
-      return AnimatedBuilder(
-        animation: _flagsController,
-        builder: (context, child) {
-          final size = MediaQuery.of(context).size;
-          final progress = (_flagsController.value + (index * 0.1)) % 1.0;
-
-          // Gentle floating motion
-          final baseX = isLeftSide ? 10.0 : size.width - flagSize - 10;
-          final x = baseX + math.sin(progress * 2 * math.pi) * 15;
-          final y = verticalPosition * size.height +
-              math.cos(progress * 2 * math.pi + index) * 10;
-
-          return Positioned(
-            left: isLeftSide ? x : null,
-            right: isLeftSide ? null : size.width - x - flagSize,
-            top: y,
-            child: child!,
-          );
-        },
-        child: Opacity(
-          opacity: 0.4,
-          child: Container(
-            width: flagSize,
-            height: flagSize,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.3),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: ClipOval(
-              child: CountryFlag.fromCountryCode(
-                flagCode,
-                width: flagSize,
-                height: flagSize,
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-  }
-
-  // Gradient orbs for visual depth (matching splash screen)
-  Widget _buildGradientOrbs() {
-    return Stack(
-      children: [
-        Positioned(
-          top: -80,
-          right: -80,
-          child: Container(
-            width: 250,
-            height: 250,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  AppColors.secondary.withValues(alpha: 0.25),
-                  AppColors.secondary.withValues(alpha: 0.0),
-                ],
-              ),
-            ),
-          ),
-        )
-            .animate(onPlay: (c) => c.repeat(reverse: true))
-            .scale(
-              begin: const Offset(1, 1),
-              end: const Offset(1.15, 1.15),
-              duration: 4.seconds,
-            ),
-        Positioned(
-          bottom: -120,
-          left: -80,
-          child: Container(
-            width: 300,
-            height: 300,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  AppColors.tertiary.withValues(alpha: 0.15),
-                  AppColors.tertiary.withValues(alpha: 0.0),
-                ],
-              ),
-            ),
-          ),
-        )
-            .animate(onPlay: (c) => c.repeat(reverse: true))
-            .scale(
-              begin: const Offset(1.15, 1.15),
-              end: const Offset(1, 1),
-              duration: 5.seconds,
-            ),
-      ],
     );
   }
 
@@ -324,26 +128,19 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 
     return Column(
       children: [
-        ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [Colors.white, Color(0xFF90CAF9), Colors.white],
-          ).createShader(bounds),
-          child: Text(
-            l10n.appTitle,
-            style: isArabic
-                ? GoogleFonts.cairo(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    letterSpacing: 0.5,
-                  )
-                : GoogleFonts.poppins(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    letterSpacing: 1,
-                  ),
-          ),
+        ShimmerText(
+          text: l10n.appTitle,
+          style: isArabic
+              ? GoogleFonts.cairo(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
+                )
+              : GoogleFonts.poppins(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1,
+                ),
         ),
       ],
     )
@@ -352,9 +149,26 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         .slideY(begin: 0.3, end: 0, delay: 200.ms, duration: 500.ms);
   }
 
-  // Consistent icon size for all social buttons
-  static const double _iconContainerSize = 32.0;
-  static const double _iconSize = 18.0;
+  Widget _buildWelcomeMessage(AppLocalizations l10n) {
+    final locale = Localizations.localeOf(context);
+    final isArabic = locale.languageCode == 'ar';
+
+    return Text(
+      l10n.welcomeBack,
+      style: isArabic
+          ? GoogleFonts.cairo(
+              fontSize: 14,
+              color: Colors.white.withValues(alpha: 0.7),
+            )
+          : GoogleFonts.poppins(
+              fontSize: 14,
+              color: Colors.white.withValues(alpha: 0.7),
+            ),
+    )
+        .animate()
+        .fadeIn(delay: 400.ms, duration: 500.ms)
+        .slideY(begin: 0.2, end: 0, delay: 400.ms, duration: 500.ms);
+  }
 
   Widget _buildGoogleButton(AppLocalizations l10n) {
     final canProceed = _termsAccepted && !_isLoading;
@@ -363,7 +177,37 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 
     return _buildSocialButton(
       label: l10n.continueWithGoogle,
-      icon: _buildIconContainer(
+      icon: _buildGoogleIcon(),
+      backgroundColor: Colors.white,
+      textColor: canProceed ? Colors.black87 : Colors.grey,
+      borderColor: Colors.grey.shade300,
+      isLoading: _isLoading && _loadingProvider == 'google',
+      onPressed: canProceed
+          ? () => _signInWithGoogle()
+          : () => _showTermsWarning(l10n),
+      isArabic: isArabic,
+    )
+        .animate()
+        .fadeIn(delay: 500.ms, duration: 400.ms)
+        .slideX(begin: 0.1, end: 0, delay: 500.ms, duration: 400.ms);
+  }
+
+  Widget _buildGoogleIcon() {
+    return Container(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Center(
         child: Text(
           'G',
           style: TextStyle(
@@ -380,20 +224,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
               ).createShader(const Rect.fromLTWH(0, 0, 20, 20)),
           ),
         ),
-        backgroundColor: Colors.white,
       ),
-      backgroundColor: Colors.white,
-      textColor: canProceed ? Colors.black87 : Colors.grey,
-      borderColor: Colors.grey.shade300,
-      isLoading: _isLoading && _loadingProvider == 'google',
-      onPressed: canProceed
-          ? () => _signInWithGoogle(context)
-          : () => _showTermsWarning(context, l10n),
-      isArabic: isArabic,
-    )
-        .animate()
-        .fadeIn(delay: 500.ms, duration: 400.ms)
-        .slideX(begin: 0.1, end: 0, delay: 500.ms, duration: 400.ms);
+    );
   }
 
   Widget _buildAppleButton(AppLocalizations l10n) {
@@ -403,21 +235,30 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 
     return _buildSocialButton(
       label: l10n.continueWithApple,
-      icon: _buildIconContainer(
-        child: Icon(
-          Icons.apple,
-          size: _iconSize + 2,
-          color: Colors.black,
+      icon: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 1),
+            ),
+          ],
         ),
-        backgroundColor: Colors.white,
+        child: const Center(
+          child: Icon(Icons.apple, size: 20, color: Colors.black),
+        ),
       ),
-      // Fix: Solid black when active, dark gray when inactive
       backgroundColor: canProceed ? Colors.black : const Color(0xFF2C2C2C),
       textColor: canProceed ? Colors.white : Colors.white.withValues(alpha: 0.6),
       isLoading: _isLoading && _loadingProvider == 'apple',
       onPressed: canProceed
-          ? () => _signInWithApple(context)
-          : () => _showTermsWarning(context, l10n),
+          ? () => _signInWithApple()
+          : () => _showTermsWarning(l10n),
       isArabic: isArabic,
     )
         .animate()
@@ -425,49 +266,54 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         .slideX(begin: 0.1, end: 0, delay: 600.ms, duration: 400.ms);
   }
 
-  Widget _buildEmailButton(BuildContext context, AppLocalizations l10n) {
+  Widget _buildEmailButton(AppLocalizations l10n) {
     final canProceed = _termsAccepted && !_isLoading;
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode == 'ar';
+    final delay = Duration(milliseconds: Platform.isIOS ? 700 : 600);
 
     return _buildSocialButton(
       label: l10n.continueWithEmail,
-      // Fix: White icon container for consistency
-      icon: _buildIconContainer(
-        child: Icon(
-          Icons.email_outlined,
-          size: _iconSize,
-          color: canProceed ? AppColors.primary : Colors.grey,
+      icon: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 1),
+            ),
+          ],
         ),
-        backgroundColor: Colors.white,
+        child: Center(
+          child: Icon(
+            Icons.email_outlined,
+            size: 18,
+            color: canProceed ? AppColors.primary : Colors.grey,
+          ),
+        ),
       ),
-      // Fix: Higher contrast background
       backgroundColor: canProceed
           ? Colors.white.withValues(alpha: 0.2)
           : Colors.white.withValues(alpha: 0.1),
       textColor: canProceed ? Colors.white : Colors.white.withValues(alpha: 0.5),
-      // Fix: More visible border
       borderColor: canProceed
           ? Colors.white.withValues(alpha: 0.5)
           : Colors.white.withValues(alpha: 0.2),
       isLoading: _isLoading && _loadingProvider == 'email',
       onPressed: canProceed
           ? () => context.push(Routes.emailAuth)
-          : () => _showTermsWarning(context, l10n),
+          : () => _showTermsWarning(l10n),
       isArabic: isArabic,
     )
         .animate()
-        .fadeIn(
-            delay: Duration(milliseconds: Platform.isIOS ? 700 : 600),
-            duration: 400.ms)
-        .slideX(
-            begin: 0.1,
-            end: 0,
-            delay: Duration(milliseconds: Platform.isIOS ? 700 : 600),
-            duration: 400.ms);
+        .fadeIn(delay: delay, duration: 400.ms)
+        .slideX(begin: 0.1, end: 0, delay: delay, duration: 400.ms);
   }
 
-  /// Professional social button with perfectly aligned icons and press feedback
   Widget _buildSocialButton({
     required String label,
     required Widget icon,
@@ -512,13 +358,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    // Fixed width for icon area - ensures alignment
-                    SizedBox(
-                      width: _iconContainerSize,
-                      child: icon,
-                    ),
+                    SizedBox(width: 32, child: icon),
                     const SizedBox(width: 14),
-                    // Text takes remaining space
                     Expanded(
                       child: Text(
                         label,
@@ -540,29 +381,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                 ),
               ),
       ),
-    );
-  }
-
-  /// Consistent icon container for all social buttons
-  Widget _buildIconContainer({
-    required Widget child,
-    required Color backgroundColor,
-  }) {
-    return Container(
-      width: _iconContainerSize,
-      height: _iconContainerSize,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Center(child: child),
     );
   }
 
@@ -619,9 +437,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           ),
         ),
       ],
-    )
-        .animate()
-        .fadeIn(delay: 800.ms, duration: 400.ms);
+    ).animate().fadeIn(delay: 800.ms, duration: 400.ms);
   }
 
   Widget _buildGuestButton(AppLocalizations l10n) {
@@ -631,19 +447,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 
     return _PressableButton(
       onPressed: canProceed
-          ? () => _continueAsGuest(context)
-          : () => _showTermsWarning(context, l10n),
+          ? () => _continueAsGuest()
+          : () => _showTermsWarning(l10n),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         decoration: BoxDecoration(
-          // Fix: Higher contrast background
           color: canProceed
               ? Colors.white.withValues(alpha: 0.15)
               : Colors.white.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            // Fix: More visible border
             color: canProceed
                 ? Colors.white.withValues(alpha: 0.4)
                 : Colors.white.withValues(alpha: 0.15),
@@ -653,7 +467,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Icon in a subtle circle for consistency
             Container(
               width: 36,
               height: 36,
@@ -664,7 +477,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
               child: Icon(
                 Icons.explore_outlined,
                 size: 20,
-                // Fix: Higher contrast icon
                 color: canProceed
                     ? Colors.white
                     : Colors.white.withValues(alpha: 0.5),
@@ -681,7 +493,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                       ? GoogleFonts.cairo(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          // Fix: Higher contrast text
                           color: canProceed
                               ? Colors.white
                               : Colors.white.withValues(alpha: 0.6),
@@ -699,7 +510,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                   style: isArabic
                       ? GoogleFonts.cairo(
                           fontSize: 12,
-                          // Fix: Higher contrast subtitle
                           color: canProceed
                               ? Colors.white.withValues(alpha: 0.8)
                               : Colors.white.withValues(alpha: 0.4),
@@ -716,9 +526,31 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           ],
         ),
       ),
-    )
-        .animate()
-        .fadeIn(delay: 900.ms, duration: 400.ms);
+    ).animate().fadeIn(delay: 900.ms, duration: 400.ms);
+  }
+
+  Widget _buildTermsContainer(AppLocalizations l10n, ThemeData theme) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        context.responsivePadding,
+        12,
+        context.responsivePadding,
+        12,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.1),
+        border: Border(
+          top: BorderSide(
+            color: Colors.white.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
+      ),
+      child: ResponsiveCenter(
+        maxWidth: 500,
+        child: _buildTerms(l10n, theme),
+      ),
+    );
   }
 
   Widget _buildTerms(AppLocalizations l10n, ThemeData theme) {
@@ -831,7 +663,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
     );
   }
 
-  void _showTermsWarning(BuildContext context, AppLocalizations l10n) {
+  void _showTermsWarning(AppLocalizations l10n) {
     HapticFeedback.mediumImpact();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -851,7 +683,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
     );
   }
 
-  Future<void> _signInWithGoogle(BuildContext context) async {
+  Future<void> _signInWithGoogle() async {
     setState(() {
       _isLoading = true;
       _loadingProvider = 'google';
@@ -869,7 +701,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
     }
   }
 
-  Future<void> _signInWithApple(BuildContext context) async {
+  Future<void> _signInWithApple() async {
     setState(() {
       _isLoading = true;
       _loadingProvider = 'apple';
@@ -887,7 +719,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
     }
   }
 
-  Future<void> _continueAsGuest(BuildContext context) async {
+  Future<void> _continueAsGuest() async {
     setState(() {
       _isLoading = true;
       _loadingProvider = 'guest';
@@ -905,7 +737,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
     }
   }
 
-  void _showErrorSnackBar(BuildContext context, String message) {
+  void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(

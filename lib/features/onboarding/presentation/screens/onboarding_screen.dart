@@ -1,6 +1,3 @@
-import 'dart:math' as math;
-
-import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -11,10 +8,17 @@ import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/backgrounds/onboarding_background.dart';
 import '../../../../presentation/providers/onboarding_provider.dart';
 import '../../../../presentation/widgets/premium_button.dart';
 
-/// Premium animated onboarding carousel screen
+/// Premium animated onboarding carousel screen with Explorer's Journey theme.
+///
+/// Features:
+/// - 4-page carousel introducing app features
+/// - Animated illustrations with pulse effect
+/// - Dynamic page indicators
+/// - Smooth navigation with haptic feedback
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -23,20 +27,12 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 }
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   bool _isLoading = false;
 
-  late AnimationController _particleController;
   late AnimationController _pulseController;
-  late AnimationController _flagsController;
-
-  // Country codes for floating flags - matching splash/auth screens
-  static const List<String> _flagCodes = [
-    'JO', 'PS', 'SA', 'AE', 'KW', 'EG', 'US', 'GB',
-    'FR', 'DE', 'JP', 'CN', 'BR', 'IN', 'AU', 'CA',
-  ];
 
   @override
   void initState() {
@@ -50,38 +46,26 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       ),
     );
 
-    _particleController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 15),
-    )..repeat();
-
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     )..repeat(reverse: true);
-
-    _flagsController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 12),
-    )..repeat();
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    _particleController.dispose();
     _pulseController.dispose();
-    _flagsController.dispose();
     super.dispose();
   }
 
   List<_OnboardingPageData> _buildPages(AppLocalizations l10n) {
     return [
       _OnboardingPageData(
-        icon: Icons.public_rounded, // Globe - Explore the world
+        icon: Icons.public_rounded,
         title: l10n.onboardingExploreTitle,
         description: l10n.onboardingExploreDescription,
-        color: const Color(0xFF4FC3F7), // Matching globe blue
+        color: const Color(0xFF4FC3F7), // Globe blue
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -89,7 +73,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         ),
       ),
       _OnboardingPageData(
-        icon: Icons.explore_rounded, // Compass - Quiz/Navigation
+        icon: Icons.explore_rounded,
         title: l10n.onboardingQuizTitle,
         description: l10n.onboardingQuizDescription,
         color: const Color(0xFFFFB74D), // Warm amber
@@ -100,7 +84,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         ),
       ),
       _OnboardingPageData(
-        icon: Icons.travel_explore_rounded, // AI Travel/Smart exploration
+        icon: Icons.travel_explore_rounded,
         title: l10n.onboardingAiTitle,
         description: l10n.onboardingAiDescription,
         color: const Color(0xFF4DB6AC), // Teal
@@ -111,7 +95,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         ),
       ),
       _OnboardingPageData(
-        icon: Icons.emoji_events_rounded, // Trophy with map theme
+        icon: Icons.emoji_events_rounded,
         title: l10n.onboardingAchievementsTitle,
         description: l10n.onboardingAchievementsDescription,
         color: const Color(0xFFFFD54F), // Gold
@@ -131,177 +115,40 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     final pages = _buildPages(l10n);
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          // Dark gradient matching splash/auth/language screens
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0D1B2A),
-              Color(0xFF1B263B),
-              Color(0xFF415A77),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
-        child: Stack(
-          children: [
-            // Gradient orbs for visual depth
-            _buildGradientOrbs(pages[_currentPage].color),
-
-            // Floating flags background
-            ..._buildFloatingFlags(),
-
-            // Main content
-            SafeArea(
-              child: Column(
-                children: [
-                  _buildSkipButton(l10n, isArabic, pages[_currentPage].color),
-                  Expanded(
-                    child: PageView.builder(
-                      controller: _pageController,
-                      onPageChanged: (page) {
-                        HapticFeedback.selectionClick();
-                        setState(() => _currentPage = page);
-                      },
-                      itemCount: pages.length,
-                      reverse: isArabic,
-                      itemBuilder: (context, index) => _OnboardingPage(
-                        data: pages[index],
-                        isActive: index == _currentPage,
-                        pulseController: _pulseController,
-                      ),
-                    ),
+      body: OnboardingBackground(
+        showFlags: true,
+        flagCount: 12,
+        primaryOrbColor: pages[_currentPage].color,
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildSkipButton(l10n, isArabic),
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (page) {
+                    HapticFeedback.selectionClick();
+                    setState(() => _currentPage = page);
+                  },
+                  itemCount: pages.length,
+                  reverse: isArabic,
+                  itemBuilder: (context, index) => _OnboardingPage(
+                    data: pages[index],
+                    isActive: index == _currentPage,
+                    pulseController: _pulseController,
                   ),
-                  _buildPageIndicators(pages),
-                  _buildNavigationButtons(l10n, isArabic, pages),
-                ],
+                ),
               ),
-            ),
-          ],
+              _buildPageIndicators(pages),
+              _buildNavigationButtons(l10n, isArabic, pages),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Gradient orbs for visual depth (matching other screens)
-  Widget _buildGradientOrbs(Color accentColor) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -80,
-          right: -80,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
-            width: 250,
-            height: 250,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  accentColor.withValues(alpha: 0.25),
-                  accentColor.withValues(alpha: 0.0),
-                ],
-              ),
-            ),
-          ),
-        )
-            .animate(onPlay: (c) => c.repeat(reverse: true))
-            .scale(
-              begin: const Offset(1, 1),
-              end: const Offset(1.15, 1.15),
-              duration: 4.seconds,
-            ),
-        Positioned(
-          bottom: -120,
-          left: -80,
-          child: Container(
-            width: 300,
-            height: 300,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  AppColors.tertiary.withValues(alpha: 0.15),
-                  AppColors.tertiary.withValues(alpha: 0.0),
-                ],
-              ),
-            ),
-          ),
-        )
-            .animate(onPlay: (c) => c.repeat(reverse: true))
-            .scale(
-              begin: const Offset(1.15, 1.15),
-              end: const Offset(1, 1),
-              duration: 5.seconds,
-            ),
-      ],
-    );
-  }
-
-  // Floating flags positioned around edges (matching auth screen)
-  List<Widget> _buildFloatingFlags() {
-    final random = math.Random(42);
-    return List.generate(10, (index) {
-      // Position flags around edges, avoiding center content area
-      final isLeftSide = index % 2 == 0;
-      final verticalPosition = 0.1 + (index / 10) * 0.8;
-      final flagSize = 20 + random.nextDouble() * 10;
-      final flagCode = _flagCodes[index % _flagCodes.length];
-
-      return AnimatedBuilder(
-        animation: _flagsController,
-        builder: (context, child) {
-          final size = MediaQuery.of(context).size;
-          final progress = (_flagsController.value + (index * 0.1)) % 1.0;
-
-          // Gentle floating motion
-          final baseX = isLeftSide ? 10.0 : size.width - flagSize - 10;
-          final x = baseX + math.sin(progress * 2 * math.pi) * 15;
-          final y = verticalPosition * size.height +
-              math.cos(progress * 2 * math.pi + index) * 10;
-
-          return Positioned(
-            left: isLeftSide ? x : null,
-            right: isLeftSide ? null : size.width - x - flagSize,
-            top: y,
-            child: child!,
-          );
-        },
-        child: Opacity(
-          opacity: 0.4,
-          child: Container(
-            width: flagSize,
-            height: flagSize,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.3),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: ClipOval(
-              child: CountryFlag.fromCountryCode(
-                flagCode,
-                width: flagSize,
-                height: flagSize,
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-  }
-
-  Widget _buildSkipButton(AppLocalizations l10n, bool isArabic, Color color) {
+  Widget _buildSkipButton(AppLocalizations l10n, bool isArabic) {
     return Padding(
       padding: const EdgeInsets.all(AppDimensions.paddingMD),
       child: Align(
@@ -409,10 +256,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       }
     } catch (e) {
       if (context.mounted) {
-        _showErrorSnackBar(
-          context,
-          AppLocalizations.of(context).errorUnknown,
-        );
+        _showErrorSnackBar(AppLocalizations.of(context).errorUnknown);
       }
     } finally {
       if (mounted) {
@@ -421,7 +265,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     }
   }
 
-  void _showErrorSnackBar(BuildContext context, String message) {
+  void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -440,6 +284,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   }
 }
 
+/// Data model for onboarding page content
 class _OnboardingPageData {
   const _OnboardingPageData({
     required this.icon,
@@ -456,6 +301,7 @@ class _OnboardingPageData {
   final Gradient gradient;
 }
 
+/// Individual onboarding page with animated content
 class _OnboardingPage extends StatelessWidget {
   const _OnboardingPage({
     required this.data,
@@ -627,6 +473,7 @@ class _OnboardingPage extends StatelessWidget {
   }
 }
 
+/// Animated page indicator dot
 class _AnimatedPageIndicator extends StatelessWidget {
   const _AnimatedPageIndicator({
     required this.isActive,
@@ -644,11 +491,12 @@ class _AnimatedPageIndicator extends StatelessWidget {
       width: isActive ? 32 : 10,
       height: 10,
       decoration: BoxDecoration(
-        // Use accent color when active, semi-transparent white when inactive
         color: isActive ? color : Colors.white.withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: isActive ? color.withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.15),
+          color: isActive
+              ? color.withValues(alpha: 0.6)
+              : Colors.white.withValues(alpha: 0.15),
           width: 1,
         ),
         boxShadow: isActive
