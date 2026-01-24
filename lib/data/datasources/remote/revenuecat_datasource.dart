@@ -91,6 +91,10 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
 
   @override
   Future<CustomerInfo> getCustomerInfo() async {
+    if (!_isInitialized || _apiKey.isEmpty) {
+      throw ServerException(message: 'RevenueCat not configured');
+    }
+
     try {
       final customerInfo = await Purchases.getCustomerInfo();
       logger.debug('Got customer info', tag: 'RevenueCat');
@@ -103,6 +107,10 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
 
   @override
   Future<Offerings?> getOfferings() async {
+    if (!_isInitialized || _apiKey.isEmpty) {
+      throw ServerException(message: 'RevenueCat not configured');
+    }
+
     try {
       final offerings = await Purchases.getOfferings();
       logger.debug(
@@ -180,6 +188,11 @@ class RevenueCatDataSource implements IRevenueCatDataSource {
 
   @override
   Stream<CustomerInfo> get customerInfoStream {
+    // Return empty stream if not initialized (API key missing)
+    if (!_isInitialized && _apiKey.isEmpty) {
+      return const Stream.empty();
+    }
+
     // Create a stream from the CustomerInfo listener
     // ignore: close_sinks - intentionally long-lived for subscription updates
     final controller = StreamController<CustomerInfo>.broadcast();

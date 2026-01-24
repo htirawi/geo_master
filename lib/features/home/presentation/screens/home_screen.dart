@@ -27,6 +27,7 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       body: CustomScrollView(
+        cacheExtent: 500,
         slivers: [
           // Immersive Hero Header
           SliverToBoxAdapter(
@@ -224,6 +225,7 @@ class _ExplorerHeader extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                             overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                       ],
