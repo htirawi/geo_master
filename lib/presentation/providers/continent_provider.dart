@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../core/error/failures.dart';
 import '../../domain/entities/continent.dart';
 import '../../domain/entities/country.dart';
@@ -82,7 +82,7 @@ class ContinentListNotifier extends StateNotifier<AsyncValue<ContinentListState>
 /// Continent list provider
 final continentListProvider =
     StateNotifierProvider<ContinentListNotifier, AsyncValue<ContinentListState>>((ref) {
-  final repository = sl<IWorldExplorationRepository>();
+  final repository = ref.watch(worldExplorationRepositoryProvider);
   final notifier = ContinentListNotifier(repository);
   notifier.loadContinents();
   return notifier;
@@ -97,7 +97,7 @@ final allContinentsProvider = Provider<List<Continent>>((ref) {
 /// Continent by ID provider
 final continentByIdProvider =
     FutureProvider.family<Continent?, String>((ref, id) async {
-  final repository = sl<IWorldExplorationRepository>();
+  final repository = ref.watch(worldExplorationRepositoryProvider);
 
   final result = await repository.getContinentById(id);
   return result.fold(
@@ -109,7 +109,7 @@ final continentByIdProvider =
 /// Countries by continent provider
 final countriesByContinentProvider =
     FutureProvider.family<List<Country>, String>((ref, continentId) async {
-  final repository = sl<IWorldExplorationRepository>();
+  final repository = ref.watch(worldExplorationRepositoryProvider);
 
   final result = await repository.getCountriesByContinent(continentId);
   return result.fold(
@@ -151,7 +151,7 @@ class ContinentStats {
 /// Continent stats provider
 final continentStatsProvider =
     FutureProvider.family<ContinentStats, String>((ref, continentId) async {
-  final repository = sl<IWorldExplorationRepository>();
+  final repository = ref.watch(worldExplorationRepositoryProvider);
 
   final continentResult = await repository.getContinentById(continentId);
   final progressResult = await repository.getContinentProgress(continentId);

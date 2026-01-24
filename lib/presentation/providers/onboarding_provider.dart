@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 
 /// Onboarding state
 class OnboardingState {
@@ -117,7 +116,7 @@ class OnboardingStateNotifier extends StateNotifier<AsyncValue<OnboardingState>>
 final onboardingStateProvider =
     StateNotifierProvider<OnboardingStateNotifier, AsyncValue<OnboardingState>>(
         (ref) {
-  final prefs = sl<SharedPreferences>();
+  final prefs = ref.watch(sharedPreferencesProvider);
   return OnboardingStateNotifier(prefs);
 });
 

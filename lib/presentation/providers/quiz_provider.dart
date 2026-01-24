@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../core/error/failures.dart';
 import '../../domain/entities/quiz.dart';
 import '../../domain/repositories/i_quiz_repository.dart';
@@ -673,7 +673,7 @@ class QuizSessionNotifier extends StateNotifier<AsyncValue<QuizState>> {
 /// Quiz state provider
 final quizStateProvider =
     StateNotifierProvider<QuizSessionNotifier, AsyncValue<QuizState>>((ref) {
-  final quizRepository = sl<IQuizRepository>();
+  final quizRepository = ref.watch(quizRepositoryProvider);
   return QuizSessionNotifier(
     quizRepository,
     () => ref.read(currentUserProvider)?.id,
@@ -740,7 +740,7 @@ final quizScoreProvider = Provider<int>((ref) {
 
 /// Quiz history provider
 final quizHistoryProvider = FutureProvider<List<QuizResult>>((ref) async {
-  final quizRepository = sl<IQuizRepository>();
+  final quizRepository = ref.watch(quizRepositoryProvider);
   final user = ref.watch(currentUserProvider);
 
   if (user == null) return [];
@@ -754,7 +754,7 @@ final quizHistoryProvider = FutureProvider<List<QuizResult>>((ref) async {
 
 /// Quiz statistics provider
 final quizStatisticsProvider = FutureProvider<QuizStatistics>((ref) async {
-  final quizRepository = sl<IQuizRepository>();
+  final quizRepository = ref.watch(quizRepositoryProvider);
   final user = ref.watch(currentUserProvider);
 
   if (user == null) return QuizStatistics.empty();
@@ -768,7 +768,7 @@ final quizStatisticsProvider = FutureProvider<QuizStatistics>((ref) async {
 
 /// Daily challenge provider
 final dailyChallengeProvider = FutureProvider<Quiz?>((ref) async {
-  final quizRepository = sl<IQuizRepository>();
+  final quizRepository = ref.watch(quizRepositoryProvider);
 
   final result = await quizRepository.getDailyChallenge();
   return result.fold(
@@ -779,7 +779,7 @@ final dailyChallengeProvider = FutureProvider<Quiz?>((ref) async {
 
 /// Is daily challenge completed provider
 final isDailyChallengeCompletedProvider = FutureProvider<bool>((ref) async {
-  final quizRepository = sl<IQuizRepository>();
+  final quizRepository = ref.watch(quizRepositoryProvider);
   final user = ref.watch(currentUserProvider);
 
   if (user == null) return false;
@@ -794,7 +794,7 @@ final isDailyChallengeCompletedProvider = FutureProvider<bool>((ref) async {
 /// Quiz history restore provider
 /// Automatically restores quiz history from Firestore when user logs in
 final quizHistoryRestoreProvider = FutureProvider<void>((ref) async {
-  final quizRepository = sl<IQuizRepository>();
+  final quizRepository = ref.watch(quizRepositoryProvider);
   final user = ref.watch(currentUserProvider);
 
   if (user == null || user.isAnonymous) return;
@@ -807,7 +807,7 @@ final quizHistoryRestoreProvider = FutureProvider<void>((ref) async {
 /// Call this to manually sync local quiz history to Firestore
 final syncQuizHistoryProvider =
     FutureProvider.family<void, String>((ref, userId) async {
-  final quizRepository = sl<IQuizRepository>();
+  final quizRepository = ref.watch(quizRepositoryProvider);
   await quizRepository.syncQuizHistoryToCloud(userId);
 });
 

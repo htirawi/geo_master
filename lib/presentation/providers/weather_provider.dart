@@ -1,14 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
-import '../../data/datasources/remote/weather_datasource.dart';
+import '../../app/di/repository_providers.dart';
 import '../../data/models/weather_model.dart';
 import '../../domain/entities/country.dart';
-
-/// Weather data source provider
-final weatherDataSourceProvider = Provider<IWeatherDataSource>((ref) {
-  return sl<IWeatherDataSource>();
-});
 
 /// Weather by capital city provider
 /// Uses the country's capital to fetch weather data

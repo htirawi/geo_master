@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../data/models/news_model.dart';
 import '../../data/models/unsplash_model.dart';
 import '../../data/models/youtube_model.dart';
@@ -9,7 +9,7 @@ import '../../domain/repositories/i_media_repository.dart';
 /// Country photos provider
 final countryPhotosProvider = FutureProvider.family<List<UnsplashPhotoModel>, String>(
   (ref, countryName) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getCountryPhotos(countryName);
     return result.fold(
@@ -22,7 +22,7 @@ final countryPhotosProvider = FutureProvider.family<List<UnsplashPhotoModel>, St
 /// Place photos provider
 final placePhotosProvider = FutureProvider.family<List<UnsplashPhotoModel>, String>(
   (ref, placeName) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getPlacePhotos(placeName);
     return result.fold(
@@ -35,7 +35,7 @@ final placePhotosProvider = FutureProvider.family<List<UnsplashPhotoModel>, Stri
 /// Search photos provider
 final searchPhotosProvider = FutureProvider.family<List<UnsplashPhotoModel>, String>(
   (ref, query) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.searchPhotos(query);
     return result.fold(
@@ -48,7 +48,7 @@ final searchPhotosProvider = FutureProvider.family<List<UnsplashPhotoModel>, Str
 /// Random photos provider
 final randomPhotosProvider = FutureProvider.family<List<UnsplashPhotoModel>, String?>(
   (ref, query) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getRandomPhotos(query: query, count: 5);
     return result.fold(
@@ -61,7 +61,7 @@ final randomPhotosProvider = FutureProvider.family<List<UnsplashPhotoModel>, Str
 /// Country videos provider
 final countryVideosProvider = FutureProvider.family<List<YouTubeVideoModel>, String>(
   (ref, countryName) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getCountryVideos(countryName);
     return result.fold(
@@ -74,7 +74,7 @@ final countryVideosProvider = FutureProvider.family<List<YouTubeVideoModel>, Str
 /// Place videos provider (virtual tours)
 final placeVideosProvider = FutureProvider.family<List<YouTubeVideoModel>, String>(
   (ref, placeName) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getPlaceVideos(placeName);
     return result.fold(
@@ -87,7 +87,7 @@ final placeVideosProvider = FutureProvider.family<List<YouTubeVideoModel>, Strin
 /// Search videos provider
 final searchVideosProvider = FutureProvider.family<List<YouTubeVideoModel>, String>(
   (ref, query) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.searchVideos(query);
     return result.fold(
@@ -100,7 +100,7 @@ final searchVideosProvider = FutureProvider.family<List<YouTubeVideoModel>, Stri
 /// Country news provider
 final countryNewsProvider = FutureProvider.family<List<NewsArticleModel>, String>(
   (ref, countryName) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getCountryNews(countryName);
     return result.fold(
@@ -113,7 +113,7 @@ final countryNewsProvider = FutureProvider.family<List<NewsArticleModel>, String
 /// Top headlines provider
 final topHeadlinesProvider = FutureProvider.family<List<NewsArticleModel>, String?>(
   (ref, country) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getTopHeadlines(country: country);
     return result.fold(
@@ -126,7 +126,7 @@ final topHeadlinesProvider = FutureProvider.family<List<NewsArticleModel>, Strin
 /// Wikipedia summary provider
 final wikipediaSummaryProvider = FutureProvider.family<WikipediaSummary?, String>(
   (ref, title) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getWikipediaSummary(title);
     return result.fold(
@@ -211,7 +211,7 @@ class MediaGalleryNotifier extends StateNotifier<MediaGalleryState> {
 final mediaGalleryProvider = StateNotifierProvider.family<
     MediaGalleryNotifier, MediaGalleryState, String>(
   (ref, countryName) {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
     final notifier = MediaGalleryNotifier(repository);
     notifier.loadCountryMedia(countryName);
     return notifier;

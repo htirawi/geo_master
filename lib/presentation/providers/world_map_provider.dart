@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../core/error/failures.dart';
 import '../../domain/entities/country.dart';
 import '../../domain/entities/country_progress.dart';
@@ -164,7 +164,7 @@ class WorldMapNotifier extends StateNotifier<AsyncValue<WorldMapState>> {
 /// World map provider
 final worldMapProvider =
     StateNotifierProvider<WorldMapNotifier, AsyncValue<WorldMapState>>((ref) {
-  final repository = sl<IWorldExplorationRepository>();
+  final repository = ref.watch(worldExplorationRepositoryProvider);
   final notifier = WorldMapNotifier(repository);
   notifier.loadMarkers();
   return notifier;
@@ -221,7 +221,7 @@ final mapFilterProvider = StateProvider<MapFilterState>((ref) {
 
 /// Random country provider for "spin the globe"
 final spinGlobeCountryProvider = FutureProvider<Country?>((ref) async {
-  final repository = sl<IWorldExplorationRepository>();
+  final repository = ref.watch(worldExplorationRepositoryProvider);
 
   final result = await repository.getRandomCountry();
   return result.fold(
@@ -302,7 +302,7 @@ final asyncMapSearchResultsProvider =
     FutureProvider.family<List<Country>, String>((ref, query) async {
   if (query.isEmpty || query.length < 2) return [];
 
-  final repository = sl<IWorldExplorationRepository>();
+  final repository = ref.watch(worldExplorationRepositoryProvider);
   final result = await repository.searchCountries(query);
   return result.fold(
     (failure) => [],
@@ -312,7 +312,7 @@ final asyncMapSearchResultsProvider =
 
 /// Random country provider for "spin the globe" feature
 final randomCountryProvider = FutureProvider.autoDispose<Country?>((ref) async {
-  final repository = sl<IWorldExplorationRepository>();
+  final repository = ref.watch(worldExplorationRepositoryProvider);
   final result = await repository.getRandomCountry();
   return result.fold(
     (failure) => null,

@@ -1,13 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../core/services/translation_service.dart';
-
-/// Translation service provider
-/// Provides access to the layered translation service for Arabic localization
-final translationServiceProvider = Provider<TranslationService>((ref) {
-  return sl<TranslationService>();
-});
 
 /// Translation service initialization state
 final translationServiceInitProvider = FutureProvider<void>((ref) async {

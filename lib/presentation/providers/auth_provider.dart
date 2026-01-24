@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../core/error/failures.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/i_auth_repository.dart';
@@ -164,7 +164,7 @@ class AuthStateNotifier extends StateNotifier<AsyncValue<AuthState>> {
 /// Auth state provider
 final authStateProvider =
     StateNotifierProvider<AuthStateNotifier, AsyncValue<AuthState>>((ref) {
-  final authRepository = sl<IAuthRepository>();
+  final authRepository = ref.watch(authRepositoryProvider);
   return AuthStateNotifier(authRepository);
 });
 

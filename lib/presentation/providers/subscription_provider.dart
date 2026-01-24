@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../core/error/failures.dart';
 import '../../domain/entities/subscription.dart';
 import '../../domain/repositories/i_subscription_repository.dart';
@@ -199,7 +199,7 @@ class SubscriptionNotifier extends StateNotifier<AsyncValue<SubscriptionState>> 
 final subscriptionProvider =
     StateNotifierProvider<SubscriptionNotifier, AsyncValue<SubscriptionState>>(
         (ref) {
-  final subscriptionRepository = sl<ISubscriptionRepository>();
+  final subscriptionRepository = ref.watch(subscriptionRepositoryProvider);
   final notifier = SubscriptionNotifier(subscriptionRepository);
 
   // Auto-initialize when user is authenticated
@@ -256,7 +256,7 @@ final premiumOfferingsProvider = Provider<List<SubscriptionOffering>>((ref) {
 /// Feature access provider
 final featureAccessProvider =
     FutureProvider.family<bool, SubscriptionFeature>((ref, feature) async {
-  final subscriptionRepository = sl<ISubscriptionRepository>();
+  final subscriptionRepository = ref.watch(subscriptionRepositoryProvider);
   final user = ref.watch(currentUserProvider);
 
   if (user == null) return false;

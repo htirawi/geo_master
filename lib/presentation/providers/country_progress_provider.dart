@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../domain/entities/country_progress.dart';
 import '../../domain/repositories/i_world_exploration_repository.dart';
 
@@ -169,7 +169,7 @@ class CountryProgressNotifier extends StateNotifier<AsyncValue<CountryProgressSt
 final countryProgressProvider = StateNotifierProvider.family<
     CountryProgressNotifier, AsyncValue<CountryProgressState>, String>(
   (ref, countryCode) {
-    final repository = sl<IWorldExplorationRepository>();
+    final repository = ref.watch(worldExplorationRepositoryProvider);
     final notifier = CountryProgressNotifier(repository);
     notifier.loadProgress(countryCode);
     return notifier;
@@ -179,7 +179,7 @@ final countryProgressProvider = StateNotifierProvider.family<
 /// Get progress for a country
 final progressForCountryProvider = FutureProvider.family<CountryProgress, String>(
   (ref, countryCode) async {
-    final repository = sl<IWorldExplorationRepository>();
+    final repository = ref.watch(worldExplorationRepositoryProvider);
 
     final result = await repository.getCountryProgress(countryCode);
     return result.fold(
@@ -192,7 +192,7 @@ final progressForCountryProvider = FutureProvider.family<CountryProgress, String
 /// All country progress provider
 final allCountryProgressProvider = FutureProvider<Map<String, CountryProgress>>(
   (ref) async {
-    final repository = sl<IWorldExplorationRepository>();
+    final repository = ref.watch(worldExplorationRepositoryProvider);
 
     final result = await repository.getAllCountryProgress();
     return result.fold(
@@ -205,7 +205,7 @@ final allCountryProgressProvider = FutureProvider<Map<String, CountryProgress>>(
 /// Favorite country codes provider
 final favoriteCountryCodesProvider = FutureProvider<List<String>>(
   (ref) async {
-    final repository = sl<IWorldExplorationRepository>();
+    final repository = ref.watch(worldExplorationRepositoryProvider);
 
     final result = await repository.getFavoriteCountryCodes();
     return result.fold(
@@ -218,7 +218,7 @@ final favoriteCountryCodesProvider = FutureProvider<List<String>>(
 /// Is country favorite provider
 final isCountryFavoriteProvider = FutureProvider.family<bool, String>(
   (ref, countryCode) async {
-    final repository = sl<IWorldExplorationRepository>();
+    final repository = ref.watch(worldExplorationRepositoryProvider);
 
     final result = await repository.getCountryProgress(countryCode);
     return result.fold(

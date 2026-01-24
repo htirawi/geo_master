@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../core/error/failures.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/i_user_repository.dart';
@@ -212,7 +212,7 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfileState>> {
 final userProfileProvider =
     StateNotifierProvider<UserProfileNotifier, AsyncValue<UserProfileState>>(
         (ref) {
-  final userRepository = sl<IUserRepository>();
+  final userRepository = ref.watch(userRepositoryProvider);
   final notifier = UserProfileNotifier(userRepository);
 
   // Auto-load when user is authenticated
@@ -267,7 +267,7 @@ final userStreakProvider = Provider<int>((ref) {
 /// Leaderboard provider
 final leaderboardProvider = FutureProvider.family<List<LeaderboardEntry>,
     LeaderboardType>((ref, type) async {
-  final userRepository = sl<IUserRepository>();
+  final userRepository = ref.watch(userRepositoryProvider);
 
   final result = await userRepository.getLeaderboard(type: type);
   return result.fold(
@@ -278,7 +278,7 @@ final leaderboardProvider = FutureProvider.family<List<LeaderboardEntry>,
 
 /// User rank provider
 final userRankProvider = FutureProvider<int>((ref) async {
-  final userRepository = sl<IUserRepository>();
+  final userRepository = ref.watch(userRepositoryProvider);
   final user = ref.watch(currentUserProvider);
 
   if (user == null) return 0;
@@ -292,7 +292,7 @@ final userRankProvider = FutureProvider<int>((ref) async {
 
 /// Learned countries provider
 final learnedCountriesProvider = FutureProvider<List<String>>((ref) async {
-  final userRepository = sl<IUserRepository>();
+  final userRepository = ref.watch(userRepositoryProvider);
   final user = ref.watch(currentUserProvider);
 
   if (user == null) return [];

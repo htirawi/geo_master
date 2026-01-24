@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../data/datasources/remote/timezone_datasource.dart';
 import '../../domain/repositories/i_media_repository.dart';
 
 /// Timezone info provider
 final timezoneInfoProvider = FutureProvider.family<TimezoneInfo?, String>(
   (ref, timezone) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getTimezoneInfo(timezone);
     return result.fold(
@@ -22,7 +22,7 @@ final timezoneInfoProvider = FutureProvider.family<TimezoneInfo?, String>(
 /// Country time provider (based on timezone)
 final countryTimeProvider = FutureProvider.family<TimezoneInfo?, String>(
   (ref, timezone) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getCountryTime(timezone);
     return result.fold(
@@ -36,7 +36,7 @@ final countryTimeProvider = FutureProvider.family<TimezoneInfo?, String>(
 final timeDifferenceProvider = FutureProvider.family<Duration?, (String, String)>(
   (ref, params) async {
     final (fromTimezone, toTimezone) = params;
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getTimeDifference(fromTimezone, toTimezone);
     return result.fold(
@@ -141,7 +141,7 @@ class WorldClockNotifier extends StateNotifier<WorldClockState> {
 final worldClockProvider =
     StateNotifierProvider.family<WorldClockNotifier, WorldClockState, String>(
   (ref, timezone) {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
     final notifier = WorldClockNotifier(repository);
     notifier.loadTime(timezone);
     return notifier;

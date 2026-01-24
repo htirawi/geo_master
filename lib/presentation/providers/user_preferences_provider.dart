@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 
 /// Local learning preferences (stored in SharedPreferences)
 /// Used for personalization before/without cloud sync
@@ -148,7 +147,7 @@ class LocalLearningPreferencesNotifier extends StateNotifier<LocalLearningPrefer
 /// Local learning preferences provider
 final localLearningPreferencesProvider =
     StateNotifierProvider<LocalLearningPreferencesNotifier, LocalLearningPreferences>((ref) {
-  final prefs = sl<SharedPreferences>();
+  final prefs = ref.watch(sharedPreferencesProvider);
   return LocalLearningPreferencesNotifier(prefs);
 });
 
@@ -353,7 +352,7 @@ class StreakDataNotifier extends StateNotifier<StreakData> {
 
 /// Streak data provider
 final streakDataProvider = StateNotifierProvider<StreakDataNotifier, StreakData>((ref) {
-  final prefs = sl<SharedPreferences>();
+  final prefs = ref.watch(sharedPreferencesProvider);
   return StreakDataNotifier(prefs);
 });
 

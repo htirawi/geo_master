@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../core/error/failures.dart';
 import '../../core/services/speech_service.dart';
 import '../../core/services/tts_service.dart';
@@ -474,7 +474,7 @@ class AiTutorNotifier extends StateNotifier<AsyncValue<AiTutorState>> {
 /// AI Tutor state provider
 final aiTutorProvider =
     StateNotifierProvider<AiTutorNotifier, AsyncValue<AiTutorState>>((ref) {
-  final aiTutorRepository = sl<IAiTutorRepository>();
+  final aiTutorRepository = ref.watch(aiTutorRepositoryProvider);
   final notifier = AiTutorNotifier(aiTutorRepository);
 
   // Auto-initialize when user is authenticated
@@ -542,7 +542,7 @@ final messageReactionsProvider = Provider<Map<String, List<String>>>((ref) {
 
 /// Bookmarks provider
 final bookmarksProvider = FutureProvider<List<Bookmark>>((ref) async {
-  final aiTutorRepository = sl<IAiTutorRepository>();
+  final aiTutorRepository = ref.watch(aiTutorRepositoryProvider);
   final user = ref.watch(currentUserProvider);
 
   if (user == null) return [];
@@ -572,7 +572,7 @@ final tutorContextProvider = Provider<TutorContext>((ref) {
 
 /// Can send message provider
 final canSendMessageProvider = FutureProvider<bool>((ref) async {
-  final aiTutorRepository = sl<IAiTutorRepository>();
+  final aiTutorRepository = ref.watch(aiTutorRepositoryProvider);
   final user = ref.watch(currentUserProvider);
 
   if (user == null) return false;

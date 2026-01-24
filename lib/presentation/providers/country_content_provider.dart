@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../core/error/failures.dart';
 import '../../domain/entities/cultural_item.dart';
 import '../../domain/entities/phrase.dart';
@@ -122,7 +122,7 @@ class CountryContentNotifier extends StateNotifier<AsyncValue<CountryContentStat
 /// Country content provider
 final countryContentProvider = StateNotifierProvider.family<
     CountryContentNotifier, AsyncValue<CountryContentState>, String>((ref, countryCode) {
-  final repository = sl<ICountryContentRepository>();
+  final repository = ref.watch(countryContentRepositoryProvider);
   return CountryContentNotifier(repository);
 });
 
@@ -130,7 +130,7 @@ final countryContentProvider = StateNotifierProvider.family<
 final countryOverviewProvider = FutureProvider.family<CountryOverview?, (String, String)>(
   (ref, params) async {
     final (countryCode, countryName) = params;
-    final repository = sl<ICountryContentRepository>();
+    final repository = ref.watch(countryContentRepositoryProvider);
 
     final result = await repository.getCountryOverview(countryName);
     return result.fold((_) => null, (overview) => overview);
@@ -140,7 +140,7 @@ final countryOverviewProvider = FutureProvider.family<CountryOverview?, (String,
 /// Places of interest provider
 final placesOfInterestProvider = FutureProvider.family<List<PlaceOfInterest>, String>(
   (ref, countryCode) async {
-    final repository = sl<ICountryContentRepository>();
+    final repository = ref.watch(countryContentRepositoryProvider);
 
     final result = await repository.getPlacesOfInterest(countryCode);
     return result.fold((_) => [], (places) => places);
@@ -150,7 +150,7 @@ final placesOfInterestProvider = FutureProvider.family<List<PlaceOfInterest>, St
 /// UNESCO sites provider
 final unescoSitesProvider = FutureProvider.family<List<PlaceOfInterest>, String>(
   (ref, countryCode) async {
-    final repository = sl<ICountryContentRepository>();
+    final repository = ref.watch(countryContentRepositoryProvider);
 
     final result = await repository.getUnescoSites(countryCode);
     return result.fold((_) => [], (sites) => sites);
@@ -160,7 +160,7 @@ final unescoSitesProvider = FutureProvider.family<List<PlaceOfInterest>, String>
 /// Famous foods provider
 final famousFoodsProvider = FutureProvider.family<List<FoodItem>, String>(
   (ref, countryCode) async {
-    final repository = sl<ICountryContentRepository>();
+    final repository = ref.watch(countryContentRepositoryProvider);
 
     final result = await repository.getFamousFoods(countryCode);
     return result.fold((_) => [], (foods) => foods);
@@ -170,7 +170,7 @@ final famousFoodsProvider = FutureProvider.family<List<FoodItem>, String>(
 /// Festivals provider
 final festivalsProvider = FutureProvider.family<List<FestivalItem>, String>(
   (ref, countryCode) async {
-    final repository = sl<ICountryContentRepository>();
+    final repository = ref.watch(countryContentRepositoryProvider);
 
     final result = await repository.getFestivals(countryCode);
     return result.fold((_) => [], (festivals) => festivals);
@@ -180,7 +180,7 @@ final festivalsProvider = FutureProvider.family<List<FestivalItem>, String>(
 /// Famous people provider
 final famousPeopleProvider = FutureProvider.family<List<FamousPerson>, String>(
   (ref, countryCode) async {
-    final repository = sl<ICountryContentRepository>();
+    final repository = ref.watch(countryContentRepositoryProvider);
 
     final result = await repository.getFamousPeople(countryCode);
     return result.fold((_) => [], (people) => people);
@@ -190,7 +190,7 @@ final famousPeopleProvider = FutureProvider.family<List<FamousPerson>, String>(
 /// Fun facts provider
 final funFactsProvider = FutureProvider.family<List<FunFact>, String>(
   (ref, countryCode) async {
-    final repository = sl<ICountryContentRepository>();
+    final repository = ref.watch(countryContentRepositoryProvider);
 
     final result = await repository.getFunFacts(countryCode);
     return result.fold((_) => [], (facts) => facts);
@@ -200,7 +200,7 @@ final funFactsProvider = FutureProvider.family<List<FunFact>, String>(
 /// Essential phrases provider
 final essentialPhrasesProvider = FutureProvider.family<List<Phrase>, String>(
   (ref, countryCode) async {
-    final repository = sl<ICountryContentRepository>();
+    final repository = ref.watch(countryContentRepositoryProvider);
 
     final result = await repository.getEssentialPhrases(countryCode);
     return result.fold((_) => [], (phrases) => phrases);
@@ -210,7 +210,7 @@ final essentialPhrasesProvider = FutureProvider.family<List<Phrase>, String>(
 /// Travel essentials provider
 final travelEssentialsProvider = FutureProvider.family<TravelEssentials?, String>(
   (ref, countryCode) async {
-    final repository = sl<ICountryContentRepository>();
+    final repository = ref.watch(countryContentRepositoryProvider);
 
     final result = await repository.getTravelEssentials(countryCode);
     return result.fold((_) => null, (essentials) => essentials);
@@ -220,7 +220,7 @@ final travelEssentialsProvider = FutureProvider.family<TravelEssentials?, String
 /// Travel tips provider
 final travelTipsProvider = FutureProvider.family<List<String>, String>(
   (ref, countryCode) async {
-    final repository = sl<ICountryContentRepository>();
+    final repository = ref.watch(countryContentRepositoryProvider);
 
     final result = await repository.getTravelTips(countryCode);
     return result.fold((_) => [], (tips) => tips);
@@ -230,7 +230,7 @@ final travelTipsProvider = FutureProvider.family<List<String>, String>(
 /// Geography info provider
 final geographyInfoProvider = FutureProvider.family<GeographyInfo?, String>(
   (ref, countryCode) async {
-    final repository = sl<ICountryContentRepository>();
+    final repository = ref.watch(countryContentRepositoryProvider);
 
     final result = await repository.getGeographyInfo(countryCode);
     return result.fold((_) => null, (info) => info);

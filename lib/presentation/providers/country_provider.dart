@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../core/error/failures.dart';
 import '../../domain/entities/country.dart';
 import '../../domain/repositories/i_country_repository.dart';
@@ -125,7 +125,7 @@ class CountryListNotifier extends StateNotifier<AsyncValue<CountryListState>> {
 final countryListProvider =
     StateNotifierProvider<CountryListNotifier, AsyncValue<CountryListState>>(
         (ref) {
-  final countryRepository = sl<ICountryRepository>();
+  final countryRepository = ref.watch(countryRepositoryProvider);
   final notifier = CountryListNotifier(countryRepository);
 
   // Auto-load countries on provider creation
@@ -143,7 +143,7 @@ final allCountriesProvider = Provider<List<Country>>((ref) {
 /// Countries by region provider
 final countriesByRegionProvider =
     FutureProvider.family<List<Country>, String>((ref, region) async {
-  final countryRepository = sl<ICountryRepository>();
+  final countryRepository = ref.watch(countryRepositoryProvider);
 
   final result = await countryRepository.getCountriesByRegion(region);
   return result.fold(
@@ -155,7 +155,7 @@ final countriesByRegionProvider =
 /// Country by code provider
 final countryByCodeProvider =
     FutureProvider.family<Country?, String>((ref, code) async {
-  final countryRepository = sl<ICountryRepository>();
+  final countryRepository = ref.watch(countryRepositoryProvider);
 
   final result = await countryRepository.getCountryByCode(code);
   return result.fold(
@@ -166,7 +166,7 @@ final countryByCodeProvider =
 
 /// Random country provider (for "Country of the Day")
 final randomCountryProvider = FutureProvider<Country?>((ref) async {
-  final countryRepository = sl<ICountryRepository>();
+  final countryRepository = ref.watch(countryRepositoryProvider);
 
   final result = await countryRepository.getRandomCountry();
   return result.fold(
@@ -179,7 +179,7 @@ final randomCountryProvider = FutureProvider<Country?>((ref) async {
 final countryOfTheDayProvider = FutureProvider<Country?>((ref) async {
   // This will return a consistent country for the day
   // The repository implementation should handle caching this for 24 hours
-  final countryRepository = sl<ICountryRepository>();
+  final countryRepository = ref.watch(countryRepositoryProvider);
 
   final result = await countryRepository.getRandomCountry();
   return result.fold(

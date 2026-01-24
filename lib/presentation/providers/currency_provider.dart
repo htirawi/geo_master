@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di/service_locator.dart';
+import '../../app/di/repository_providers.dart';
 import '../../data/models/exchange_rate_model.dart';
 import '../../domain/repositories/i_media_repository.dart';
 
 /// Exchange rates provider
 final exchangeRatesProvider = FutureProvider.family<ExchangeRateModel?, String>(
   (ref, baseCurrency) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getExchangeRates(baseCurrency: baseCurrency);
     return result.fold(
@@ -20,7 +20,7 @@ final exchangeRatesProvider = FutureProvider.family<ExchangeRateModel?, String>(
 /// USD exchange rates (default)
 final usdExchangeRatesProvider = FutureProvider<ExchangeRateModel?>(
   (ref) async {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getExchangeRates(baseCurrency: 'USD');
     return result.fold(
@@ -147,7 +147,7 @@ class CurrencyConversionNotifier extends StateNotifier<CurrencyConversionState> 
 final currencyConversionProvider =
     StateNotifierProvider<CurrencyConversionNotifier, CurrencyConversionState>(
   (ref) {
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
     final notifier = CurrencyConversionNotifier(repository);
     notifier.convert();
     return notifier;
@@ -158,7 +158,7 @@ final currencyConversionProvider =
 final currencyRateProvider = FutureProvider.family<double?, (String, String)>(
   (ref, params) async {
     final (from, to) = params;
-    final repository = sl<IMediaRepository>();
+    final repository = ref.watch(mediaRepositoryProvider);
 
     final result = await repository.getExchangeRate(from: from, to: to);
     return result.fold(
