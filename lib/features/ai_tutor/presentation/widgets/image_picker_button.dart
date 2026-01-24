@@ -34,7 +34,7 @@ class ImagePickerButton extends StatelessWidget {
   void _showImageSourceDialog(BuildContext context) {
     final theme = Theme.of(context);
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
@@ -255,7 +255,7 @@ class ChatImageDisplay extends StatelessWidget {
   }
 
   void _showFullImage(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,

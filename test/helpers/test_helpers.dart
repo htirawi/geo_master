@@ -121,7 +121,7 @@ extension ProviderContainerExtension on ProviderContainer {
         if (value.hasValue) return value.value!;
         throw value.error!;
       }
-      await Future.delayed(const Duration(milliseconds: 10));
+      await Future<void>.delayed(const Duration(milliseconds: 10));
     }
     throw TimeoutException('Timed out waiting for provider state');
   }

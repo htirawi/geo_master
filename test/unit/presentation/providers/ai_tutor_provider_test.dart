@@ -8,7 +8,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:geo_master/core/error/failures.dart';
 import 'package:geo_master/domain/entities/chat_message.dart';
 import 'package:geo_master/domain/entities/user.dart';
-import 'package:geo_master/domain/repositories/i_ai_tutor_repository.dart';
 import 'package:geo_master/presentation/providers/ai_tutor_provider.dart';
 import 'package:geo_master/presentation/providers/auth_provider.dart';
 
@@ -161,7 +160,7 @@ void main() {
         await streamController.close();
 
         // Allow stream to process
-        await Future.delayed(const Duration(milliseconds: 50));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
 
         // Assert
         verify(() => mockAiTutorRepository.sendMessage(
@@ -293,7 +292,7 @@ void main() {
 
       // Simulate authenticated user
       authStreamController.add(testUser);
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
 
       // Act
       final canSend = await container.read(canSendMessageProvider.future);
@@ -328,7 +327,7 @@ void main() {
 
       // Simulate authenticated user
       authStreamController.add(testUser);
-      await Future.delayed(const Duration(milliseconds: 10));
+      await Future<void>.delayed(const Duration(milliseconds: 10));
 
       // Act
       final canSend = await container.read(canSendMessageProvider.future);
@@ -349,7 +348,7 @@ void main() {
 
       // Simulate unauthenticated state
       authStreamController.add(null);
-      await Future.delayed(const Duration(milliseconds: 10));
+      await Future<void>.delayed(const Duration(milliseconds: 10));
 
       // Act
       final canSend = await container.read(canSendMessageProvider.future);

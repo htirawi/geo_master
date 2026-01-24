@@ -247,7 +247,7 @@ Future<void> showStudyPlanDialog(
   required void Function(String goal, String duration, int hoursPerDay) onGenerate,
   bool isPremium = false,
 }) async {
-  await showDialog(
+  await showDialog<void>(
     context: context,
     builder: (context) => StudyPlanDialog(
       onGenerate: onGenerate,

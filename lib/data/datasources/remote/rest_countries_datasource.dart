@@ -179,11 +179,6 @@ class RestCountriesDataSource implements IRestCountriesDataSource {
     return 'name,cca2,cca3,capital,region,subregion,population,area,flags,latlng';
   }
 
-  /// Get extended fields for single country lookups
-  String _getExtendedFields() {
-    return 'name,cca2,cca3,capital,region,subregion,population,area,flags,borders';
-  }
-
   /// Handle Dio errors
   Exception _handleDioError(DioException e) {
     switch (e.type) {

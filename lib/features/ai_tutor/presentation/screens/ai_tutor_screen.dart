@@ -296,7 +296,7 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
   void _showPremiumFeatures() {
     final theme = Theme.of(context);
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
@@ -446,7 +446,7 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
+                MaterialPageRoute<void>(
                   builder: (context) => const BookmarksScreen(),
                 ),
               );

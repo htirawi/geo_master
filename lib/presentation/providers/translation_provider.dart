@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/di/repository_providers.dart';
-import '../../core/services/translation_service.dart';
 
 /// Translation service initialization state
 final translationServiceInitProvider = FutureProvider<void>((ref) async {

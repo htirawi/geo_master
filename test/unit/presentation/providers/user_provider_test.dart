@@ -237,7 +237,7 @@ void main() {
 
       // Simulate authenticated user
       authStreamController.add(testUser);
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
 
       // Act
       final rank = await container.read(userRankProvider.future);
@@ -261,7 +261,7 @@ void main() {
 
       // Simulate unauthenticated state
       authStreamController.add(null);
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
 
       // Act
       final rank = await container.read(userRankProvider.future);

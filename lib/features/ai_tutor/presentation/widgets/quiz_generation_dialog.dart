@@ -232,7 +232,7 @@ Future<void> showQuizGenerationDialog(
   required void Function(String topic, String difficulty, int questionCount) onGenerate,
   bool isPremium = false,
 }) async {
-  await showDialog(
+  await showDialog<void>(
     context: context,
     builder: (context) => QuizGenerationDialog(
       onGenerate: onGenerate,

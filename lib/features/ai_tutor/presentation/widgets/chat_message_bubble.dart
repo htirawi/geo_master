@@ -305,7 +305,7 @@ class ChatMessageBubble extends StatelessWidget {
   void _showMessageOptions(BuildContext context) {
     final theme = Theme.of(context);
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(

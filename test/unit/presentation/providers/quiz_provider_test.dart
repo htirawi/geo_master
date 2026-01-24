@@ -294,7 +294,7 @@ void main() {
 
       // Authenticate user
       authStreamController.add(testUser);
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
 
       // Act
       final statsAsync = await container.read(quizStatisticsProvider.future);
@@ -320,7 +320,7 @@ void main() {
 
       // Unauthenticated state
       authStreamController.add(null);
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
 
       // Act
       final statsAsync = await container.read(quizStatisticsProvider.future);

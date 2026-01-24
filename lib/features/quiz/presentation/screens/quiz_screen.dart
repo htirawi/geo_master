@@ -17,9 +17,6 @@ import '../../../../presentation/providers/subscription_provider.dart';
 final _selectedDifficultyProvider =
     StateProvider<QuizDifficulty>((ref) => QuizDifficulty.medium);
 
-/// Selected continent provider for continent challenge
-final _selectedContinentProvider = StateProvider<String?>((ref) => null);
-
 /// Quiz mode selection screen - Redesigned Professional Challenge Arena
 class QuizScreen extends ConsumerWidget {
   const QuizScreen({super.key});

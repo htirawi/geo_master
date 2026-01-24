@@ -118,7 +118,7 @@ void showReactionPickerBottomSheet(
 }) {
   final theme = Theme.of(context);
 
-  showModalBottomSheet(
+  showModalBottomSheet<void>(
     context: context,
     backgroundColor: theme.colorScheme.surface,
     shape: const RoundedRectangleBorder(

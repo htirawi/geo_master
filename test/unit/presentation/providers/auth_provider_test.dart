@@ -58,7 +58,7 @@ void main() {
         authStreamController.add(testUser);
 
         // Allow stream listener to process
-        await Future.delayed(const Duration(milliseconds: 10));
+        await Future<void>.delayed(const Duration(milliseconds: 10));
 
         // Assert
         final state = container.read(authStateProvider);
@@ -81,7 +81,7 @@ void main() {
         authStreamController.add(null);
 
         // Allow stream listener to process
-        await Future.delayed(const Duration(milliseconds: 10));
+        await Future<void>.delayed(const Duration(milliseconds: 10));
 
         // Assert
         final state = container.read(authStateProvider);
@@ -111,7 +111,7 @@ void main() {
 
         // Simulate auth stream emitting the user after successful sign-in
         authStreamController.add(anonymousUser);
-        await Future.delayed(const Duration(milliseconds: 10));
+        await Future<void>.delayed(const Duration(milliseconds: 10));
 
         // Assert
         final state = container.read(authStateProvider);
@@ -152,14 +152,14 @@ void main() {
 
         // First authenticate
         authStreamController.add(testUser);
-        await Future.delayed(const Duration(milliseconds: 10));
+        await Future<void>.delayed(const Duration(milliseconds: 10));
 
         // Act
         await container.read(authStateProvider.notifier).signOut();
 
         // Simulate auth stream emitting null after sign-out
         authStreamController.add(null);
-        await Future.delayed(const Duration(milliseconds: 10));
+        await Future<void>.delayed(const Duration(milliseconds: 10));
 
         // Assert
         final state = container.read(authStateProvider);
@@ -183,7 +183,7 @@ void main() {
 
       // Trigger auth state
       authStreamController.add(testUser);
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
 
       // Assert
       final user = container.read(currentUserProvider);
@@ -203,7 +203,7 @@ void main() {
 
       // Trigger unauthenticated state
       authStreamController.add(null);
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
 
       // Assert
       final user = container.read(currentUserProvider);
@@ -223,7 +223,7 @@ void main() {
 
       // Trigger authenticated state
       authStreamController.add(testUser);
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
 
       // Assert
       expect(container.read(isAuthenticatedProvider), isTrue);

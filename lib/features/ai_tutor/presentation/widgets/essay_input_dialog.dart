@@ -244,7 +244,7 @@ Future<void> showEssayInputDialog(
   required void Function(String title, String content) onSubmit,
   bool isPremium = false,
 }) async {
-  await showDialog(
+  await showDialog<void>(
     context: context,
     builder: (context) => EssayInputDialog(
       onSubmit: onSubmit,

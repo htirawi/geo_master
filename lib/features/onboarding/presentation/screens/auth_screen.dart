@@ -16,7 +16,6 @@ import '../../../../core/utils/responsive_utils.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/auth_provider.dart';
 import '../../../../presentation/widgets/decorative_background.dart';
-import '../../../../presentation/widgets/premium_button.dart';
 
 /// Premium auth screen with social login options and animations
 class AuthScreen extends ConsumerStatefulWidget {
@@ -58,7 +57,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    final size = MediaQuery.of(context).size;
 
     // Listen to auth state changes
     ref.listen<AsyncValue<AuthState>>(authStateProvider, (previous, next) {
