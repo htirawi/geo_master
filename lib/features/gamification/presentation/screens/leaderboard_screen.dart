@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/utils/responsive_utils.dart';
 import '../../../../domain/repositories/i_user_repository.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/user_provider.dart';
@@ -25,21 +26,24 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        setState(() {
-          _currentType = [
-            LeaderboardType.global,
-            LeaderboardType.weekly,
-            LeaderboardType.friends,
-          ][_tabController.index];
-        });
-      }
-    });
+    _tabController.addListener(_onTabChanged);
+  }
+
+  void _onTabChanged() {
+    if (!_tabController.indexIsChanging) {
+      setState(() {
+        _currentType = [
+          LeaderboardType.global,
+          LeaderboardType.weekly,
+          LeaderboardType.friends,
+        ][_tabController.index];
+      });
+    }
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_onTabChanged);
     _tabController.dispose();
     super.dispose();
   }
@@ -53,12 +57,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     final currentUser = ref.watch(userDataProvider);
     final userProgress = ref.watch(userProgressProvider);
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final expandedHeight = responsive.sp(200);
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           // App Bar with gradient
           SliverAppBar(
-            expandedHeight: 200,
+            expandedHeight: expandedHeight,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -74,13 +82,14 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                 ),
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(AppDimensions.paddingLG),
+                    padding: responsive.insets(AppDimensions.md),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         // Current user rank card
                         userRankAsync.when(
                           data: (rank) => _buildCurrentUserCard(
+                            context,
                             theme,
                             l10n,
                             rank,
@@ -89,8 +98,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                             userProgress.totalXp,
                             userProgress.level,
                           ),
-                          loading: () => _buildCurrentUserCardLoading(theme),
+                          loading: () => _buildCurrentUserCardLoading(context, theme),
                           error: (_, __) => _buildCurrentUserCard(
+                            context,
                             theme,
                             l10n,
                             0,
@@ -138,12 +148,12 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
             data: (entries) {
               if (entries.isEmpty) {
                 return SliverFillRemaining(
-                  child: _buildEmptyState(theme, l10n),
+                  child: _buildEmptyState(context, theme, l10n),
                 );
               }
 
               return SliverPadding(
-                padding: const EdgeInsets.all(AppDimensions.paddingMD),
+                padding: responsive.insets(AppDimensions.paddingMD),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
@@ -175,15 +185,15 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                   children: [
                     Icon(
                       Icons.error_outline,
-                      size: AppDimensions.avatarMD,
+                      size: responsive.sp(AppDimensions.avatarMD),
                       color: theme.colorScheme.error,
                     ),
-                    const SizedBox(height: AppDimensions.spacingMD),
+                    SizedBox(height: responsive.sp(AppDimensions.spacingMD)),
                     Text(
                       l10n.error,
                       style: theme.textTheme.titleMedium,
                     ),
-                    const SizedBox(height: AppDimensions.spacingSM),
+                    SizedBox(height: responsive.sp(AppDimensions.spacingSM)),
                     TextButton(
                       onPressed: () => ref.refresh(leaderboardProvider(_currentType)),
                       child: Text(l10n.retry),
@@ -199,6 +209,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   }
 
   Widget _buildCurrentUserCard(
+    BuildContext context,
     ThemeData theme,
     AppLocalizations l10n,
     int rank,
@@ -207,11 +218,21 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     int totalXp,
     int level,
   ) {
+    final responsive = ResponsiveUtils.of(context);
+    final paddingMD = responsive.sp(AppDimensions.paddingMD);
+    final spacingMD = responsive.sp(AppDimensions.spacingMD);
+    final avatarMD = responsive.sp(AppDimensions.avatarMD);
+    final avatarRadius = responsive.sp(AppDimensions.lg);
+    final radiusLG = responsive.sp(AppDimensions.radiusLG);
+    final radiusMD = responsive.sp(AppDimensions.radiusMD);
+    final paddingSM = responsive.sp(AppDimensions.sm);
+    final paddingXS = responsive.sp(AppDimensions.xs - 2);
+
     return Container(
-      padding: const EdgeInsets.all(AppDimensions.paddingMD),
+      padding: EdgeInsets.all(paddingMD),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+        borderRadius: BorderRadius.circular(radiusLG),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.3),
         ),
@@ -220,8 +241,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
         children: [
           // Rank
           Container(
-            width: AppDimensions.avatarMD,
-            height: AppDimensions.avatarMD,
+            width: avatarMD,
+            height: avatarMD,
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.3),
               shape: BoxShape.circle,
@@ -236,11 +257,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
               ),
             ),
           ),
-          const SizedBox(width: AppDimensions.spacingMD),
+          SizedBox(width: spacingMD),
 
           // Avatar
           CircleAvatar(
-            radius: AppDimensions.lg,
+            radius: avatarRadius,
             backgroundColor: Colors.white.withValues(alpha: 0.3),
             backgroundImage: photoUrl != null
                 ? CachedNetworkImageProvider(photoUrl)
@@ -249,7 +270,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                 ? const Icon(Icons.person, color: Colors.white)
                 : null,
           ),
-          const SizedBox(width: AppDimensions.spacingMD),
+          SizedBox(width: spacingMD),
 
           // Info
           Expanded(
@@ -275,10 +296,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
           // Your Rank label
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.sm, vertical: AppDimensions.xs - 2),
+            padding: EdgeInsets.symmetric(horizontal: paddingSM, vertical: paddingXS),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+              borderRadius: BorderRadius.circular(radiusMD),
             ),
             child: Text(
               l10n.yourRank,
@@ -293,12 +314,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     );
   }
 
-  Widget _buildCurrentUserCardLoading(ThemeData theme) {
+  Widget _buildCurrentUserCardLoading(BuildContext context, ThemeData theme) {
+    final responsive = ResponsiveUtils.of(context);
+    final paddingMD = responsive.sp(AppDimensions.paddingMD);
+    final radiusLG = responsive.sp(AppDimensions.radiusLG);
+
     return Container(
-      padding: const EdgeInsets.all(AppDimensions.paddingMD),
+      padding: EdgeInsets.all(paddingMD),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+        borderRadius: BorderRadius.circular(radiusLG),
       ),
       child: const Center(
         child: CircularProgressIndicator(color: Colors.white),
@@ -306,24 +331,29 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     );
   }
 
-  Widget _buildEmptyState(ThemeData theme, AppLocalizations l10n) {
+  Widget _buildEmptyState(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+    final responsive = ResponsiveUtils.of(context);
+    final iconSize = responsive.sp(AppDimensions.iconXXL);
+    final spacingMD = responsive.sp(AppDimensions.spacingMD);
+    final spacingSM = responsive.sp(AppDimensions.spacingSM);
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.leaderboard_outlined,
-            size: AppDimensions.iconXXL,
+            size: iconSize,
             color: theme.colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(height: AppDimensions.spacingMD),
+          SizedBox(height: spacingMD),
           Text(
             'No rankings yet',
             style: theme.textTheme.titleMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: AppDimensions.spacingSM),
+          SizedBox(height: spacingSM),
           Text(
             'Be the first to earn XP and climb the ranks!',
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -382,13 +412,23 @@ class _LeaderboardEntryCard extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final spacingSM = responsive.sp(AppDimensions.spacingSM);
+    final radiusMD = responsive.sp(AppDimensions.radiusMD);
+    final radiusSM = responsive.sp(AppDimensions.radiusSM);
+    final avatarSM = responsive.sp(AppDimensions.avatarSM);
+    final avatarRadius = responsive.sp(AppDimensions.lg - 4);
+    final paddingSM = responsive.sp(AppDimensions.sm);
+    final paddingXS = responsive.sp(AppDimensions.xs - 2);
+
     return Container(
-      margin: const EdgeInsets.only(bottom: AppDimensions.spacingSM),
+      margin: EdgeInsets.only(bottom: spacingSM),
       decoration: BoxDecoration(
         color: isCurrentUser
             ? theme.colorScheme.primaryContainer.withValues(alpha: 0.5)
             : theme.colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+        borderRadius: BorderRadius.circular(radiusMD),
         border: isCurrentUser
             ? Border.all(color: theme.colorScheme.primary, width: 2)
             : null,
@@ -399,9 +439,9 @@ class _LeaderboardEntryCard extends StatelessWidget {
           children: [
             // Rank
             SizedBox(
-              width: AppDimensions.avatarSM,
+              width: avatarSM,
               child: isTopThree
-                  ? _buildMedalIcon(entry.rank)
+                  ? _buildMedalIcon(context, entry.rank)
                   : Text(
                       '#${entry.rank}',
                       style: theme.textTheme.titleMedium?.copyWith(
@@ -411,11 +451,11 @@ class _LeaderboardEntryCard extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
             ),
-            const SizedBox(width: AppDimensions.spacingSM),
+            SizedBox(width: spacingSM),
 
             // Avatar
             CircleAvatar(
-              radius: AppDimensions.lg - 4,
+              radius: avatarRadius,
               backgroundColor: theme.colorScheme.primaryContainer,
               backgroundImage: entry.photoUrl != null
                   ? CachedNetworkImageProvider(entry.photoUrl!)
@@ -447,12 +487,12 @@ class _LeaderboardEntryCard extends StatelessWidget {
           ),
         ),
         trailing: Container(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.sm, vertical: AppDimensions.xs - 2),
+          padding: EdgeInsets.symmetric(horizontal: paddingSM, vertical: paddingXS),
           decoration: BoxDecoration(
             color: isTopThree
                 ? _getMedalColor(entry.rank).withValues(alpha: 0.2)
                 : theme.colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+            borderRadius: BorderRadius.circular(radiusSM),
           ),
           child: Text(
             '${entry.totalXp} XP',
@@ -468,7 +508,10 @@ class _LeaderboardEntryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildMedalIcon(int rank) {
+  Widget _buildMedalIcon(BuildContext context, int rank) {
+    final responsive = ResponsiveUtils.of(context);
+    final iconSize = responsive.sp(AppDimensions.iconLG - 4);
+
     IconData icon;
     Color color;
 
@@ -489,7 +532,7 @@ class _LeaderboardEntryCard extends StatelessWidget {
         return const SizedBox.shrink();
     }
 
-    return Icon(icon, color: color, size: AppDimensions.iconLG - 4);
+    return Icon(icon, color: color, size: iconSize);
   }
 
   Color _getMedalColor(int rank) {

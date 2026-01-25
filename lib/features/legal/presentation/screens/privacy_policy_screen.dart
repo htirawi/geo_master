@@ -15,6 +15,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode == 'ar';
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -31,16 +32,16 @@ class PrivacyPolicyScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildLastUpdated(isArabic),
+            _buildLastUpdated(isArabic, isDark),
             const SizedBox(height: 24),
-            _buildIntro(isArabic, theme),
+            _buildIntro(isArabic, isDark),
             _buildSection(
               title: isArabic ? '1. المعلومات التي نجمعها' : '1. Information We Collect',
               content: isArabic
                   ? 'نجمع المعلومات التالية:\n\n• معلومات الحساب: الاسم، البريد الإلكتروني عند التسجيل\n• بيانات الاستخدام: تقدمك في التعلم، نتائج الاختبارات، الإنجازات\n• معلومات الجهاز: نوع الجهاز، نظام التشغيل، معرف الجهاز\n• بيانات التحليلات: كيفية استخدامك للتطبيق لتحسين تجربتك'
                   : 'We collect the following information:\n\n• Account Information: Name, email when you register\n• Usage Data: Your learning progress, quiz results, achievements\n• Device Information: Device type, operating system, device identifier\n• Analytics Data: How you use the App to improve your experience',
               isArabic: isArabic,
-              theme: theme,
+              isDark: isDark,
             ),
             _buildSection(
               title: isArabic ? '2. كيف نستخدم معلوماتك' : '2. How We Use Your Information',
@@ -48,7 +49,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ? 'نستخدم معلوماتك لـ:\n\n• توفير وتحسين خدماتنا\n• تخصيص تجربة التعلم الخاصة بك\n• إرسال إشعارات مهمة حول حسابك\n• تحليل أنماط الاستخدام لتحسين التطبيق\n• منع الاحتيال وضمان الأمان'
                   : 'We use your information to:\n\n• Provide and improve our services\n• Personalize your learning experience\n• Send important notifications about your account\n• Analyze usage patterns to enhance the App\n• Prevent fraud and ensure security',
               isArabic: isArabic,
-              theme: theme,
+              isDark: isDark,
             ),
             _buildSection(
               title: isArabic ? '3. مشاركة البيانات' : '3. Data Sharing',
@@ -56,7 +57,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ? 'لا نبيع معلوماتك الشخصية. قد نشارك البيانات مع:\n\n• مزودي الخدمات: مثل Firebase لتخزين البيانات والمصادقة\n• شركاء التحليلات: لفهم استخدام التطبيق (بيانات مجهولة الهوية)\n• السلطات القانونية: عند الطلب بموجب القانون'
                   : 'We do not sell your personal information. We may share data with:\n\n• Service Providers: Such as Firebase for data storage and authentication\n• Analytics Partners: To understand App usage (anonymized data)\n• Legal Authorities: When required by law',
               isArabic: isArabic,
-              theme: theme,
+              isDark: isDark,
             ),
             _buildSection(
               title: isArabic ? '4. أمان البيانات' : '4. Data Security',
@@ -64,7 +65,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ? 'نحن ملتزمون بحماية بياناتك:\n\n• نستخدم التشفير لحماية البيانات أثناء النقل والتخزين\n• نطبق ضوابط وصول صارمة\n• نجري مراجعات أمنية منتظمة\n• نخزن البيانات على خوادم آمنة'
                   : 'We are committed to protecting your data:\n\n• We use encryption to protect data in transit and at rest\n• We implement strict access controls\n• We conduct regular security reviews\n• We store data on secure servers',
               isArabic: isArabic,
-              theme: theme,
+              isDark: isDark,
             ),
             _buildSection(
               title: isArabic ? '5. حقوقك (GDPR)' : '5. Your Rights (GDPR)',
@@ -72,7 +73,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ? 'لديك الحقوق التالية:\n\n• الوصول: طلب نسخة من بياناتك الشخصية\n• التصحيح: تصحيح أي معلومات غير دقيقة\n• الحذف: طلب حذف بياناتك ("الحق في النسيان")\n• النقل: الحصول على بياناتك بتنسيق قابل للنقل\n• الاعتراض: الاعتراض على معالجة معينة للبيانات\n• سحب الموافقة: في أي وقت'
                   : 'You have the following rights:\n\n• Access: Request a copy of your personal data\n• Rectification: Correct any inaccurate information\n• Erasure: Request deletion of your data ("Right to be Forgotten")\n• Portability: Receive your data in a portable format\n• Object: Object to certain data processing\n• Withdraw Consent: At any time',
               isArabic: isArabic,
-              theme: theme,
+              isDark: isDark,
             ),
             _buildSection(
               title: isArabic ? '6. الاحتفاظ بالبيانات' : '6. Data Retention',
@@ -80,7 +81,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ? 'نحتفظ ببياناتك طالما لديك حساب نشط. عند حذف حسابك:\n\n• يتم حذف البيانات الشخصية خلال 30 يوماً\n• قد نحتفظ ببيانات مجهولة الهوية للتحليلات\n• قد نحتفظ ببعض البيانات للامتثال القانوني'
                   : 'We retain your data as long as you have an active account. When you delete your account:\n\n• Personal data is deleted within 30 days\n• We may retain anonymized data for analytics\n• We may retain some data for legal compliance',
               isArabic: isArabic,
-              theme: theme,
+              isDark: isDark,
             ),
             _buildSection(
               title: isArabic ? '7. خصوصية الأطفال' : '7. Children\'s Privacy',
@@ -88,7 +89,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ? 'تطبيقنا مناسب لجميع الأعمار. للمستخدمين تحت 16 عاماً:\n\n• نحصل على موافقة الوالدين عند الضرورة\n• نجمع الحد الأدنى من البيانات المطلوبة\n• لا نعرض إعلانات مستهدفة للأطفال'
                   : 'Our App is suitable for all ages. For users under 16:\n\n• We obtain parental consent when necessary\n• We collect minimal required data\n• We do not show targeted ads to children',
               isArabic: isArabic,
-              theme: theme,
+              isDark: isDark,
             ),
             _buildSection(
               title: isArabic ? '8. ملفات تعريف الارتباط والتتبع' : '8. Cookies and Tracking',
@@ -96,7 +97,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ? 'نستخدم تقنيات التتبع لـ:\n\n• تذكر تفضيلاتك\n• تحليل استخدام التطبيق\n• تحسين أداء التطبيق\n\nيمكنك التحكم في هذه الإعدادات من إعدادات جهازك.'
                   : 'We use tracking technologies to:\n\n• Remember your preferences\n• Analyze App usage\n• Improve App performance\n\nYou can control these settings from your device settings.',
               isArabic: isArabic,
-              theme: theme,
+              isDark: isDark,
             ),
             _buildSection(
               title: isArabic ? '9. التحويلات الدولية' : '9. International Transfers',
@@ -104,7 +105,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ? 'قد يتم نقل بياناتك ومعالجتها في دول خارج بلد إقامتك. نضمن حماية بياناتك وفقاً لمعايير حماية البيانات الدولية.'
                   : 'Your data may be transferred to and processed in countries outside your country of residence. We ensure your data is protected according to international data protection standards.',
               isArabic: isArabic,
-              theme: theme,
+              isDark: isDark,
             ),
             _buildSection(
               title: isArabic ? '10. التغييرات على هذه السياسة' : '10. Changes to This Policy',
@@ -112,7 +113,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ? 'قد نقوم بتحديث سياسة الخصوصية هذه. سنخطرك بأي تغييرات جوهرية عبر:\n\n• إشعار داخل التطبيق\n• البريد الإلكتروني (إذا كان لديك حساب)\n\nيُعتبر استمرارك في استخدام التطبيق موافقة على التغييرات.'
                   : 'We may update this Privacy Policy. We will notify you of any material changes via:\n\n• In-app notification\n• Email (if you have an account)\n\nYour continued use of the App constitutes acceptance of the changes.',
               isArabic: isArabic,
-              theme: theme,
+              isDark: isDark,
             ),
             _buildSection(
               title: isArabic ? '11. اتصل بنا' : '11. Contact Us',
@@ -120,7 +121,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ? 'لأي استفسارات تتعلق بالخصوصية:\n\nالبريد الإلكتروني: privacy@geomaster.app\n\nمسؤول حماية البيانات:\ndpo@geomaster.app'
                   : 'For any privacy-related inquiries:\n\nEmail: privacy@geomaster.app\n\nData Protection Officer:\ndpo@geomaster.app',
               isArabic: isArabic,
-              theme: theme,
+              isDark: isDark,
             ),
             const SizedBox(height: 40),
           ],
@@ -129,21 +130,23 @@ class PrivacyPolicyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLastUpdated(bool isArabic) {
+  Widget _buildLastUpdated(bool isArabic, bool isDark) {
+    final primaryColor = isDark ? AppColors.primaryLight : AppColors.primary;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
+        color: primaryColor.withValues(alpha: isDark ? 0.2 : 0.1),
         borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
       ),
       child: Row(
         children: [
-          const Icon(Icons.update, size: 18, color: AppColors.primary),
+          Icon(Icons.update, size: 18, color: primaryColor),
           const SizedBox(width: AppDimensions.xs),
           Text(
             isArabic ? 'آخر تحديث: يناير 2026' : 'Last updated: January 2026',
             style: TextStyle(
-              color: AppColors.primary,
+              color: primaryColor,
               fontWeight: FontWeight.w500,
               fontFamily: isArabic ? GoogleFonts.cairo().fontFamily : GoogleFonts.poppins().fontFamily,
             ),
@@ -153,20 +156,23 @@ class PrivacyPolicyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIntro(bool isArabic, ThemeData theme) {
+  Widget _buildIntro(bool isArabic, bool isDark) {
+    final tertiaryColor = isDark ? AppColors.oceanShallow : AppColors.tertiary;
+    final contentColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
       child: Container(
         padding: const EdgeInsets.all(AppDimensions.md),
         decoration: BoxDecoration(
-          color: AppColors.tertiary.withValues(alpha: 0.1),
+          color: tertiaryColor.withValues(alpha: isDark ? 0.15 : 0.1),
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-          border: Border.all(color: AppColors.tertiary.withValues(alpha: 0.3)),
+          border: Border.all(color: tertiaryColor.withValues(alpha: 0.3)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.shield_outlined, color: AppColors.tertiary, size: 24),
+            Icon(Icons.shield_outlined, color: tertiaryColor, size: 24),
             const SizedBox(width: AppDimensions.sm),
             Expanded(
               child: Text(
@@ -177,12 +183,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
                     ? GoogleFonts.cairo(
                         fontSize: 14,
                         height: 1.6,
-                        color: AppColors.textSecondaryLight,
+                        color: contentColor,
                       )
                     : GoogleFonts.poppins(
                         fontSize: 14,
                         height: 1.6,
-                        color: AppColors.textSecondaryLight,
+                        color: contentColor,
                       ),
               ),
             ),
@@ -196,8 +202,11 @@ class PrivacyPolicyScreen extends StatelessWidget {
     required String title,
     required String content,
     required bool isArabic,
-    required ThemeData theme,
+    required bool isDark,
   }) {
+    final titleColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final contentColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
       child: Column(
@@ -209,12 +218,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ? GoogleFonts.cairo(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimaryLight,
+                    color: titleColor,
                   )
                 : GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimaryLight,
+                    color: titleColor,
                   ),
           ),
           const SizedBox(height: AppDimensions.sm),
@@ -224,12 +233,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ? GoogleFonts.cairo(
                     fontSize: 15,
                     height: 1.7,
-                    color: AppColors.textSecondaryLight,
+                    color: contentColor,
                   )
                 : GoogleFonts.poppins(
                     fontSize: 15,
                     height: 1.7,
-                    color: AppColors.textSecondaryLight,
+                    color: contentColor,
                   ),
           ),
         ],

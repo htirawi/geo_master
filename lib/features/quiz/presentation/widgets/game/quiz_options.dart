@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/utils/responsive_utils.dart';
 import '../../../../../domain/entities/quiz.dart';
 
 /// Single-select quiz options widget
@@ -30,103 +31,160 @@ class QuizOptionsSingle extends StatelessWidget {
     final displayOptions = question.getDisplayOptions(isArabic: isArabic);
     final displayCorrectAnswer = question.getDisplayCorrectAnswer(isArabic: isArabic);
 
-    return Column(
-      children: displayOptions.asMap().entries.map((entry) {
-        final index = entry.key;
-        final option = entry.value;
-        final isSelected = selectedAnswer == option;
-        final isCorrect = displayCorrectAnswer == option;
+    // Build option widgets
+    final optionWidgets = displayOptions.asMap().entries.map((entry) {
+      final index = entry.key;
+      final option = entry.value;
+      return _buildOptionCard(
+        context: context,
+        theme: theme,
+        option: option,
+        index: index,
+        isSelected: selectedAnswer == option,
+        isCorrect: displayCorrectAnswer == option,
+        showFeedback: showFeedback,
+        onTap: showFeedback ? null : () => onAnswerSelected(option),
+      );
+    }).toList();
 
-        Color? backgroundColor;
-        Color? borderColor;
-        Color? textColor;
+    // Use responsive layout: 2 columns on tablets, 1 column on phones
+    return ResponsiveBuilder(
+      mobile: Column(children: optionWidgets),
+      tablet: _buildGridLayout(optionWidgets),
+      desktop: _buildGridLayout(optionWidgets),
+    );
+  }
 
-        if (showFeedback) {
-          if (isCorrect) {
-            backgroundColor = AppColors.quizCorrect.withValues(alpha: 0.1);
-            borderColor = AppColors.quizCorrect;
-            textColor = AppColors.quizCorrect;
-          } else if (isSelected && !isCorrect) {
-            backgroundColor = AppColors.quizIncorrect.withValues(alpha: 0.1);
-            borderColor = AppColors.quizIncorrect;
-            textColor = AppColors.quizIncorrect;
-          }
-        } else if (isSelected) {
-          backgroundColor = theme.colorScheme.primary.withValues(alpha: 0.1);
-          borderColor = theme.colorScheme.primary;
-        }
-
-        return Padding(
+  Widget _buildGridLayout(List<Widget> options) {
+    final rows = <Widget>[];
+    for (var i = 0; i < options.length; i += 2) {
+      final hasSecond = i + 1 < options.length;
+      rows.add(
+        Padding(
           padding: const EdgeInsets.only(bottom: AppDimensions.spacingSM),
-          child: Material(
-            color: backgroundColor ?? theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-            child: InkWell(
-              onTap: showFeedback ? null : () => onAnswerSelected(option),
-              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(AppDimensions.paddingMD),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: borderColor ??
-                        theme.colorScheme.outline.withValues(alpha: 0.3),
-                    width: isSelected || (showFeedback && isCorrect) ? 2 : 1,
-                  ),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-                ),
-                child: Row(
-                  children: [
-                    // Option letter
-                    Container(
-                      width: AppDimensions.iconXL,
-                      height: AppDimensions.iconXL,
-                      decoration: BoxDecoration(
-                        color: (borderColor ?? theme.colorScheme.outline)
-                            .withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          String.fromCharCode(65 + index), // A, B, C, D
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            color: borderColor ?? theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: AppDimensions.sm),
-                    Expanded(
-                      child: Text(
-                        option,
-                        style:
-                            (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-                          fontSize: 15,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
-                          color: textColor,
-                        ),
-                      ),
-                    ),
-                    if (showFeedback && isCorrect)
-                      const Icon(
-                        Icons.check_circle,
-                        color: AppColors.quizCorrect,
-                      )
-                    else if (showFeedback && isSelected && !isCorrect)
-                      const Icon(
-                        Icons.cancel,
-                        color: AppColors.quizIncorrect,
-                      ),
-                  ],
-                ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: options[i]),
+              if (hasSecond) ...[
+                const SizedBox(width: AppDimensions.spacingSM),
+                Expanded(child: options[i + 1]),
+              ] else
+                const Expanded(child: SizedBox()),
+            ],
+          ),
+        ),
+      );
+    }
+    return Column(children: rows);
+  }
+
+  Widget _buildOptionCard({
+    required BuildContext context,
+    required ThemeData theme,
+    required String option,
+    required int index,
+    required bool isSelected,
+    required bool isCorrect,
+    required bool showFeedback,
+    required VoidCallback? onTap,
+  }) {
+    Color? backgroundColor;
+    Color? borderColor;
+    Color? textColor;
+
+    if (showFeedback) {
+      if (isCorrect) {
+        backgroundColor = AppColors.quizCorrect.withValues(alpha: 0.1);
+        borderColor = AppColors.quizCorrect;
+        textColor = AppColors.quizCorrect;
+      } else if (isSelected && !isCorrect) {
+        backgroundColor = AppColors.quizIncorrect.withValues(alpha: 0.1);
+        borderColor = AppColors.quizIncorrect;
+        textColor = AppColors.quizIncorrect;
+      }
+    } else if (isSelected) {
+      backgroundColor = theme.colorScheme.primary.withValues(alpha: 0.1);
+      borderColor = theme.colorScheme.primary;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppDimensions.spacingSM),
+      child: Material(
+        color: backgroundColor ?? theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(AppDimensions.paddingMD),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: borderColor ??
+                    theme.colorScheme.outline.withValues(alpha: 0.3),
+                width: isSelected || (showFeedback && isCorrect) ? 2 : 1,
               ),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+            ),
+            child: Row(
+              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+              children: [
+                // Option letter (leading in LTR, trailing in RTL)
+                Container(
+                  width: AppDimensions.iconXL,
+                  height: AppDimensions.iconXL,
+                  decoration: BoxDecoration(
+                    color: (borderColor ?? theme.colorScheme.outline)
+                        .withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      String.fromCharCode(65 + index), // A, B, C, D
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        color: borderColor ?? theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppDimensions.sm),
+                Expanded(
+                  child: Text(
+                    option,
+                    style:
+                        (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
+                      fontSize: 15,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      color: textColor,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                if (showFeedback && isCorrect)
+                  const Padding(
+                    padding: EdgeInsetsDirectional.only(start: AppDimensions.sm),
+                    child: Icon(
+                      Icons.check_circle,
+                      color: AppColors.quizCorrect,
+                    ),
+                  )
+                else if (showFeedback && isSelected && !isCorrect)
+                  const Padding(
+                    padding: EdgeInsetsDirectional.only(start: AppDimensions.sm),
+                    child: Icon(
+                      Icons.cancel,
+                      color: AppColors.quizIncorrect,
+                    ),
+                  ),
+              ],
             ),
           ),
-        ).animate().fadeIn(delay: Duration(milliseconds: 100 * index));
-      }).toList(),
-    );
+        ),
+      ),
+    ).animate().fadeIn(delay: Duration(milliseconds: 100 * index));
   }
 }
 
@@ -154,107 +212,164 @@ class QuizOptionsMulti extends StatelessWidget {
     final displayOptions = question.getDisplayOptions(isArabic: isArabic);
     final displayCorrectAnswers = question.getDisplayCorrectAnswers(isArabic: isArabic);
 
-    return Column(
-      children: displayOptions.asMap().entries.map((entry) {
-        final index = entry.key;
-        final option = entry.value;
-        final isSelected = selectedAnswers.contains(option);
-        final isCorrect = displayCorrectAnswers?.contains(option) ?? false;
+    // Build option widgets
+    final optionWidgets = displayOptions.asMap().entries.map((entry) {
+      final index = entry.key;
+      final option = entry.value;
+      return _buildOptionCard(
+        context: context,
+        theme: theme,
+        option: option,
+        index: index,
+        isSelected: selectedAnswers.contains(option),
+        isCorrect: displayCorrectAnswers?.contains(option) ?? false,
+        showFeedback: showFeedback,
+        onTap: showFeedback ? null : () => onToggleAnswer(option),
+      );
+    }).toList();
 
-        Color? backgroundColor;
-        Color? borderColor;
-        Color? textColor;
+    // Use responsive layout: 2 columns on tablets, 1 column on phones
+    return ResponsiveBuilder(
+      mobile: Column(children: optionWidgets),
+      tablet: _buildGridLayout(optionWidgets),
+      desktop: _buildGridLayout(optionWidgets),
+    );
+  }
 
-        if (showFeedback) {
-          if (isCorrect) {
-            backgroundColor = AppColors.quizCorrect.withValues(alpha: 0.1);
-            borderColor = AppColors.quizCorrect;
-            textColor = AppColors.quizCorrect;
-          } else if (isSelected && !isCorrect) {
-            backgroundColor = AppColors.quizIncorrect.withValues(alpha: 0.1);
-            borderColor = AppColors.quizIncorrect;
-            textColor = AppColors.quizIncorrect;
-          }
-        } else if (isSelected) {
-          backgroundColor = theme.colorScheme.primary.withValues(alpha: 0.1);
-          borderColor = theme.colorScheme.primary;
-        }
-
-        return Padding(
+  Widget _buildGridLayout(List<Widget> options) {
+    final rows = <Widget>[];
+    for (var i = 0; i < options.length; i += 2) {
+      final hasSecond = i + 1 < options.length;
+      rows.add(
+        Padding(
           padding: const EdgeInsets.only(bottom: AppDimensions.spacingSM),
-          child: Material(
-            color: backgroundColor ?? theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-            child: InkWell(
-              onTap: showFeedback ? null : () => onToggleAnswer(option),
-              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(AppDimensions.paddingMD),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: borderColor ??
-                        theme.colorScheme.outline.withValues(alpha: 0.3),
-                    width: isSelected || (showFeedback && isCorrect) ? 2 : 1,
-                  ),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-                ),
-                child: Row(
-                  children: [
-                    // Checkbox
-                    AnimatedContainer(
-                      duration: AppDimensions.durationFast,
-                      width: AppDimensions.iconMD,
-                      height: AppDimensions.iconMD,
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? (borderColor ?? theme.colorScheme.primary)
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(AppDimensions.xxs + 2),
-                        border: Border.all(
-                          color: borderColor ??
-                              theme.colorScheme.outline.withValues(alpha: 0.5),
-                          width: 2,
-                        ),
-                      ),
-                      child: isSelected
-                          ? const Icon(
-                              Icons.check,
-                              size: AppDimensions.iconXS,
-                              color: Colors.white,
-                            )
-                          : null,
-                    ),
-                    const SizedBox(width: AppDimensions.sm),
-                    Expanded(
-                      child: Text(
-                        option,
-                        style:
-                            (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-                          fontSize: 15,
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.normal,
-                          color: textColor,
-                        ),
-                      ),
-                    ),
-                    if (showFeedback && isCorrect)
-                      const Icon(
-                        Icons.check_circle,
-                        color: AppColors.quizCorrect,
-                      )
-                    else if (showFeedback && isSelected && !isCorrect)
-                      const Icon(
-                        Icons.cancel,
-                        color: AppColors.quizIncorrect,
-                      ),
-                  ],
-                ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: options[i]),
+              if (hasSecond) ...[
+                const SizedBox(width: AppDimensions.spacingSM),
+                Expanded(child: options[i + 1]),
+              ] else
+                const Expanded(child: SizedBox()),
+            ],
+          ),
+        ),
+      );
+    }
+    return Column(children: rows);
+  }
+
+  Widget _buildOptionCard({
+    required BuildContext context,
+    required ThemeData theme,
+    required String option,
+    required int index,
+    required bool isSelected,
+    required bool isCorrect,
+    required bool showFeedback,
+    required VoidCallback? onTap,
+  }) {
+    Color? backgroundColor;
+    Color? borderColor;
+    Color? textColor;
+
+    if (showFeedback) {
+      if (isCorrect) {
+        backgroundColor = AppColors.quizCorrect.withValues(alpha: 0.1);
+        borderColor = AppColors.quizCorrect;
+        textColor = AppColors.quizCorrect;
+      } else if (isSelected && !isCorrect) {
+        backgroundColor = AppColors.quizIncorrect.withValues(alpha: 0.1);
+        borderColor = AppColors.quizIncorrect;
+        textColor = AppColors.quizIncorrect;
+      }
+    } else if (isSelected) {
+      backgroundColor = theme.colorScheme.primary.withValues(alpha: 0.1);
+      borderColor = theme.colorScheme.primary;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppDimensions.spacingSM),
+      child: Material(
+        color: backgroundColor ?? theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(AppDimensions.paddingMD),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: borderColor ??
+                    theme.colorScheme.outline.withValues(alpha: 0.3),
+                width: isSelected || (showFeedback && isCorrect) ? 2 : 1,
               ),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+            ),
+            child: Row(
+              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+              children: [
+                // Checkbox (leading in LTR, trailing in RTL)
+                AnimatedContainer(
+                  duration: AppDimensions.durationFast,
+                  width: AppDimensions.iconMD,
+                  height: AppDimensions.iconMD,
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? (borderColor ?? theme.colorScheme.primary)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(AppDimensions.xxs + 2),
+                    border: Border.all(
+                      color: borderColor ??
+                          theme.colorScheme.outline.withValues(alpha: 0.5),
+                      width: 2,
+                    ),
+                  ),
+                  child: isSelected
+                      ? const Icon(
+                          Icons.check,
+                          size: AppDimensions.iconXS,
+                          color: Colors.white,
+                        )
+                      : null,
+                ),
+                const SizedBox(width: AppDimensions.sm),
+                Expanded(
+                  child: Text(
+                    option,
+                    style:
+                        (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
+                      fontSize: 15,
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.normal,
+                      color: textColor,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                if (showFeedback && isCorrect)
+                  const Padding(
+                    padding: EdgeInsetsDirectional.only(start: AppDimensions.sm),
+                    child: Icon(
+                      Icons.check_circle,
+                      color: AppColors.quizCorrect,
+                    ),
+                  )
+                else if (showFeedback && isSelected && !isCorrect)
+                  const Padding(
+                    padding: EdgeInsetsDirectional.only(start: AppDimensions.sm),
+                    child: Icon(
+                      Icons.cancel,
+                      color: AppColors.quizIncorrect,
+                    ),
+                  ),
+              ],
             ),
           ),
-        ).animate().fadeIn(delay: Duration(milliseconds: 100 * index));
-      }).toList(),
-    );
+        ),
+      ),
+    ).animate().fadeIn(delay: Duration(milliseconds: 100 * index));
   }
 }

@@ -162,6 +162,7 @@ class _ExplorerButtonState extends State<ExplorerButton>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
+  bool _reduceMotion = false;
 
   @override
   void initState() {
@@ -176,6 +177,12 @@ class _ExplorerButtonState extends State<ExplorerButton>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _reduceMotion = MediaQuery.of(context).disableAnimations;
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -184,18 +191,24 @@ class _ExplorerButtonState extends State<ExplorerButton>
   void _handleTapDown(TapDownDetails details) {
     if (widget.onPressed != null && !widget.isLoading) {
       setState(() => _isPressed = true);
-      _controller.forward();
+      if (!_reduceMotion) {
+        _controller.forward();
+      }
     }
   }
 
   void _handleTapUp(TapUpDetails details) {
     setState(() => _isPressed = false);
-    _controller.reverse();
+    if (!_reduceMotion) {
+      _controller.reverse();
+    }
   }
 
   void _handleTapCancel() {
     setState(() => _isPressed = false);
-    _controller.reverse();
+    if (!_reduceMotion) {
+      _controller.reverse();
+    }
   }
 
   void _handleTap() {
@@ -217,39 +230,46 @@ class _ExplorerButtonState extends State<ExplorerButton>
       animation: _scaleAnimation,
       builder: (context, child) {
         return Transform.scale(
-          scale: _scaleAnimation.value,
+          scale: _reduceMotion ? 1.0 : _scaleAnimation.value,
           child: child,
         );
       },
-      child: GestureDetector(
-        onTapDown: _handleTapDown,
-        onTapUp: _handleTapUp,
-        onTapCancel: _handleTapCancel,
-        onTap: _handleTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          height: config.height,
-          padding: EdgeInsets.symmetric(horizontal: config.horizontalPadding),
-          decoration: BoxDecoration(
-            color: widget.variant == ExplorerButtonVariant.gradient
-                ? null
-                : config.backgroundColor,
-            gradient: widget.variant == ExplorerButtonVariant.gradient
-                ? widget.gradient
-                : null,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-            border: config.border,
-            boxShadow: _isPressed || isDisabled
-                ? null
-                : [
-                    BoxShadow(
-                      color: config.backgroundColor.withValues(alpha: 0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+      child: Semantics(
+        button: true,
+        enabled: !isDisabled,
+        label: widget.label,
+        child: GestureDetector(
+          onTapDown: _handleTapDown,
+          onTapUp: _handleTapUp,
+          onTapCancel: _handleTapCancel,
+          onTap: _handleTap,
+          child: AnimatedContainer(
+            duration: _reduceMotion
+                ? Duration.zero
+                : const Duration(milliseconds: 200),
+            height: config.height,
+            padding: EdgeInsets.symmetric(horizontal: config.horizontalPadding),
+            decoration: BoxDecoration(
+              color: widget.variant == ExplorerButtonVariant.gradient
+                  ? null
+                  : config.backgroundColor,
+              gradient: widget.variant == ExplorerButtonVariant.gradient
+                  ? widget.gradient
+                  : null,
+              borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+              border: config.border,
+              boxShadow: _isPressed || isDisabled
+                  ? null
+                  : [
+                      BoxShadow(
+                        color: config.backgroundColor.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+            ),
+            child: _buildContent(config),
           ),
-          child: _buildContent(config),
         ),
       ),
     );

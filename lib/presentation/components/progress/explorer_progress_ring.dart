@@ -170,27 +170,29 @@ class _ExplorerProgressRingState extends State<ExplorerProgressRing>
               startAngle: widget.startAngle,
             ),
           ),
-          // Progress ring
-          AnimatedBuilder(
-            animation: _animation,
-            builder: (context, child) {
-              return CustomPaint(
-                size: Size(widget.size, widget.size),
-                painter: widget.gradient != null
-                    ? _GradientRingPainter(
-                        progress: _animation.value,
-                        strokeWidth: widget.strokeWidth,
-                        gradient: widget.gradient!,
-                        startAngle: widget.startAngle,
-                      )
-                    : _RingPainter(
-                        progress: _animation.value,
-                        strokeWidth: widget.strokeWidth,
-                        color: progressColor,
-                        startAngle: widget.startAngle,
-                      ),
-              );
-            },
+          // Progress ring - wrapped in RepaintBoundary for performance
+          RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                return CustomPaint(
+                  size: Size(widget.size, widget.size),
+                  painter: widget.gradient != null
+                      ? _GradientRingPainter(
+                          progress: _animation.value,
+                          strokeWidth: widget.strokeWidth,
+                          gradient: widget.gradient!,
+                          startAngle: widget.startAngle,
+                        )
+                      : _RingPainter(
+                          progress: _animation.value,
+                          strokeWidth: widget.strokeWidth,
+                          color: progressColor,
+                          startAngle: widget.startAngle,
+                        ),
+                );
+              },
+            ),
           ),
           // Center content
           if (widget.centerChild != null)

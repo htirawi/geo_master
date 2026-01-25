@@ -103,7 +103,15 @@ class WeatherCard extends ConsumerWidget {
                     'https://openweathermap.org/img/wn/${weather.icon}@2x.png',
                 width: AppDimensions.iconXXL,
                 height: AppDimensions.iconXXL,
-                placeholder: (_, __) => const SizedBox(width: AppDimensions.iconXXL, height: AppDimensions.iconXXL),
+                placeholder: (_, __) => SizedBox(
+                  width: AppDimensions.iconXXL,
+                  height: AppDimensions.iconXXL,
+                  child: Icon(
+                    _getWeatherIcon(weather.condition),
+                    size: AppDimensions.iconLG,
+                    color: Colors.white.withValues(alpha: 0.5),
+                  ),
+                ),
                 errorWidget: (_, __, ___) => Icon(
                   _getWeatherIcon(weather.condition),
                   size: AppDimensions.iconXL,

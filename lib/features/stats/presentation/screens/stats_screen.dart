@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/utils/responsive_utils.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/components/headers/explorer_hero_header.dart';
 
@@ -27,34 +28,33 @@ class StatsScreen extends ConsumerWidget {
           SliverToBoxAdapter(
             child: _JournalHeader(isArabic: isArabic),
           ),
-          // Level Progress Card
+          // Main content wrapped in ResponsiveCenter
           SliverToBoxAdapter(
-            child: const _ExpeditionRankCard()
-                .animate()
-                .fadeIn(delay: 200.ms, duration: 400.ms)
-                .slideY(begin: 0.1, end: 0),
-          ),
-          // Journey Stats
-          SliverToBoxAdapter(
-            child: const _JourneyStatsSection()
-                .animate()
-                .fadeIn(delay: 300.ms, duration: 400.ms),
-          ),
-          // Achievements Section
-          SliverToBoxAdapter(
-            child: _AchievementsSection(isArabic: isArabic)
-                .animate()
-                .fadeIn(delay: 400.ms, duration: 400.ms),
-          ),
-          // Region Progress
-          SliverToBoxAdapter(
-            child: _RegionProgressSection(isArabic: isArabic)
-                .animate()
-                .fadeIn(delay: 500.ms, duration: 400.ms),
-          ),
-          // Bottom spacing
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 100),
+            child: ResponsiveCenter(
+              child: Column(
+                children: [
+                  // Level Progress Card
+                  const _ExpeditionRankCard()
+                      .animate()
+                      .fadeIn(delay: 200.ms, duration: 400.ms)
+                      .slideY(begin: 0.1, end: 0),
+                  // Journey Stats
+                  const _JourneyStatsSection()
+                      .animate()
+                      .fadeIn(delay: 300.ms, duration: 400.ms),
+                  // Achievements Section
+                  _AchievementsSection(isArabic: isArabic)
+                      .animate()
+                      .fadeIn(delay: 400.ms, duration: 400.ms),
+                  // Region Progress
+                  _RegionProgressSection(isArabic: isArabic)
+                      .animate()
+                      .fadeIn(delay: 500.ms, duration: 400.ms),
+                  // Bottom spacing
+                  const SizedBox(height: 100),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -580,7 +580,7 @@ class _AchievementsSection extends StatelessWidget {
         children: [
           // Section header
           Padding(
-            padding: const EdgeInsets.only(left: AppDimensions.xxs, bottom: AppDimensions.sm),
+            padding: const EdgeInsetsDirectional.only(start: AppDimensions.xxs, bottom: AppDimensions.sm),
             child: Row(
               children: [
                 Container(
@@ -674,7 +674,7 @@ class _AchievementBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 90,
-      margin: const EdgeInsets.only(right: AppDimensions.sm),
+      margin: const EdgeInsetsDirectional.only(end: AppDimensions.sm),
       child: Column(
         children: [
           Container(
@@ -757,7 +757,7 @@ class _RegionProgressSection extends StatelessWidget {
         children: [
           // Section header
           Padding(
-            padding: const EdgeInsets.only(left: AppDimensions.xxs, bottom: AppDimensions.md),
+            padding: const EdgeInsetsDirectional.only(start: AppDimensions.xxs, bottom: AppDimensions.md),
             child: Row(
               children: [
                 Container(

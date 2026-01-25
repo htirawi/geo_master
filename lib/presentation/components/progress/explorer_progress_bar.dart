@@ -171,21 +171,23 @@ class _ExplorerProgressBarState extends State<ExplorerProgressBar>
             color: bgColor,
             borderRadius: radius,
           ),
-          child: AnimatedBuilder(
-            animation: _animation,
-            builder: (context, child) {
-              return FractionallySizedBox(
-                alignment: Alignment.centerLeft,
-                widthFactor: _animation.value,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: widget.gradient == null ? progressColor : null,
-                    gradient: widget.gradient,
-                    borderRadius: radius,
+          child: RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                return FractionallySizedBox(
+                  alignment: AlignmentDirectional.centerStart,
+                  widthFactor: _animation.value,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: widget.gradient == null ? progressColor : null,
+                      gradient: widget.gradient,
+                      borderRadius: radius,
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       ],

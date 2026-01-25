@@ -190,7 +190,7 @@ class _ExplorerTextFieldState extends State<ExplorerTextField> {
         if (widget.helperText != null && !hasError) ...[
           const SizedBox(height: AppDimensions.xxs),
           Padding(
-            padding: const EdgeInsets.only(left: AppDimensions.sm),
+            padding: const EdgeInsetsDirectional.only(start: AppDimensions.sm),
             child: Text(
               widget.helperText!,
               style: AppTypography.caption.copyWith(

@@ -137,15 +137,25 @@ class _PassportCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    // Theme-aware colors for the passport card
+    final cardBackground = isDark ? AppColors.surfaceDark : Colors.white;
+    final photoBackground = isDark ? AppColors.backgroundDark : AppColors.backgroundLight;
+    final borderColor = isDark ? AppColors.dividerDark : AppColors.dividerLight;
+    final tertiaryTextColor = isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight;
+    final primaryTextColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final secondaryTextColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
     return Container(
       padding: const EdgeInsets.all(AppDimensions.lg),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBackground,
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
+            color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.3),
             blurRadius: AppDimensions.blurHeavy - 4,
             offset: const Offset(0, AppDimensions.sm - 2),
           ),
@@ -160,10 +170,10 @@ class _PassportCard extends StatelessWidget {
                 width: 80,
                 height: 100,
                 decoration: BoxDecoration(
-                  color: AppColors.backgroundLight,
+                  color: photoBackground,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                   border: Border.all(
-                    color: AppColors.dividerLight,
+                    color: borderColor,
                     width: 2,
                   ),
                   image: photoUrl != null
@@ -174,10 +184,10 @@ class _PassportCard extends StatelessWidget {
                       : null,
                 ),
                 child: photoUrl == null
-                    ? const Icon(
+                    ? Icon(
                         Icons.person,
                         size: AppDimensions.iconXL + 8,
-                        color: AppColors.textTertiaryLight,
+                        color: tertiaryTextColor,
                       )
                     : null,
               ),
@@ -214,7 +224,7 @@ class _PassportCard extends StatelessWidget {
                   l10n.travelerName.toUpperCase(),
                   style: GoogleFonts.robotoMono(
                     fontSize: 10,
-                    color: AppColors.textTertiaryLight,
+                    color: tertiaryTextColor,
                     letterSpacing: 1.5,
                   ),
                 ),
@@ -230,7 +240,7 @@ class _PassportCard extends StatelessWidget {
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ))
-                      .copyWith(color: AppColors.textPrimaryLight),
+                      .copyWith(color: primaryTextColor),
                 ),
                 const SizedBox(height: AppDimensions.xs),
                 if (email != null) ...[
@@ -238,7 +248,7 @@ class _PassportCard extends StatelessWidget {
                     l10n.contactEmail.toUpperCase(),
                     style: GoogleFonts.robotoMono(
                       fontSize: 10,
-                      color: AppColors.textTertiaryLight,
+                      color: tertiaryTextColor,
                       letterSpacing: 1.5,
                     ),
                   ),
@@ -247,7 +257,7 @@ class _PassportCard extends StatelessWidget {
                     email!,
                     style: GoogleFonts.robotoMono(
                       fontSize: 12,
-                      color: AppColors.textSecondaryLight,
+                      color: secondaryTextColor,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),

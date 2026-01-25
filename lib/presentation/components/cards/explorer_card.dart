@@ -147,6 +147,7 @@ class _ExplorerCardState extends State<ExplorerCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  bool _reduceMotion = false;
 
   @override
   void initState() {
@@ -161,23 +162,33 @@ class _ExplorerCardState extends State<ExplorerCard>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _reduceMotion = MediaQuery.of(context).disableAnimations;
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
 
   void _handleTapDown(TapDownDetails details) {
-    if (widget.onTap != null && widget.animatePress) {
+    if (widget.onTap != null && widget.animatePress && !_reduceMotion) {
       _controller.forward();
     }
   }
 
   void _handleTapUp(TapUpDetails details) {
-    _controller.reverse();
+    if (!_reduceMotion) {
+      _controller.reverse();
+    }
   }
 
   void _handleTapCancel() {
-    _controller.reverse();
+    if (!_reduceMotion) {
+      _controller.reverse();
+    }
   }
 
   void _handleTap() {
@@ -198,7 +209,7 @@ class _ExplorerCardState extends State<ExplorerCard>
       animation: _scaleAnimation,
       builder: (context, child) {
         return Transform.scale(
-          scale: _scaleAnimation.value,
+          scale: _reduceMotion ? 1.0 : _scaleAnimation.value,
           child: child,
         );
       },
@@ -209,14 +220,24 @@ class _ExplorerCardState extends State<ExplorerCard>
       card = Padding(padding: widget.margin!, child: card);
     }
 
-    return GestureDetector(
-      onTapDown: widget.onTap != null ? _handleTapDown : null,
-      onTapUp: widget.onTap != null ? _handleTapUp : null,
-      onTapCancel: widget.onTap != null ? _handleTapCancel : null,
-      onTap: widget.onTap != null ? _handleTap : null,
-      onLongPress: widget.onLongPress,
-      child: card,
-    );
+    // Only wrap with Semantics if the card is interactive
+    if (widget.onTap != null || widget.onLongPress != null) {
+      return Semantics(
+        button: true,
+        onTap: widget.onTap,
+        onLongPress: widget.onLongPress,
+        child: GestureDetector(
+          onTapDown: widget.onTap != null ? _handleTapDown : null,
+          onTapUp: widget.onTap != null ? _handleTapUp : null,
+          onTapCancel: widget.onTap != null ? _handleTapCancel : null,
+          onTap: widget.onTap != null ? _handleTap : null,
+          onLongPress: widget.onLongPress,
+          child: card,
+        ),
+      );
+    }
+
+    return card;
   }
 
   Widget _buildCard(_CardConfig config) {

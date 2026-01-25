@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -26,159 +26,178 @@ class CountryGridCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final regionColor = _getRegionColor(country.region);
+    final reduceMotion = MediaQuery.of(context).disableAnimations;
+    final countryName = country.getDisplayName(isArabic: isArabic);
+    final capital = country.getDisplayCapital(isArabic: isArabic);
 
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        context.push(Routes.countryDetail.replaceFirst(':code', country.code));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          borderRadius: AppDimensions.borderRadiusXL,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: AppDimensions.blurMedium - 4,
-              offset: const Offset(0, AppDimensions.xxs),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Flag Container - Proper display with full flag visible
-            Expanded(
-              flex: 3,
-              child: ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusXL)),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    // Background for white flags
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Colors.grey[200]!,
-                            Colors.grey[100]!,
-                          ],
-                        ),
-                      ),
-                    ),
-                    // Flag image - contain to show full flag
-                    Padding(
-                      padding: const EdgeInsets.all(AppDimensions.sm),
-                      child: CachedNetworkImage(
-                        imageUrl: country.flagUrl,
-                        fit: BoxFit.contain,
-                        placeholder: (_, __) => Center(
-                          child: Text(
-                            country.flagEmoji,
-                            style: const TextStyle(fontSize: 48),
-                          ),
-                        ),
-                        errorWidget: (_, __, ___) => Center(
-                          child: Text(
-                            country.flagEmoji,
-                            style: const TextStyle(fontSize: 48),
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Subtle inner shadow for depth
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusXL)),
-                        border: Border.all(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    // Region badge
-                    Positioned(
-                      top: AppDimensions.xs,
-                      right: AppDimensions.xs,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppDimensions.xs,
-                          vertical: AppDimensions.xxs,
-                        ),
+    Widget card = Semantics(
+      button: true,
+      label: '$countryName, ${country.region}${capital != null ? ', capital: $capital' : ''}',
+      child: GestureDetector(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          context.push(Routes.countryDetail.replaceFirst(':code', country.code));
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: AppDimensions.borderRadiusXL,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: AppDimensions.blurMedium - 4,
+                offset: const Offset(0, AppDimensions.xxs),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Flag Container - Proper display with full flag visible
+              Expanded(
+                flex: 3,
+                child: ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusXL)),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      // Background for white flags
+                      Container(
                         decoration: BoxDecoration(
-                          color: regionColor,
-                          borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-                          boxShadow: [
-                            BoxShadow(
-                              color: regionColor.withValues(alpha: 0.3),
-                              blurRadius: AppDimensions.xxs,
-                              offset: const Offset(0, AppDimensions.xxs / 2),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.grey[200]!,
+                              Colors.grey[100]!,
+                            ],
+                          ),
+                        ),
+                      ),
+                      // Professional flag display using country_flags package
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppDimensions.sm),
+                          child: Semantics(
+                            image: true,
+                            label: 'Flag of $countryName',
+                            excludeSemantics: true,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: CountryFlag.fromCountryCode(
+                                country.code,
+                                height: 64,
+                                width: 96,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Subtle inner shadow for depth
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.vertical(top: Radius.circular(AppDimensions.radiusXL)),
+                          border: Border.all(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                      // Region badge
+                      Positioned(
+                        top: AppDimensions.xs,
+                        right: AppDimensions.xs,
+                        child: Semantics(
+                          label: '${country.region} region',
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppDimensions.xs,
+                              vertical: AppDimensions.xxs,
+                            ),
+                            decoration: BoxDecoration(
+                              color: regionColor,
+                              borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: regionColor.withValues(alpha: 0.3),
+                                  blurRadius: AppDimensions.xxs,
+                                  offset: const Offset(0, AppDimensions.xxs / 2),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              _getRegionIcon(country.region),
+                              size: AppDimensions.iconXS - 2,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Info Section
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(AppDimensions.sm),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ExcludeSemantics(
+                        child: Text(
+                          countryName,
+                          style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.xxs),
+                      ExcludeSemantics(
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              size: AppDimensions.sm,
+                              color: regionColor,
+                            ),
+                            const SizedBox(width: AppDimensions.xxs),
+                            Expanded(
+                              child: Text(
+                                capital ?? '-',
+                                style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
+                                  fontSize: 11,
+                                  color: Colors.grey[600],
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
-                        child: Icon(
-                          _getRegionIcon(country.region),
-                          size: AppDimensions.iconXS - 2,
-                          color: Colors.white,
-                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            // Info Section
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(AppDimensions.sm),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      country.getDisplayName(isArabic: isArabic),
-                      style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: AppDimensions.xxs),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on,
-                          size: AppDimensions.sm,
-                          color: regionColor,
-                        ),
-                        const SizedBox(width: AppDimensions.xxs),
-                        Expanded(
-                          child: Text(
-                            country.getDisplayCapital(isArabic: isArabic) ?? '-',
-                            style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-                              fontSize: 11,
-                              color: Colors.grey[600],
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ).animate().fadeIn(delay: Duration(milliseconds: 50 * (index % 10)), duration: 300.ms).scale(
+    );
+
+    if (reduceMotion) {
+      return card;
+    }
+
+    return card.animate().fadeIn(delay: Duration(milliseconds: 50 * (index % 10)), duration: 300.ms).scale(
           begin: const Offset(0.95, 0.95),
           end: const Offset(1, 1),
           delay: Duration(milliseconds: 50 * (index % 10)),

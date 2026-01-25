@@ -23,60 +23,78 @@ class BlitzTimer extends StatelessWidget {
     final progress = timeRemaining / totalTime;
     final isLow = timeRemaining <= 5;
     final color = isLow ? AppColors.error : AppColors.primary;
+    final reduceMotion = MediaQuery.of(context).disableAnimations;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.md,
-        vertical: AppDimensions.xs,
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AnimatedBuilder(
-                animation: pulseAnimation,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: isLow ? 1.0 + (pulseAnimation.value * 0.1) : 1.0,
-                    child: Icon(
-                      Icons.timer,
-                      color: color,
-                      size: AppDimensions.iconMD,
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(width: AppDimensions.xs),
-              Text(
-                '$timeRemaining',
-                style: GoogleFonts.poppins(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: color,
+    Widget content = Semantics(
+      label: '$timeRemaining seconds remaining',
+      liveRegion: isLow, // Announce urgently when time is low
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.md,
+          vertical: AppDimensions.xs,
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AnimatedBuilder(
+                  animation: pulseAnimation,
+                  builder: (context, child) {
+                    final scale = reduceMotion
+                        ? 1.0
+                        : (isLow ? 1.0 + (pulseAnimation.value * 0.1) : 1.0);
+                    return Transform.scale(
+                      scale: scale,
+                      child: Icon(
+                        Icons.timer,
+                        color: color,
+                        size: AppDimensions.iconMD,
+                        semanticLabel: 'Timer',
+                      ),
+                    );
+                  },
                 ),
-              ),
-              Text(
-                's',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  color: color.withValues(alpha: 0.7),
+                const SizedBox(width: AppDimensions.xs),
+                Text(
+                  '$timeRemaining',
+                  style: GoogleFonts.poppins(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppDimensions.xs),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppDimensions.xxs),
-            child: LinearProgressIndicator(
-              value: progress,
-              backgroundColor: color.withValues(alpha: 0.2),
-              color: color,
-              minHeight: 6,
+                Text(
+                  's',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    color: color.withValues(alpha: 0.7),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+            const SizedBox(height: AppDimensions.xs),
+            Semantics(
+              label: '${(progress * 100).round()}% time remaining',
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppDimensions.xxs),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  backgroundColor: color.withValues(alpha: 0.2),
+                  color: color,
+                  minHeight: 6,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-    ).animate().fadeIn(duration: 200.ms);
+    );
+
+    if (reduceMotion) {
+      return content;
+    }
+
+    return content.animate().fadeIn(duration: 200.ms);
   }
 }

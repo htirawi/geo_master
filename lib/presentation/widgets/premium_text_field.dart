@@ -38,13 +38,21 @@ class PremiumTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    // Theme-aware colors
+    final containerColor = isDark ? AppColors.surfaceDark : Colors.white;
+    final disabledFillColor = isDark ? AppColors.backgroundDark : Colors.grey.shade100;
+    final labelColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: containerColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -53,10 +61,13 @@ class PremiumTextField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         enabled: enabled,
+        style: TextStyle(
+          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+        ),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(
-            color: AppColors.textSecondaryLight,
+          labelStyle: TextStyle(
+            color: labelColor,
             fontWeight: FontWeight.w500,
           ),
           prefixIcon: Container(
@@ -90,7 +101,7 @@ class PremiumTextField extends StatelessWidget {
             borderSide: const BorderSide(color: AppColors.error, width: 2),
           ),
           filled: true,
-          fillColor: enabled ? Colors.white : Colors.grey.shade100,
+          fillColor: enabled ? containerColor : disabledFillColor,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
             vertical: 18,

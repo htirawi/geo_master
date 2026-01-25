@@ -368,7 +368,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               animation: _pulseController,
               builder: (context, _) {
                 return FractionallySizedBox(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   widthFactor: 0.3 + (_pulseController.value * 0.7),
                   child: Container(
                     decoration: BoxDecoration(

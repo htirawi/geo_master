@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/utils/responsive_utils.dart';
 import '../../../../domain/entities/achievement.dart';
 import '../../../../domain/entities/user.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -35,17 +36,20 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: _categories.length, vsync: this);
-    _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        setState(() {
-          _selectedCategory = _categories[_tabController.index];
-        });
-      }
-    });
+    _tabController.addListener(_onTabChanged);
+  }
+
+  void _onTabChanged() {
+    if (!_tabController.indexIsChanging) {
+      setState(() {
+        _selectedCategory = _categories[_tabController.index];
+      });
+    }
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_onTabChanged);
     _tabController.dispose();
     super.dispose();
   }
@@ -56,6 +60,12 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
     final l10n = AppLocalizations.of(context);
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final progress = ref.watch(userProgressProvider);
+
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final expandedHeight = responsive.sp(180);
+    final paddingLG = responsive.sp(AppDimensions.paddingLG);
+    final spacingMD = responsive.sp(AppDimensions.spacingMD);
 
     final unlockedIds = progress.unlockedAchievements.toSet();
     const allAchievements = Achievements.all;
@@ -85,7 +95,7 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
         slivers: [
           // App Bar
           SliverAppBar(
-            expandedHeight: 180,
+            expandedHeight: expandedHeight,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -102,7 +112,7 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
                 ),
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(AppDimensions.paddingLG),
+                    padding: EdgeInsets.all(paddingLG),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,20 +120,23 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
                         Row(
                           children: [
                             _buildStatCard(
+                              context,
                               theme,
                               Icons.emoji_events,
                               '$totalUnlocked/$totalAchievements',
                               l10n.unlocked,
                             ),
-                            const SizedBox(width: AppDimensions.spacingMD),
+                            SizedBox(width: spacingMD),
                             _buildStatCard(
+                              context,
                               theme,
                               Icons.pie_chart,
                               '$progressPercent%',
                               l10n.progress,
                             ),
-                            const SizedBox(width: AppDimensions.spacingMD),
+                            SizedBox(width: spacingMD),
                             _buildStatCard(
+                              context,
                               theme,
                               Icons.star,
                               '${_calculateTotalXpEarned(unlockedIds)}',
@@ -174,20 +187,20 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
           if (unlockedAchievements.isNotEmpty) ...[
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppDimensions.paddingMD,
-                  AppDimensions.paddingMD,
-                  AppDimensions.paddingMD,
-                  AppDimensions.paddingSM,
+                padding: responsive.insetsOnly(
+                  left: AppDimensions.paddingMD,
+                  top: AppDimensions.paddingMD,
+                  right: AppDimensions.paddingMD,
+                  bottom: AppDimensions.paddingSM,
                 ),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.check_circle,
                       color: AppColors.success,
-                      size: AppDimensions.iconSM,
+                      size: responsive.sp(AppDimensions.iconSM),
                     ),
-                    const SizedBox(width: AppDimensions.spacingSM),
+                    SizedBox(width: responsive.sp(AppDimensions.spacingSM)),
                     Text(
                       '${l10n.unlocked} (${unlockedAchievements.length})',
                       style: theme.textTheme.titleMedium?.copyWith(
@@ -199,14 +212,14 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.symmetric(
+              padding: responsive.insetsSymmetric(
                 horizontal: AppDimensions.paddingMD,
               ),
               sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: AppDimensions.spacingMD,
-                  crossAxisSpacing: AppDimensions.spacingMD,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: Responsive.gridColumns(context),
+                  mainAxisSpacing: responsive.sp(AppDimensions.spacingMD),
+                  crossAxisSpacing: responsive.sp(AppDimensions.spacingMD),
                   childAspectRatio: 0.85,
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -229,20 +242,20 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
           if (lockedAchievements.isNotEmpty) ...[
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppDimensions.paddingMD,
-                  AppDimensions.paddingLG,
-                  AppDimensions.paddingMD,
-                  AppDimensions.paddingSM,
+                padding: responsive.insetsOnly(
+                  left: AppDimensions.paddingMD,
+                  top: AppDimensions.paddingLG,
+                  right: AppDimensions.paddingMD,
+                  bottom: AppDimensions.paddingSM,
                 ),
                 child: Row(
                   children: [
                     Icon(
                       Icons.lock,
                       color: theme.colorScheme.onSurfaceVariant,
-                      size: AppDimensions.iconSM,
+                      size: responsive.sp(AppDimensions.iconSM),
                     ),
-                    const SizedBox(width: AppDimensions.spacingSM),
+                    SizedBox(width: responsive.sp(AppDimensions.spacingSM)),
                     Text(
                       '${l10n.locked} (${lockedAchievements.length})',
                       style: theme.textTheme.titleMedium?.copyWith(
@@ -254,17 +267,16 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(
-                AppDimensions.paddingMD,
-                0,
-                AppDimensions.paddingMD,
-                AppDimensions.paddingLG,
+              padding: responsive.insetsOnly(
+                left: AppDimensions.paddingMD,
+                right: AppDimensions.paddingMD,
+                bottom: AppDimensions.paddingLG,
               ),
               sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: AppDimensions.spacingMD,
-                  crossAxisSpacing: AppDimensions.spacingMD,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: Responsive.gridColumns(context),
+                  mainAxisSpacing: responsive.sp(AppDimensions.spacingMD),
+                  crossAxisSpacing: responsive.sp(AppDimensions.spacingMD),
                   childAspectRatio: 0.85,
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -292,10 +304,10 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
                   children: [
                     Icon(
                       Icons.emoji_events_outlined,
-                      size: AppDimensions.iconXXL,
+                      size: responsive.sp(AppDimensions.iconXXL),
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
-                    const SizedBox(height: AppDimensions.spacingMD),
+                    SizedBox(height: spacingMD),
                     Text(
                       'No achievements in this category',
                       style: theme.textTheme.bodyLarge?.copyWith(
@@ -312,22 +324,29 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
   }
 
   Widget _buildStatCard(
+    BuildContext context,
     ThemeData theme,
     IconData icon,
     String value,
     String label,
   ) {
+    final responsive = ResponsiveUtils.of(context);
+    final paddingSM = responsive.sp(AppDimensions.paddingSM);
+    final radiusMD = responsive.sp(AppDimensions.radiusMD);
+    final iconMD = responsive.sp(AppDimensions.iconMD);
+    final xxs = responsive.sp(AppDimensions.xxs);
+
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(AppDimensions.paddingSM),
+        padding: EdgeInsets.all(paddingSM),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+          borderRadius: BorderRadius.circular(radiusMD),
         ),
         child: Column(
           children: [
-            Icon(icon, color: Colors.white, size: AppDimensions.iconMD),
-            const SizedBox(height: AppDimensions.xxs),
+            Icon(icon, color: Colors.white, size: iconMD),
+            SizedBox(height: xxs),
             Text(
               value,
               style: theme.textTheme.titleMedium?.copyWith(
@@ -401,10 +420,20 @@ class _AchievementCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final radiusLG = responsive.sp(AppDimensions.radiusLG);
+    final paddingMD = responsive.sp(AppDimensions.paddingMD);
+    final spacingSM = responsive.sp(AppDimensions.spacingSM);
+    final xxs = responsive.sp(AppDimensions.xxs);
+    final xs = responsive.sp(AppDimensions.xs);
+    final paddingSM = responsive.sp(AppDimensions.paddingSM);
+    final radiusSM = responsive.sp(AppDimensions.radiusSM);
+
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+        borderRadius: BorderRadius.circular(radiusLG),
         border: isUnlocked
             ? Border.all(color: _getTierColor(achievement.tier), width: 2)
             : null,
@@ -412,8 +441,8 @@ class _AchievementCard extends StatelessWidget {
             ? [
                 BoxShadow(
                   color: _getTierColor(achievement.tier).withValues(alpha: 0.3),
-                  blurRadius: AppDimensions.xs,
-                  offset: const Offset(0, AppDimensions.xxs),
+                  blurRadius: xs,
+                  offset: Offset(0, xxs),
                 ),
               ]
             : null,
@@ -421,13 +450,13 @@ class _AchievementCard extends StatelessWidget {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(AppDimensions.paddingMD),
+            padding: EdgeInsets.all(paddingMD),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Achievement Icon
-                _buildAchievementIcon(theme),
-                const SizedBox(height: AppDimensions.spacingSM),
+                _buildAchievementIcon(context, theme),
+                SizedBox(height: spacingSM),
 
                 // Title
                 Text(
@@ -442,7 +471,7 @@ class _AchievementCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: AppDimensions.xxs),
+                SizedBox(height: xxs),
 
                 // Description
                 Text(
@@ -454,18 +483,18 @@ class _AchievementCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: AppDimensions.spacingSM),
+                SizedBox(height: spacingSM),
 
                 // XP Reward or Progress
                 if (isUnlocked)
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppDimensions.paddingSM,
-                      vertical: AppDimensions.xxs,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: paddingSM,
+                      vertical: xxs,
                     ),
                     decoration: BoxDecoration(
                       color: _getTierColor(achievement.tier).withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                      borderRadius: BorderRadius.circular(radiusSM),
                     ),
                     child: Text(
                       '+${achievement.xpReward} XP',
@@ -476,28 +505,28 @@ class _AchievementCard extends StatelessWidget {
                     ),
                   )
                 else
-                  _buildProgressIndicator(theme),
+                  _buildProgressIndicator(context, theme),
               ],
             ),
           ),
 
           // Tier Badge
           Positioned(
-            top: AppDimensions.xs,
-            right: isArabic ? null : AppDimensions.xs,
-            left: isArabic ? AppDimensions.xs : null,
+            top: xs,
+            right: isArabic ? null : xs,
+            left: isArabic ? xs : null,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimensions.xs - 2, vertical: 2),
+              padding: EdgeInsets.symmetric(horizontal: responsive.sp(AppDimensions.xs - 2), vertical: 2),
               decoration: BoxDecoration(
                 color: _getTierColor(achievement.tier),
-                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                borderRadius: BorderRadius.circular(radiusSM),
               ),
               child: Text(
                 achievement.tier.displayName,
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 10,
+                  fontSize: responsive.sp(10),
                 ),
               ),
             ),
@@ -509,7 +538,7 @@ class _AchievementCard extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                  borderRadius: BorderRadius.circular(radiusLG),
                 ),
               ),
             ),
@@ -518,14 +547,18 @@ class _AchievementCard extends StatelessWidget {
     );
   }
 
-  Widget _buildAchievementIcon(ThemeData theme) {
+  Widget _buildAchievementIcon(BuildContext context, ThemeData theme) {
+    final responsive = ResponsiveUtils.of(context);
+    final avatarSize = responsive.sp(AppDimensions.avatarLG - 8);
+    final iconSize = responsive.sp(AppDimensions.iconLG - 4);
+
     final iconColor = isUnlocked
         ? _getTierColor(achievement.tier)
         : theme.colorScheme.onSurfaceVariant;
 
     return Container(
-      width: AppDimensions.avatarLG - 8,
-      height: AppDimensions.avatarLG - 8,
+      width: avatarSize,
+      height: avatarSize,
       decoration: BoxDecoration(
         color: iconColor.withValues(alpha: isUnlocked ? 0.2 : 0.1),
         shape: BoxShape.circle,
@@ -536,12 +569,15 @@ class _AchievementCard extends StatelessWidget {
       child: Icon(
         _getCategoryIcon(achievement.category),
         color: iconColor,
-        size: AppDimensions.iconLG - 4,
+        size: iconSize,
       ),
     );
   }
 
-  Widget _buildProgressIndicator(ThemeData theme) {
+  Widget _buildProgressIndicator(BuildContext context, ThemeData theme) {
+    final responsive = ResponsiveUtils.of(context);
+    final xxs = responsive.sp(AppDimensions.xxs);
+
     final currentValue = _getCurrentValue();
     final progressPercent = achievement.requiredValue > 0
         ? (currentValue / achievement.requiredValue).clamp(0.0, 1.0)
@@ -555,7 +591,7 @@ class _AchievementCard extends StatelessWidget {
           valueColor: AlwaysStoppedAnimation(_getTierColor(achievement.tier)),
           borderRadius: BorderRadius.circular(2),
         ),
-        const SizedBox(height: AppDimensions.xxs),
+        SizedBox(height: xxs),
         Text(
           '$currentValue / ${achievement.requiredValue}',
           style: theme.textTheme.labelSmall?.copyWith(

@@ -114,6 +114,7 @@ class _NavItem extends StatefulWidget {
 class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  bool _reduceMotion = false;
 
   @override
   void initState() {
@@ -125,6 +126,12 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.9).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _reduceMotion = MediaQuery.of(context).disableAnimations;
   }
 
   @override
@@ -144,69 +151,86 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
       return _buildCenterItem(isDark);
     }
 
-    return GestureDetector(
-      onTapDown: (_) => _controller.forward(),
-      onTapUp: (_) => _controller.reverse(),
-      onTapCancel: () => _controller.reverse(),
-      onTap: widget.onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          );
+    return Semantics(
+      button: true,
+      selected: widget.isSelected,
+      label: widget.item.label,
+      child: GestureDetector(
+        onTapDown: (_) {
+          if (!_reduceMotion) _controller.forward();
         },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.all(6),
-                    decoration: widget.isSelected
-                        ? BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(
-                                AppDimensions.radiusSM),
-                          )
-                        : null,
-                    child: Icon(
-                      widget.isSelected
-                          ? widget.item.activeIcon ?? widget.item.icon
-                          : widget.item.icon,
-                      color: color,
-                      size: 22,
+        onTapUp: (_) {
+          if (!_reduceMotion) _controller.reverse();
+        },
+        onTapCancel: () {
+          if (!_reduceMotion) _controller.reverse();
+        },
+        onTap: widget.onTap,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _reduceMotion ? 1.0 : _scaleAnimation.value,
+              child: child,
+            );
+          },
+          child: Container(
+            // Ensure minimum touch target of 44x44
+            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    AnimatedContainer(
+                      duration: _reduceMotion
+                          ? Duration.zero
+                          : const Duration(milliseconds: 200),
+                      padding: const EdgeInsets.all(8),
+                      decoration: widget.isSelected
+                          ? BoxDecoration(
+                              color: AppColors.primary.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(
+                                  AppDimensions.radiusSM),
+                            )
+                          : null,
+                      child: Icon(
+                        widget.isSelected
+                            ? widget.item.activeIcon ?? widget.item.icon
+                            : widget.item.icon,
+                        color: color,
+                        size: 24,
+                      ),
                     ),
-                  ),
-                  if (widget.item.badge != null)
-                    Positioned(
-                      right: -4,
-                      top: -4,
-                      child: widget.item.badge!,
-                    ),
-                ],
-              ),
-              if (widget.showLabel) ...[
-                const SizedBox(height: 2),
-                AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 200),
-                  style: AppTypography.labelSmall.copyWith(
-                    color: color,
-                    fontWeight:
-                        widget.isSelected ? FontWeight.w600 : FontWeight.w400,
-                    fontSize: 10,
-                  ),
-                  child: Text(widget.item.label),
+                    if (widget.item.badge != null)
+                      Positioned(
+                        right: -4,
+                        top: -4,
+                        child: widget.item.badge!,
+                      ),
+                  ],
                 ),
+                if (widget.showLabel) ...[
+                  const SizedBox(height: 2),
+                  AnimatedDefaultTextStyle(
+                    duration: _reduceMotion
+                        ? Duration.zero
+                        : const Duration(milliseconds: 200),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: color,
+                      fontWeight:
+                          widget.isSelected ? FontWeight.w600 : FontWeight.w400,
+                      fontSize: 10,
+                    ),
+                    child: Text(widget.item.label),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -214,70 +238,83 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
   }
 
   Widget _buildCenterItem(bool isDark) {
-    return GestureDetector(
-      onTapDown: (_) => _controller.forward(),
-      onTapUp: (_) => _controller.reverse(),
-      onTapCancel: () => _controller.reverse(),
-      onTap: widget.onTap,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          );
+    return Semantics(
+      button: true,
+      selected: widget.isSelected,
+      label: widget.item.label,
+      child: GestureDetector(
+        onTapDown: (_) {
+          if (!_reduceMotion) _controller.forward();
         },
-        child: Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  gradient: widget.isSelected
-                      ? AppColors.explorerGradient
-                      : LinearGradient(
-                          colors: [
-                            AppColors.primary.withValues(alpha: 0.8),
-                            AppColors.primary,
-                          ],
-                        ),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.4),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  widget.isSelected
-                      ? widget.item.activeIcon ?? widget.item.icon
-                      : widget.item.icon,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-              if (widget.showLabel) ...[
-                const SizedBox(height: 2),
-                Text(
-                  widget.item.label,
-                  style: AppTypography.labelSmall.copyWith(
-                    fontSize: 10,
-                    color: widget.isSelected
-                        ? AppColors.primary
-                        : (isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondaryLight),
-                    fontWeight:
-                        widget.isSelected ? FontWeight.w600 : FontWeight.w400,
+        onTapUp: (_) {
+          if (!_reduceMotion) _controller.reverse();
+        },
+        onTapCancel: () {
+          if (!_reduceMotion) _controller.reverse();
+        },
+        onTap: widget.onTap,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _reduceMotion ? 1.0 : _scaleAnimation.value,
+              child: child,
+            );
+          },
+          child: Container(
+            // Ensure minimum touch target of 48x48 for center item
+            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    gradient: widget.isSelected
+                        ? AppColors.explorerGradient
+                        : LinearGradient(
+                            colors: [
+                              AppColors.primary.withValues(alpha: 0.8),
+                              AppColors.primary,
+                            ],
+                          ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.4),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    widget.isSelected
+                        ? widget.item.activeIcon ?? widget.item.icon
+                        : widget.item.icon,
+                    color: Colors.white,
+                    size: 24,
                   ),
                 ),
+                if (widget.showLabel) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    widget.item.label,
+                    style: AppTypography.labelSmall.copyWith(
+                      fontSize: 10,
+                      color: widget.isSelected
+                          ? AppColors.primary
+                          : (isDark
+                              ? AppColors.textSecondaryDark
+                              : AppColors.textSecondaryLight),
+                      fontWeight:
+                          widget.isSelected ? FontWeight.w600 : FontWeight.w400,
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

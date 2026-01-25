@@ -58,6 +58,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     // Listen to auth state changes
     ref.listen<AsyncValue<AuthState>>(authStateProvider, (previous, next) {
@@ -71,8 +72,8 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
     });
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      appBar: _buildAppBar(theme, l10n),
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      appBar: _buildAppBar(theme, l10n, isDark),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppDimensions.paddingXL),
@@ -81,13 +82,13 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHeader(theme, l10n),
+                _buildHeader(theme, l10n, isDark),
                 const SizedBox(height: AppDimensions.spacingXL),
-                _buildFormFields(l10n),
+                _buildFormFields(l10n, isDark),
                 const SizedBox(height: AppDimensions.spacingMD),
                 _buildSubmitButton(l10n),
                 const SizedBox(height: AppDimensions.spacingLG),
-                _buildToggleButton(theme, l10n),
+                _buildToggleButton(theme, l10n, isDark),
               ],
             ),
           ),
@@ -96,7 +97,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(ThemeData theme, AppLocalizations l10n) {
+  PreferredSizeWidget _buildAppBar(ThemeData theme, AppLocalizations l10n, bool isDark) {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -104,19 +105,19 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
         icon: Container(
           padding: const EdgeInsets.all(AppDimensions.xs),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
+                color: (isDark ? Colors.black : Colors.black).withValues(alpha: isDark ? 0.3 : 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
             ],
           ),
-          child: const Icon(
+          child: Icon(
             Icons.arrow_back,
-            color: AppColors.textPrimaryLight,
+            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
             size: 20,
           ),
         ),
@@ -127,14 +128,14 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
         _isSignUp ? l10n.createAccount : l10n.signIn,
         style: theme.textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.w600,
-          color: AppColors.textPrimaryLight,
+          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
         ),
       ),
       centerTitle: true,
     );
   }
 
-  Widget _buildHeader(ThemeData theme, AppLocalizations l10n) {
+  Widget _buildHeader(ThemeData theme, AppLocalizations l10n, bool isDark) {
     return Column(
       children: [
         Container(
@@ -145,8 +146,8 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                AppColors.primary.withValues(alpha: 0.1),
-                AppColors.primary.withValues(alpha: 0.2),
+                AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.1),
+                AppColors.primary.withValues(alpha: isDark ? 0.3 : 0.2),
               ],
             ),
             shape: BoxShape.circle,
@@ -154,7 +155,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
           child: Icon(
             _isSignUp ? Icons.person_add_outlined : Icons.login,
             size: 40,
-            color: AppColors.primary,
+            color: isDark ? AppColors.primaryLight : AppColors.primary,
           ),
         )
             .animate()
@@ -170,7 +171,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
           _isSignUp ? l10n.createYourAccount : l10n.welcomeBack,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimaryLight,
+            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
           ),
         )
             .animate()
@@ -182,7 +183,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
               ? l10n.enterDetailsToGetStarted
               : l10n.enterCredentialsToSignIn,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: AppColors.textSecondaryLight,
+            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
           ),
           textAlign: TextAlign.center,
         )
@@ -193,7 +194,9 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
     );
   }
 
-  Widget _buildFormFields(AppLocalizations l10n) {
+  Widget _buildFormFields(AppLocalizations l10n, bool isDark) {
+    final secondaryColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+
     return Column(
       children: [
         // Name field (sign up only)
@@ -247,7 +250,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
               _obscurePassword
                   ? Icons.visibility_off_outlined
                   : Icons.visibility_outlined,
-              color: AppColors.textSecondaryLight,
+              color: secondaryColor,
             ),
             onPressed: () =>
                 setState(() => _obscurePassword = !_obscurePassword),
@@ -281,7 +284,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
                 _obscureConfirmPassword
                     ? Icons.visibility_off_outlined
                     : Icons.visibility_outlined,
-                color: AppColors.textSecondaryLight,
+                color: secondaryColor,
               ),
               onPressed: () => setState(
                   () => _obscureConfirmPassword = !_obscureConfirmPassword),
@@ -307,8 +310,8 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
               onPressed: _showForgotPasswordDialog,
               child: Text(
                 l10n.forgotPassword,
-                style: const TextStyle(
-                  color: AppColors.primary,
+                style: TextStyle(
+                  color: isDark ? AppColors.primaryLight : AppColors.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -333,14 +336,14 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
         .slideY(begin: 0.2, end: 0, delay: 700.ms, duration: 400.ms);
   }
 
-  Widget _buildToggleButton(ThemeData theme, AppLocalizations l10n) {
+  Widget _buildToggleButton(ThemeData theme, AppLocalizations l10n, bool isDark) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           _isSignUp ? l10n.alreadyHaveAccount : l10n.dontHaveAccount,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: AppColors.textSecondaryLight,
+            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
           ),
         ),
         TextButton(
@@ -351,8 +354,8 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
           },
           child: Text(
             _isSignUp ? l10n.signIn : l10n.signUp,
-            style: const TextStyle(
-              color: AppColors.primary,
+            style: TextStyle(
+              color: isDark ? AppColors.primaryLight : AppColors.primary,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -398,6 +401,8 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
     final emailController = TextEditingController(text: _emailController.text);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final secondaryColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
     showDialog<void>(
       context: context,
@@ -408,10 +413,10 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
             Container(
               padding: const EdgeInsets.all(AppDimensions.xs),
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                color: AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.lock_reset, color: AppColors.primary),
+              child: Icon(Icons.lock_reset, color: isDark ? AppColors.primaryLight : AppColors.primary),
             ),
             const SizedBox(width: AppDimensions.sm),
             Text(l10n.resetPassword),
@@ -422,12 +427,12 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
           children: [
             Text(
               l10n.resetPasswordDescription,
-              style: const TextStyle(color: AppColors.textSecondaryLight),
+              style: TextStyle(color: secondaryColor),
             ),
             const SizedBox(height: AppDimensions.spacingMD),
             Container(
               decoration: BoxDecoration(
-                color: Colors.grey.shade50,
+                color: isDark ? AppColors.surfaceDark : AppColors.mountainSnow,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               ),
               child: TextField(
@@ -438,8 +443,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
                     borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                     borderSide: BorderSide.none,
                   ),
-                  prefixIcon: const Icon(Icons.email_outlined,
-                      color: AppColors.textSecondaryLight),
+                  prefixIcon: Icon(Icons.email_outlined, color: secondaryColor),
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -451,12 +455,12 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
             onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(
               l10n.cancel,
-              style: const TextStyle(color: AppColors.textSecondaryLight),
+              style: TextStyle(color: secondaryColor),
             ),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: isDark ? AppColors.primaryLight : AppColors.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               ),
