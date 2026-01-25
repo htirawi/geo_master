@@ -103,7 +103,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
     } on FirebaseException catch (e) {
       throw ServerException(message: 'Failed to get user: ${e.message}');
     } catch (e) {
-      throw ServerException(message: 'Unexpected error getting user');
+      throw const ServerException(message: 'Unexpected error getting user');
     }
   }
 
@@ -126,7 +126,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
     } on FirebaseException catch (e) {
       throw ServerException(message: 'Failed to save user: ${e.message}');
     } catch (e) {
-      throw ServerException(message: 'Unexpected error saving user');
+      throw const ServerException(message: 'Unexpected error saving user');
     }
   }
 
@@ -143,7 +143,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       throw ServerException(
           message: 'Failed to update preferences: ${e.message}');
     } catch (e) {
-      throw ServerException(
+      throw const ServerException(
           message: 'Unexpected error updating preferences');
     }
   }
@@ -160,7 +160,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
     } on FirebaseException catch (e) {
       throw ServerException(message: 'Failed to update progress: ${e.message}');
     } catch (e) {
-      throw ServerException(message: 'Unexpected error updating progress');
+      throw const ServerException(message: 'Unexpected error updating progress');
     }
   }
 
@@ -209,7 +209,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       throw ServerException(message: 'Failed to add XP: ${e.message}');
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException(message: 'Unexpected error adding XP');
+      throw const ServerException(message: 'Unexpected error adding XP');
     }
   }
 
@@ -282,7 +282,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       throw ServerException(message: 'Failed to update streak: ${e.message}');
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException(message: 'Unexpected error updating streak');
+      throw const ServerException(message: 'Unexpected error updating streak');
     }
   }
 
@@ -314,7 +314,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
         message: 'Failed to increment countries learned: ${e.message}',
       );
     } catch (e) {
-      throw ServerException(
+      throw const ServerException(
         message: 'Unexpected error incrementing countries learned',
       );
     }
@@ -331,7 +331,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
         message: 'Failed to increment quizzes completed: ${e.message}',
       );
     } catch (e) {
-      throw ServerException(
+      throw const ServerException(
         message: 'Unexpected error incrementing quizzes completed',
       );
     }
@@ -353,7 +353,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
         message: 'Failed to update quiz stats: ${e.message}',
       );
     } catch (e) {
-      throw ServerException(
+      throw const ServerException(
         message: 'Unexpected error updating quiz stats',
       );
     }
@@ -370,7 +370,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
         message: 'Failed to unlock achievement: ${e.message}',
       );
     } catch (e) {
-      throw ServerException(
+      throw const ServerException(
         message: 'Unexpected error unlocking achievement',
       );
     }
@@ -386,7 +386,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
         message: 'Failed to get learned countries: ${e.message}',
       );
     } catch (e) {
-      throw ServerException(
+      throw const ServerException(
         message: 'Unexpected error getting learned countries',
       );
     }
@@ -425,7 +425,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
         message: 'Failed to get leaderboard: ${e.message}',
       );
     } catch (e) {
-      throw ServerException(
+      throw const ServerException(
         message: 'Unexpected error getting leaderboard',
       );
     }
@@ -454,7 +454,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
       throw ServerException(message: 'Failed to get user rank: ${e.message}');
     } catch (e) {
       if (e is ServerException) rethrow;
-      throw ServerException(message: 'Unexpected error getting user rank');
+      throw const ServerException(message: 'Unexpected error getting user rank');
     }
   }
 
@@ -475,7 +475,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
         message: 'Failed to save quiz result: ${e.message}',
       );
     } catch (e) {
-      throw ServerException(
+      throw const ServerException(
         message: 'Unexpected error saving quiz result',
       );
     }
@@ -506,7 +506,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
         message: 'Failed to get quiz history: ${e.message}',
       );
     } catch (e) {
-      throw ServerException(
+      throw const ServerException(
         message: 'Unexpected error getting quiz history',
       );
     }
@@ -554,7 +554,7 @@ class FirestoreUserDataSource implements IFirestoreUserDataSource {
         message: 'Failed to sync quiz history: ${e.message}',
       );
     } catch (e) {
-      throw ServerException(
+      throw const ServerException(
         message: 'Unexpected error syncing quiz history',
       );
     }

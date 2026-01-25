@@ -191,7 +191,7 @@ class ClaudeApiDataSource implements IClaudeApiDataSource {
         error: e,
         stackTrace: stackTrace,
       );
-      throw ServerException(message: 'Failed to send message');
+      throw const ServerException(message: 'Failed to send message');
     }
   }
 
@@ -267,7 +267,7 @@ class ClaudeApiDataSource implements IClaudeApiDataSource {
         error: e,
         stackTrace: stackTrace,
       );
-      throw ServerException(message: 'Failed to send message');
+      throw const ServerException(message: 'Failed to send message');
     }
   }
 
@@ -614,7 +614,7 @@ Guidelines:
         error: e,
         stackTrace: stackTrace,
       );
-      throw ServerException(message: 'Failed to analyze image');
+      throw const ServerException(message: 'Failed to analyze image');
     }
   }
 
@@ -709,7 +709,7 @@ Guidelines:
         error: e,
         stackTrace: stackTrace,
       );
-      throw ServerException(message: 'Failed to generate quiz');
+      throw const ServerException(message: 'Failed to generate quiz');
     }
   }
 
@@ -818,7 +818,7 @@ Guidelines:
         error: e,
         stackTrace: stackTrace,
       );
-      throw ServerException(message: 'Failed to generate study plan');
+      throw const ServerException(message: 'Failed to generate study plan');
     }
   }
 
@@ -934,7 +934,7 @@ $sanitizedContent
         error: e,
         stackTrace: stackTrace,
       );
-      throw ServerException(message: 'Failed to get essay feedback');
+      throw const ServerException(message: 'Failed to get essay feedback');
     }
   }
 }

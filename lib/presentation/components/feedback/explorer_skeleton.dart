@@ -177,13 +177,13 @@ class CountryCardSkeleton extends StatelessWidget {
             ),
             const SizedBox(width: AppDimensions.md),
             // Text placeholders
-            Expanded(
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SkeletonBox(width: 120, height: 18),
-                  const SizedBox(height: AppDimensions.xs),
-                  const SkeletonBox(width: 80, height: 14),
+                  SkeletonBox(width: 120, height: 18),
+                  SizedBox(height: AppDimensions.xs),
+                  SkeletonBox(width: 80, height: 14),
                 ],
               ),
             ),
@@ -211,25 +211,25 @@ class QuizCardSkeleton extends StatelessWidget {
           color: isDark ? AppColors.cardDark : AppColors.cardLight,
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         ),
-        child: Column(
+        child: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const SkeletonCircle(size: 48),
-                const SizedBox(width: AppDimensions.md),
+                SkeletonCircle(size: 48),
+                SizedBox(width: AppDimensions.md),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SkeletonBox(width: 100, height: 18),
-                    const SizedBox(height: AppDimensions.xs),
-                    const SkeletonBox(width: 60, height: 14),
+                    SkeletonBox(width: 100, height: 18),
+                    SizedBox(height: AppDimensions.xs),
+                    SkeletonBox(width: 60, height: 14),
                   ],
                 ),
               ],
             ),
-            const SizedBox(height: AppDimensions.md),
-            const SkeletonBox(height: 8),
+            SizedBox(height: AppDimensions.md),
+            SkeletonBox(height: 8),
           ],
         ),
       ),
@@ -252,14 +252,14 @@ class StatCardSkeleton extends StatelessWidget {
           color: isDark ? AppColors.cardDark : AppColors.cardLight,
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         ),
-        child: Column(
+        child: const Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SkeletonCircle(size: 32),
-            const SizedBox(height: AppDimensions.sm),
-            const SkeletonBox(width: 60, height: 24),
-            const SizedBox(height: AppDimensions.xs),
-            const SkeletonBox(width: 80, height: 12),
+            SkeletonCircle(size: 32),
+            SizedBox(height: AppDimensions.sm),
+            SkeletonBox(width: 60, height: 24),
+            SizedBox(height: AppDimensions.xs),
+            SkeletonBox(width: 80, height: 12),
           ],
         ),
       ),
@@ -361,11 +361,11 @@ class ProfileHeaderSkeleton extends StatelessWidget {
   }
 
   Widget _buildStatColumn() {
-    return Column(
+    return const Column(
       children: [
-        const SkeletonBox(width: 40, height: 24),
-        const SizedBox(height: AppDimensions.xxs),
-        const SkeletonBox(width: 60, height: 12),
+        SkeletonBox(width: 40, height: 24),
+        SizedBox(height: AppDimensions.xxs),
+        SkeletonBox(width: 60, height: 12),
       ],
     );
   }

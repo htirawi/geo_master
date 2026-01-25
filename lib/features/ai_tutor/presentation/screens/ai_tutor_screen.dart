@@ -67,6 +67,9 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
   }
 
   Future<void> _initializeServices() async {
+    // Capture locale before async gap
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
     // Initialize speech service
     final speechService = ref.read(speechServiceProvider);
     await speechService.initialize();
@@ -76,7 +79,6 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
     await ttsService.initialize();
 
     // Set TTS language based on preferences
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     await ttsService.setLanguageFromCode(isArabic ? 'ar' : 'en');
 
     // Listen to speech results
@@ -478,7 +480,7 @@ class _AiTutorScreenState extends ConsumerState<AiTutorScreen> {
                 PopupMenuItem(
                   value: 'clear',
                   child: ListTile(
-                    leading: Icon(Icons.delete_outline, color: AppColors.error),
+                    leading: const Icon(Icons.delete_outline, color: AppColors.error),
                     title: Text(
                       l10n.clearChat,
                       style: const TextStyle(color: AppColors.error),

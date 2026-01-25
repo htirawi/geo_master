@@ -5,9 +5,9 @@ import '../../../../../core/constants/app_dimensions.dart';
 
 /// Info item data class
 class InfoItem {
+  const InfoItem(this.label, this.value);
   final String label;
   final String value;
-  const InfoItem(this.label, this.value);
 }
 
 /// Reusable info section widget for displaying key-value pairs

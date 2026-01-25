@@ -183,7 +183,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       borderColor: Colors.grey.shade300,
       isLoading: _isLoading && _loadingProvider == 'google',
       onPressed: canProceed
-          ? () => _signInWithGoogle()
+          ? _signInWithGoogle
           : () => _showTermsWarning(l10n),
       isArabic: isArabic,
     )
@@ -257,7 +257,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       textColor: canProceed ? Colors.white : Colors.white.withValues(alpha: 0.6),
       isLoading: _isLoading && _loadingProvider == 'apple',
       onPressed: canProceed
-          ? () => _signInWithApple()
+          ? _signInWithApple
           : () => _showTermsWarning(l10n),
       isArabic: isArabic,
     )
@@ -447,7 +447,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
     return _PressableButton(
       onPressed: canProceed
-          ? () => _continueAsGuest()
+          ? _continueAsGuest
           : () => _showTermsWarning(l10n),
       child: Container(
         width: double.infinity,

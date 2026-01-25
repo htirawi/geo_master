@@ -105,7 +105,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
           'SECURITY: Failed to open encrypted progress box - refusing unencrypted storage',
           tag: 'QuizLocalDS',
         );
-        throw CacheException(
+        throw const CacheException(
           message: 'Unable to securely store quiz progress. Please restart the app.',
         );
       }
@@ -127,7 +127,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
           'SECURITY: Failed to open encrypted history box - refusing unencrypted storage',
           tag: 'QuizLocalDS',
         );
-        throw CacheException(
+        throw const CacheException(
           message: 'Unable to securely store quiz history. Please restart the app.',
         );
       }
@@ -149,7 +149,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
           'SECURITY: Failed to open encrypted daily challenge box - refusing unencrypted storage',
           tag: 'QuizLocalDS',
         );
-        throw CacheException(
+        throw const CacheException(
           message: 'Unable to securely store daily challenges. Please restart the app.',
         );
       }
@@ -164,7 +164,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       final key = 'progress_${quiz.id}';
       await box.put(key, jsonEncode(quiz.toJson()));
     } catch (e) {
-      throw CacheException(message: 'Failed to save quiz progress');
+      throw const CacheException(message: 'Failed to save quiz progress');
     }
   }
 
@@ -190,7 +190,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       }
       return null;
     } catch (e) {
-      throw CacheException(message: 'Failed to get quiz progress');
+      throw const CacheException(message: 'Failed to get quiz progress');
     }
   }
 
@@ -205,7 +205,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
         await box.delete(key);
       }
     } catch (e) {
-      throw CacheException(message: 'Failed to clear quiz progress');
+      throw const CacheException(message: 'Failed to clear quiz progress');
     }
   }
 
@@ -216,7 +216,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       final key = 'result_${result.userId}_${result.completedAt.millisecondsSinceEpoch}';
       await box.put(key, jsonEncode(result.toJson()));
     } catch (e) {
-      throw CacheException(message: 'Failed to save quiz result');
+      throw const CacheException(message: 'Failed to save quiz result');
     }
   }
 
@@ -258,7 +258,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       results.sort((a, b) => b.completedAt.compareTo(a.completedAt));
       return results.take(limit).toList();
     } catch (e) {
-      throw CacheException(message: 'Failed to get quiz history');
+      throw const CacheException(message: 'Failed to get quiz history');
     }
   }
 
@@ -272,7 +272,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       final key = _getDailyChallengeKey(userId, date);
       await box.put(key, DateTime.now().toIso8601String());
     } catch (e) {
-      throw CacheException(
+      throw const CacheException(
         message: 'Failed to save daily challenge completion',
       );
     }
@@ -285,7 +285,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       final key = _getDailyChallengeKey(userId, date);
       return box.containsKey(key);
     } catch (e) {
-      throw CacheException(
+      throw const CacheException(
         message: 'Failed to check daily challenge status',
       );
     }
@@ -302,7 +302,7 @@ class QuizLocalDataSource implements IQuizLocalDataSource {
       await historyBox.clear();
       await dailyChallengeBox.clear();
     } catch (e) {
-      throw CacheException(message: 'Failed to clear quiz cache');
+      throw const CacheException(message: 'Failed to clear quiz cache');
     }
   }
 

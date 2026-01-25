@@ -78,7 +78,7 @@ class Country {
   /// Get display continents based on locale
   List<String> getDisplayContinents({required bool isArabic}) {
     if (isArabic) {
-      return continents.map((c) => ArabicCountryNames.getContinent(c)).toList();
+      return continents.map(ArabicCountryNames.getContinent).toList();
     }
     return continents;
   }

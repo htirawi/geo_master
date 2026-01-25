@@ -3,13 +3,12 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-
 import 'package:geo_master/core/error/failures.dart';
 import 'package:geo_master/domain/entities/chat_message.dart';
 import 'package:geo_master/domain/entities/user.dart';
 import 'package:geo_master/presentation/providers/ai_tutor_provider.dart';
 import 'package:geo_master/presentation/providers/auth_provider.dart';
+import 'package:mocktail/mocktail.dart';
 
 import '../../../helpers/test_helpers.dart';
 
@@ -147,7 +146,7 @@ void main() {
         await container.read(aiTutorProvider.notifier).initialize(testUser.id);
 
         // Act
-        final context = TutorContext(userLevel: 1);
+        const context = TutorContext(userLevel: 1);
         await container.read(aiTutorProvider.notifier).sendMessage(
               userId: testUser.id,
               message: 'Hello!',
@@ -206,7 +205,7 @@ void main() {
         await container.read(aiTutorProvider.notifier).initialize(testUser.id);
 
         // Act
-        final context = TutorContext(userLevel: 1);
+        const context = TutorContext(userLevel: 1);
         await container.read(aiTutorProvider.notifier).sendMessage(
               userId: testUser.id,
               message: 'Hello!',

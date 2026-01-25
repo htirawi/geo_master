@@ -116,7 +116,7 @@ class CountryRepositoryImpl implements ICountryRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'An unexpected error occurred'));
+      return const Left(ServerFailure(message: 'An unexpected error occurred'));
     }
   }
 
@@ -158,7 +158,7 @@ class CountryRepositoryImpl implements ICountryRepository {
         statusCode: e.statusCode,
       ));
     } catch (e) {
-      return Left(ServerFailure(message: 'An unexpected error occurred'));
+      return const Left(ServerFailure(message: 'An unexpected error occurred'));
     }
   }
 
@@ -195,7 +195,7 @@ class CountryRepositoryImpl implements ICountryRepository {
         statusCode: e.statusCode,
       ));
     } catch (e) {
-      return Left(ServerFailure(message: 'An unexpected error occurred'));
+      return const Left(ServerFailure(message: 'An unexpected error occurred'));
     }
   }
 
@@ -234,7 +234,7 @@ class CountryRepositoryImpl implements ICountryRepository {
         statusCode: e.statusCode,
       ));
     } catch (e) {
-      return Left(ServerFailure(message: 'An unexpected error occurred'));
+      return const Left(ServerFailure(message: 'An unexpected error occurred'));
     }
   }
 
@@ -253,7 +253,7 @@ class CountryRepositoryImpl implements ICountryRepository {
         },
       );
     } catch (e) {
-      return Left(ServerFailure(message: 'An unexpected error occurred'));
+      return const Left(ServerFailure(message: 'An unexpected error occurred'));
     }
   }
 
@@ -282,7 +282,7 @@ class CountryRepositoryImpl implements ICountryRepository {
         },
       );
     } catch (e) {
-      return Left(ServerFailure(message: 'An unexpected error occurred'));
+      return const Left(ServerFailure(message: 'An unexpected error occurred'));
     }
   }
 
@@ -356,7 +356,7 @@ class CountryRepositoryImpl implements ICountryRepository {
       await box.clear();
       return const Right(null);
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to clear cache'));
+      return const Left(CacheFailure(message: 'Failed to clear cache'));
     }
   }
 }

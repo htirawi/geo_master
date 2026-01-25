@@ -106,7 +106,7 @@ class CountryContentNotifier extends StateNotifier<AsyncValue<CountryContentStat
         travelTips: results[8].fold((_) => <String>[], (t) => t as List<String>),
       ));
     } catch (e) {
-      state = AsyncValue.data(CountryContentError(
+      state = const AsyncValue.data(CountryContentError(
         ServerFailure(message: 'Failed to load content'),
       ));
     }

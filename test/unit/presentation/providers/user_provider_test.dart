@@ -3,13 +3,12 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-
 import 'package:geo_master/core/error/failures.dart';
 import 'package:geo_master/domain/entities/user.dart';
 import 'package:geo_master/domain/repositories/i_user_repository.dart';
 import 'package:geo_master/presentation/providers/auth_provider.dart';
 import 'package:geo_master/presentation/providers/user_provider.dart';
+import 'package:mocktail/mocktail.dart';
 
 import '../../../helpers/test_helpers.dart';
 
@@ -106,14 +105,14 @@ void main() {
         final testUser = createTestUser(
           progress: const UserProgress(totalXp: 1000),
         );
-        final updatedProgress = const UserProgress(totalXp: 1100);
+        const updatedProgress = UserProgress(totalXp: 1100);
 
         when(() => mockAuthRepository.authStateChanges)
             .thenAnswer((_) => authStreamController.stream);
         when(() => mockUserRepository.getCurrentUserData())
             .thenAnswer((_) async => Right(testUser));
         when(() => mockUserRepository.addXp(TestData.testUserId, 100))
-            .thenAnswer((_) async => Right(updatedProgress));
+            .thenAnswer((_) async => const Right(updatedProgress));
 
         container = createTestContainer(
           userRepo: mockUserRepository,

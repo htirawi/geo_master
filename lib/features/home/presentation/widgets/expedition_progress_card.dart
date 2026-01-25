@@ -8,8 +8,8 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/components/cards/explorer_card.dart';
 import '../../../../presentation/providers/auth_provider.dart';
 import '../../../../presentation/providers/user_provider.dart';
-import 'week_progress_bar.dart';
 import 'mini_stat_item.dart';
+import 'week_progress_bar.dart';
 
 /// Expedition Progress Card - Streak + Stats
 ///

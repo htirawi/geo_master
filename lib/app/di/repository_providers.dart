@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'service_locator.dart';
 import '../../core/services/translation_service.dart';
 import '../../data/datasources/remote/weather_datasource.dart';
 import '../../domain/repositories/i_ai_tutor_repository.dart';
@@ -13,6 +12,7 @@ import '../../domain/repositories/i_quiz_repository.dart';
 import '../../domain/repositories/i_subscription_repository.dart';
 import '../../domain/repositories/i_user_repository.dart';
 import '../../domain/repositories/i_world_exploration_repository.dart';
+import 'service_locator.dart';
 
 // =============================================================================
 // Repository Providers

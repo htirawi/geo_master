@@ -587,14 +587,14 @@ final canSendMessageProvider = FutureProvider<bool>((ref) async {
 /// Speech service provider
 final speechServiceProvider = Provider<SpeechService>((ref) {
   final service = SpeechService();
-  ref.onDispose(() => service.dispose());
+  ref.onDispose(service.dispose);
   return service;
 });
 
 /// TTS service provider
 final ttsServiceProvider = Provider<TTSService>((ref) {
   final service = TTSService();
-  ref.onDispose(() => service.dispose());
+  ref.onDispose(service.dispose);
   return service;
 });
 

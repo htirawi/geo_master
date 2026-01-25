@@ -49,7 +49,7 @@ class RestCountriesDataSource implements IRestCountriesDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'An unexpected error occurred');
+      throw const ServerException(message: 'An unexpected error occurred');
     }
   }
 
@@ -93,7 +93,7 @@ class RestCountriesDataSource implements IRestCountriesDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'An unexpected error occurred');
+      throw const ServerException(message: 'An unexpected error occurred');
     }
   }
 
@@ -127,7 +127,7 @@ class RestCountriesDataSource implements IRestCountriesDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'An unexpected error occurred');
+      throw const ServerException(message: 'An unexpected error occurred');
     }
   }
 
@@ -168,7 +168,7 @@ class RestCountriesDataSource implements IRestCountriesDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'An unexpected error occurred');
+      throw const ServerException(message: 'An unexpected error occurred');
     }
   }
 

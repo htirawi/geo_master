@@ -294,7 +294,7 @@ class ExplorerSliverAppBar extends StatelessWidget {
         ),
         background: background ??
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: AppColors.explorerGradient,
               ),
             ),

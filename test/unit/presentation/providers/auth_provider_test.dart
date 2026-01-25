@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-
 import 'package:geo_master/core/error/failures.dart';
 import 'package:geo_master/domain/entities/user.dart';
 import 'package:geo_master/presentation/providers/auth_provider.dart';
+import 'package:mocktail/mocktail.dart';
 
 import '../../../helpers/test_helpers.dart';
 

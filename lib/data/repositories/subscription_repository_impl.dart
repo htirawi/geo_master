@@ -53,7 +53,7 @@ class SubscriptionRepositoryImpl implements ISubscriptionRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to get subscription'));
+      return const Left(ServerFailure(message: 'Failed to get subscription'));
     }
   }
 
@@ -112,7 +112,7 @@ class SubscriptionRepositoryImpl implements ISubscriptionRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to get subscription options'));
+      return const Left(ServerFailure(message: 'Failed to get subscription options'));
     }
   }
 
@@ -168,7 +168,7 @@ class SubscriptionRepositoryImpl implements ISubscriptionRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(SubscriptionFailure(message: 'Failed to complete purchase'));
+      return const Left(SubscriptionFailure(message: 'Failed to complete purchase'));
     }
   }
 
@@ -203,7 +203,7 @@ class SubscriptionRepositoryImpl implements ISubscriptionRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(SubscriptionFailure(message: 'Failed to restore purchases'));
+      return const Left(SubscriptionFailure(message: 'Failed to restore purchases'));
     }
   }
 
@@ -229,7 +229,7 @@ class SubscriptionRepositoryImpl implements ISubscriptionRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(
+      return const Left(
         SubscriptionFailure(message: 'Failed to process cancellation'),
       );
     }
@@ -252,7 +252,7 @@ class SubscriptionRepositoryImpl implements ISubscriptionRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to check premium status'));
+      return const Left(ServerFailure(message: 'Failed to check premium status'));
     }
   }
 
@@ -304,7 +304,7 @@ class SubscriptionRepositoryImpl implements ISubscriptionRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to check feature access'));
+      return const Left(ServerFailure(message: 'Failed to check feature access'));
     }
   }
 
@@ -341,7 +341,7 @@ class SubscriptionRepositoryImpl implements ISubscriptionRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure(message: 'Failed to sync subscription'));
+      return const Left(ServerFailure(message: 'Failed to sync subscription'));
     }
   }
 }

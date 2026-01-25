@@ -226,7 +226,7 @@ class _ExplorerButtonState extends State<ExplorerButton>
     final isDisabled = widget.onPressed == null || widget.isLoading;
     final config = _getButtonConfig(isDark, isDisabled);
 
-    Widget button = AnimatedBuilder(
+    final Widget button = AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
         return Transform.scale(

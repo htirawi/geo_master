@@ -284,7 +284,7 @@ class _QuickFactsSection extends StatelessWidget {
               value: isArabic
                   ? country.languages
                       .take(3)
-                      .map((l) => ArabicCountryNames.getLanguage(l))
+                      .map(ArabicCountryNames.getLanguage)
                       .join('، ')
                   : country.languages.take(3).join(', '),
             ),

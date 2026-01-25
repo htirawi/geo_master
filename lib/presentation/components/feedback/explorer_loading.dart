@@ -175,7 +175,7 @@ class _CompassPainter extends CustomPainter {
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round;
 
-    final sweepAngle = math.pi * 0.8;
+    const sweepAngle = math.pi * 0.8;
     final startAngle = progress * 2 * math.pi - math.pi / 2;
 
     canvas.drawArc(

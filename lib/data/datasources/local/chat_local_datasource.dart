@@ -121,7 +121,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
           'SECURITY: Failed to open encrypted chat box - refusing to store data unencrypted',
           tag: 'ChatLocalDS',
         );
-        throw CacheException(
+        throw const CacheException(
           message: 'Unable to securely store chat data. Please restart the app.',
         );
       }
@@ -154,7 +154,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
 
       await box.put(key, jsonEncode(messages));
     } catch (e) {
-      throw CacheException(message: 'Failed to save chat message');
+      throw const CacheException(message: 'Failed to save chat message');
     }
   }
 
@@ -201,7 +201,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
     } on CacheException {
       rethrow;
     } catch (e) {
-      throw CacheException(message: 'Failed to get chat history');
+      throw const CacheException(message: 'Failed to get chat history');
     }
   }
 
@@ -212,7 +212,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
       final key = 'chat_$userId';
       await box.delete(key);
     } catch (e) {
-      throw CacheException(message: 'Failed to clear chat history');
+      throw const CacheException(message: 'Failed to clear chat history');
     }
   }
 
@@ -233,7 +233,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
 
       return _sharedPreferences.getInt('$_messageCountPrefix$userId') ?? 0;
     } catch (e) {
-      throw CacheException(message: 'Failed to get message count');
+      throw const CacheException(message: 'Failed to get message count');
     }
   }
 
@@ -252,7 +252,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
         today,
       );
     } catch (e) {
-      throw CacheException(message: 'Failed to increment message count');
+      throw const CacheException(message: 'Failed to increment message count');
     }
   }
 
@@ -266,7 +266,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
         today,
       );
     } catch (e) {
-      throw CacheException(message: 'Failed to reset message count');
+      throw const CacheException(message: 'Failed to reset message count');
     }
   }
 
@@ -285,7 +285,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
         }
       }
     } catch (e) {
-      throw CacheException(message: 'Failed to clear chat cache');
+      throw const CacheException(message: 'Failed to clear chat cache');
     }
   }
 
@@ -312,7 +312,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
           'SECURITY: Failed to open encrypted reactions box - refusing unencrypted storage',
           tag: 'ChatLocalDS',
         );
-        throw CacheException(
+        throw const CacheException(
           message: 'Unable to securely store reactions. Please restart the app.',
         );
       }
@@ -343,7 +343,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
         await box.put(key, jsonEncode(reactions));
       }
     } catch (e) {
-      throw CacheException(message: 'Failed to add reaction');
+      throw const CacheException(message: 'Failed to add reaction');
     }
   }
 
@@ -364,7 +364,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
         await box.put(key, jsonEncode(reactions));
       }
     } catch (e) {
-      throw CacheException(message: 'Failed to remove reaction');
+      throw const CacheException(message: 'Failed to remove reaction');
     }
   }
 
@@ -397,7 +397,7 @@ class ChatLocalDataSource implements IChatLocalDataSource {
         await box.delete(key);
       }
     } catch (e) {
-      throw CacheException(message: 'Failed to clear reactions');
+      throw const CacheException(message: 'Failed to clear reactions');
     }
   }
 }

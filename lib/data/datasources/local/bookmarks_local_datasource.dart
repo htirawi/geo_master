@@ -100,7 +100,7 @@ class BookmarksLocalDataSource implements IBookmarksLocalDataSource {
           'SECURITY: Failed to open encrypted bookmarks box - refusing unencrypted storage',
           tag: 'BookmarksLocalDS',
         );
-        throw CacheException(
+        throw const CacheException(
           message: 'Unable to securely store bookmarks. Please restart the app.',
         );
       }
@@ -133,7 +133,7 @@ class BookmarksLocalDataSource implements IBookmarksLocalDataSource {
 
       await box.put(key, jsonEncode(bookmarks.map((b) => b.toJson()).toList()));
     } catch (e) {
-      throw CacheException(message: 'Failed to save bookmark');
+      throw const CacheException(message: 'Failed to save bookmark');
     }
   }
 
@@ -144,7 +144,7 @@ class BookmarksLocalDataSource implements IBookmarksLocalDataSource {
       final key = 'bookmarks_$userId';
       return _getBookmarksList(box, key);
     } catch (e) {
-      throw CacheException(message: 'Failed to get bookmarks');
+      throw const CacheException(message: 'Failed to get bookmarks');
     }
   }
 
@@ -159,7 +159,7 @@ class BookmarksLocalDataSource implements IBookmarksLocalDataSource {
 
       await box.put(key, jsonEncode(bookmarks.map((b) => b.toJson()).toList()));
     } catch (e) {
-      throw CacheException(message: 'Failed to delete bookmark');
+      throw const CacheException(message: 'Failed to delete bookmark');
     }
   }
 
@@ -207,7 +207,7 @@ class BookmarksLocalDataSource implements IBookmarksLocalDataSource {
         );
       }
     } catch (e) {
-      throw CacheException(message: 'Failed to update bookmark');
+      throw const CacheException(message: 'Failed to update bookmark');
     }
   }
 
@@ -225,7 +225,7 @@ class BookmarksLocalDataSource implements IBookmarksLocalDataSource {
             b.tags.any((t) => t.toLowerCase().contains(lowerQuery));
       }).toList();
     } catch (e) {
-      throw CacheException(message: 'Failed to search bookmarks');
+      throw const CacheException(message: 'Failed to search bookmarks');
     }
   }
 
@@ -238,7 +238,7 @@ class BookmarksLocalDataSource implements IBookmarksLocalDataSource {
       final bookmarks = await getBookmarks(userId);
       return bookmarks.where((b) => b.tags.contains(tag)).toList();
     } catch (e) {
-      throw CacheException(message: 'Failed to get bookmarks by tag');
+      throw const CacheException(message: 'Failed to get bookmarks by tag');
     }
   }
 
@@ -249,7 +249,7 @@ class BookmarksLocalDataSource implements IBookmarksLocalDataSource {
       final key = 'bookmarks_$userId';
       await box.delete(key);
     } catch (e) {
-      throw CacheException(message: 'Failed to clear bookmarks');
+      throw const CacheException(message: 'Failed to clear bookmarks');
     }
   }
 

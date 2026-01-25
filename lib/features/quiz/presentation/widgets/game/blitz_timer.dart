@@ -25,7 +25,7 @@ class BlitzTimer extends StatelessWidget {
     final color = isLow ? AppColors.error : AppColors.primary;
     final reduceMotion = MediaQuery.of(context).disableAnimations;
 
-    Widget content = Semantics(
+    final Widget content = Semantics(
       label: '$timeRemaining seconds remaining',
       liveRegion: isLow, // Announce urgently when time is low
       child: Container(

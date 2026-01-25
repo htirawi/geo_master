@@ -63,7 +63,7 @@ class QuizQuestionDisplay extends StatelessWidget {
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => Container(
                   color: theme.colorScheme.surfaceContainerHighest,
-                  child: Icon(
+                  child: const Icon(
                     Icons.flag,
                     size: 48,
                     semanticLabel: 'Flag image failed to load',

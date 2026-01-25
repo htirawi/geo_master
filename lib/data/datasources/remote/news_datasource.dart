@@ -96,7 +96,7 @@ class NewsDataSource implements INewsDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'News API error');
+      throw const ServerException(message: 'News API error');
     }
   }
 
@@ -144,7 +144,7 @@ class NewsDataSource implements INewsDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'News API error');
+      throw const ServerException(message: 'News API error');
     }
   }
 

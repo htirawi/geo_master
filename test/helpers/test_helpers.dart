@@ -1,7 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:geo_master/app/di/repository_providers.dart';
 import 'package:geo_master/core/services/translation_service.dart';
 import 'package:geo_master/data/datasources/remote/weather_datasource.dart';
@@ -14,6 +11,8 @@ import 'package:geo_master/domain/repositories/i_quiz_repository.dart';
 import 'package:geo_master/domain/repositories/i_subscription_repository.dart';
 import 'package:geo_master/domain/repositories/i_user_repository.dart';
 import 'package:geo_master/domain/repositories/i_world_exploration_repository.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // =============================================================================
 // Mock Repositories

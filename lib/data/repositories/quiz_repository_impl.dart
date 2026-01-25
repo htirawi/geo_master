@@ -324,7 +324,7 @@ class QuizRepositoryImpl implements IQuizRepository {
           hintArabic: includeHint ? 'قد يحتوي العلم على ألوان من الرمز الوطني' : null,
           explanation: 'The flag of ${targetCountry.name} features its national colors and symbols.',
           explanationArabic: 'يتميز علم ${targetCountry.nameArabic} بألوانه ورموزه الوطنية.',
-          metadata: {
+          metadata: const {
             'isImageOptions': true,
           },
         );

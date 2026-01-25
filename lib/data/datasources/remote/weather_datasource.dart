@@ -55,7 +55,7 @@ class WeatherDataSource implements IWeatherDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'Weather API error');
+      throw const ServerException(message: 'Weather API error');
     }
   }
 
@@ -91,7 +91,7 @@ class WeatherDataSource implements IWeatherDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'Weather API error');
+      throw const ServerException(message: 'Weather API error');
     }
   }
 

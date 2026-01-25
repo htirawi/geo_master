@@ -168,7 +168,7 @@ class _ExplorerChipState extends State<ExplorerChip>
                 const SizedBox(width: AppDimensions.xs),
               ],
               if (widget.variant == ChipVariant.filter && widget.isSelected) ...[
-                Icon(
+                const Icon(
                   Icons.check_rounded,
                   size: AppDimensions.iconXS,
                   color: Colors.white,

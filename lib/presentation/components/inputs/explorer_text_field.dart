@@ -223,14 +223,14 @@ class _ExplorerTextFieldState extends State<ExplorerTextField> {
         );
         focusedBorder = OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: AppColors.primary,
             width: 2,
           ),
         );
         errorBorder = OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: AppColors.error,
             width: 2,
           ),
@@ -243,14 +243,14 @@ class _ExplorerTextFieldState extends State<ExplorerTextField> {
         );
         focusedBorder = OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: AppColors.primary,
             width: 2,
           ),
         );
         errorBorder = OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: AppColors.error,
             width: 2,
           ),
@@ -263,13 +263,13 @@ class _ExplorerTextFieldState extends State<ExplorerTextField> {
             width: 1,
           ),
         );
-        focusedBorder = UnderlineInputBorder(
+        focusedBorder = const UnderlineInputBorder(
           borderSide: BorderSide(
             color: AppColors.primary,
             width: 2,
           ),
         );
-        errorBorder = UnderlineInputBorder(
+        errorBorder = const UnderlineInputBorder(
           borderSide: BorderSide(
             color: AppColors.error,
             width: 2,

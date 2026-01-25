@@ -3,14 +3,13 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-
 import 'package:geo_master/core/error/failures.dart';
 import 'package:geo_master/domain/entities/quiz.dart';
 import 'package:geo_master/domain/entities/user.dart';
 import 'package:geo_master/domain/repositories/i_quiz_repository.dart';
 import 'package:geo_master/presentation/providers/auth_provider.dart';
 import 'package:geo_master/presentation/providers/quiz_provider.dart';
+import 'package:mocktail/mocktail.dart';
 
 import '../../../helpers/test_helpers.dart';
 
@@ -65,7 +64,7 @@ void main() {
           questionType: QuestionType.multipleChoice,
           question: 'Question $index?',
           questionArabic: 'سؤال $index؟',
-          options: ['A', 'B', 'C', 'D'],
+          options: const ['A', 'B', 'C', 'D'],
           correctAnswer: 'A',
           countryCode: 'US',
         ),

@@ -666,7 +666,7 @@ class _GameModesGrid extends ConsumerWidget {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(AppDimensions.radiusXL),
         ),
@@ -855,7 +855,7 @@ class _ModernDifficultySelector extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.speed_rounded,
                 color: AppColors.secondary,
                 size: AppDimensions.iconMD - 2,

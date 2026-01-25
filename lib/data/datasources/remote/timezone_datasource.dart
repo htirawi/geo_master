@@ -46,7 +46,7 @@ class TimezoneDataSource implements ITimezoneDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'Timezone API error');
+      throw const ServerException(message: 'Timezone API error');
     }
   }
 
@@ -71,7 +71,7 @@ class TimezoneDataSource implements ITimezoneDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'Timezone API error');
+      throw const ServerException(message: 'Timezone API error');
     }
   }
 
@@ -94,7 +94,7 @@ class TimezoneDataSource implements ITimezoneDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'Timezone API error');
+      throw const ServerException(message: 'Timezone API error');
     }
   }
 

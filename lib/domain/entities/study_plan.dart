@@ -74,19 +74,6 @@ class StudyPlan {
 /// A milestone in the study plan
 @immutable
 class Milestone {
-  const Milestone({
-    required this.week,
-    required this.title,
-    required this.objectives,
-    required this.topics,
-    required this.activities,
-  });
-
-  final int week;
-  final String title;
-  final List<String> objectives;
-  final List<String> topics;
-  final List<String> activities;
 
   factory Milestone.fromJson(Map<String, dynamic> json) {
     return Milestone(
@@ -106,6 +93,19 @@ class Milestone {
           [],
     );
   }
+  const Milestone({
+    required this.week,
+    required this.title,
+    required this.objectives,
+    required this.topics,
+    required this.activities,
+  });
+
+  final int week;
+  final String title;
+  final List<String> objectives;
+  final List<String> topics;
+  final List<String> activities;
 
   Map<String, dynamic> toJson() {
     return {
@@ -121,6 +121,14 @@ class Milestone {
 /// A daily activity in the study routine
 @immutable
 class DailyActivity {
+
+  factory DailyActivity.fromJson(Map<String, dynamic> json) {
+    return DailyActivity(
+      time: json['time'] as String? ?? '',
+      duration: json['duration'] as int? ?? 30,
+      activity: json['activity'] as String? ?? '',
+    );
+  }
   const DailyActivity({
     required this.time,
     required this.duration,
@@ -130,14 +138,6 @@ class DailyActivity {
   final String time;
   final int duration; // in minutes
   final String activity;
-
-  factory DailyActivity.fromJson(Map<String, dynamic> json) {
-    return DailyActivity(
-      time: json['time'] as String? ?? '',
-      duration: json['duration'] as int? ?? 30,
-      activity: json['activity'] as String? ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -186,15 +186,6 @@ class EssayFeedback {
 /// A section of feedback
 @immutable
 class FeedbackSection {
-  const FeedbackSection({
-    required this.score,
-    required this.feedback,
-    required this.suggestions,
-  });
-
-  final int score;
-  final String feedback;
-  final List<String> suggestions;
 
   factory FeedbackSection.fromJson(Map<String, dynamic> json) {
     return FeedbackSection(
@@ -206,6 +197,15 @@ class FeedbackSection {
           [],
     );
   }
+  const FeedbackSection({
+    required this.score,
+    required this.feedback,
+    required this.suggestions,
+  });
+
+  final int score;
+  final String feedback;
+  final List<String> suggestions;
 
   Map<String, dynamic> toJson() {
     return {

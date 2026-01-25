@@ -30,7 +30,7 @@ class CountryGridCard extends StatelessWidget {
     final countryName = country.getDisplayName(isArabic: isArabic);
     final capital = country.getDisplayCapital(isArabic: isArabic);
 
-    Widget card = Semantics(
+    final Widget card = Semantics(
       button: true,
       label: '$countryName, ${country.region}${capital != null ? ', capital: $capital' : ''}',
       child: GestureDetector(

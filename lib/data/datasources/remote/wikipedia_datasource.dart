@@ -53,7 +53,7 @@ class WikipediaDataSource implements IWikipediaDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'Wikipedia API error');
+      throw const ServerException(message: 'Wikipedia API error');
     }
   }
 
@@ -99,7 +99,7 @@ class WikipediaDataSource implements IWikipediaDataSource {
       throw _handleDioError(e);
     } catch (e) {
       if (e is ServerException || e is NetworkException) rethrow;
-      throw ServerException(message: 'Wikipedia search error');
+      throw const ServerException(message: 'Wikipedia search error');
     }
   }
 

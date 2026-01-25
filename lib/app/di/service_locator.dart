@@ -111,6 +111,7 @@ void validateApiKeys() {
     assert(() {
       // ignore: avoid_print
       print('WARNING: Missing API keys: ${missingKeys.join(', ')}');
+      // ignore: avoid_print
       print('Some features will be disabled. Configure via --dart-define');
       return true;
     }());
