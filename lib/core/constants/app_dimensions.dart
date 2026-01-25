@@ -225,8 +225,8 @@ abstract final class AppDimensions {
   // NAVIGATION
   // ============================================================================
 
-  /// Bottom navigation bar height
-  static const double bottomNavHeight = 64.0;
+  /// Bottom navigation bar height (72px to fit center elevated button + label)
+  static const double bottomNavHeight = 72.0;
 
   /// Bottom nav icon size
   static const double bottomNavIconSize = 24.0;

@@ -269,8 +269,8 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
                     gradient: widget.isSelected
                         ? AppColors.explorerGradient
@@ -294,7 +294,7 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                         ? widget.item.activeIcon ?? widget.item.icon
                         : widget.item.icon,
                     color: Colors.white,
-                    size: 24,
+                    size: 22,
                   ),
                 ),
                 if (widget.showLabel) ...[
