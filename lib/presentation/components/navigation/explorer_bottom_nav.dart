@@ -159,7 +159,7 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
           );
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: AppDimensions.xs),
+          padding: const EdgeInsets.symmetric(vertical: 4),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -169,7 +169,7 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                 children: [
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.all(AppDimensions.xs),
+                    padding: const EdgeInsets.all(6),
                     decoration: widget.isSelected
                         ? BoxDecoration(
                             color: AppColors.primary.withValues(alpha: 0.1),
@@ -182,7 +182,7 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                           ? widget.item.activeIcon ?? widget.item.icon
                           : widget.item.icon,
                       color: color,
-                      size: AppDimensions.iconMD,
+                      size: 22,
                     ),
                   ),
                   if (widget.item.badge != null)
@@ -194,13 +194,14 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                 ],
               ),
               if (widget.showLabel) ...[
-                const SizedBox(height: AppDimensions.xxs),
+                const SizedBox(height: 2),
                 AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 200),
                   style: AppTypography.labelSmall.copyWith(
                     color: color,
                     fontWeight:
                         widget.isSelected ? FontWeight.w600 : FontWeight.w400,
+                    fontSize: 10,
                   ),
                   child: Text(widget.item.label),
                 ),
@@ -227,13 +228,13 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
           );
         },
         child: Container(
-          margin: const EdgeInsets.only(bottom: AppDimensions.xs),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 56,
-                height: 56,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
                   gradient: widget.isSelected
                       ? AppColors.explorerGradient
@@ -247,8 +248,8 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.primary.withValues(alpha: 0.4),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
@@ -257,14 +258,15 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                       ? widget.item.activeIcon ?? widget.item.icon
                       : widget.item.icon,
                   color: Colors.white,
-                  size: AppDimensions.iconLG,
+                  size: 22,
                 ),
               ),
               if (widget.showLabel) ...[
-                const SizedBox(height: AppDimensions.xxs),
+                const SizedBox(height: 2),
                 Text(
                   widget.item.label,
                   style: AppTypography.labelSmall.copyWith(
+                    fontSize: 10,
                     color: widget.isSelected
                         ? AppColors.primary
                         : (isDark

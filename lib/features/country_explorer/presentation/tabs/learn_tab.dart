@@ -547,7 +547,7 @@ class _AiTutorCard extends StatelessWidget {
                     Text(
                       isArabic
                           ? 'اسأل أي شيء عن ${country.getDisplayName(isArabic: true)}'
-                          : 'Ask anything about ${country.name}',
+                          : 'Ask anything about ${country.getDisplayName(isArabic: false)}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: Colors.white.withValues(alpha: 0.8),
                       ),

@@ -188,7 +188,7 @@ class CountryInfoPopup extends ConsumerWidget {
           const SizedBox(width: AppDimensions.xxs),
           Expanded(
             child: Text(
-              country.capital!,
+              country.getDisplayCapital(isArabic: isArabic) ?? '',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -208,7 +208,7 @@ class CountryInfoPopup extends ConsumerWidget {
           ),
           const SizedBox(width: AppDimensions.xxs),
           Text(
-            country.continents.first,
+            country.getDisplayContinents(isArabic: isArabic).first,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -426,7 +426,7 @@ class CountryInfoBottomSheet extends ConsumerWidget {
                         ),
                         if (country.capital != null)
                           Text(
-                            country.capital!,
+                            country.getDisplayCapital(isArabic: isArabic) ?? '',
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),

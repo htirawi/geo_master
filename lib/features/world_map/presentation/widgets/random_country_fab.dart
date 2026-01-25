@@ -291,7 +291,7 @@ class RandomCountryTooltip extends StatelessWidget {
             if (country.capital != null) ...[
               const SizedBox(height: AppDimensions.xxs),
               Text(
-                country.capital!,
+                country.getDisplayCapital(isArabic: isArabic) ?? '',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
                 ),

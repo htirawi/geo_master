@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
+import '../../../../../core/constants/arabic_country_names.dart';
 import '../../../../../domain/entities/country.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 
@@ -93,7 +94,9 @@ class CountryCurrenciesSection extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            currency.name,
+                            isArabic
+                                ? ArabicCountryNames.getCurrency(currency.name)
+                                : currency.name,
                             style: (isArabic
                                 ? GoogleFonts.cairo
                                 : GoogleFonts.poppins)(

@@ -82,10 +82,15 @@ class ExplorerHeader extends StatelessWidget {
           ..._buildFloatingElements(),
           // Content
           SafeArea(
+            bottom: false,
             child: Padding(
-              padding: const EdgeInsets.all(AppDimensions.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppDimensions.lg,
+                vertical: AppDimensions.sm,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     children: [
@@ -110,25 +115,24 @@ class ExplorerHeader extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppDimensions.lg),
+                  const SizedBox(height: AppDimensions.sm),
                   Text(
                     '$greeting,',
                     style: GoogleFonts.poppins(
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.white70,
                       fontWeight: FontWeight.w400,
                     ),
                   ).animate().fadeIn(duration: AppDimensions.durationSlow),
-                  const SizedBox(height: AppDimensions.xxs),
                   Text(
                     firstName,
                     style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-                      fontSize: 28,
+                      fontSize: 24,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ).animate().fadeIn(delay: 100.ms, duration: AppDimensions.durationSlow),
-                  const SizedBox(height: AppDimensions.xs),
+                  const SizedBox(height: AppDimensions.xxs),
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimensions.sm,

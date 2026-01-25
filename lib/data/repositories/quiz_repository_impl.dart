@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:dartz/dartz.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../core/constants/arabic_country_names.dart';
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../core/services/logger_service.dart';
@@ -232,13 +233,20 @@ class QuizRepositoryImpl implements IQuizRepository {
     switch (mode) {
       case QuizMode.capitals:
         if (targetCountry.capital == null) return null;
-        final options = [
-          targetCountry.capital!,
-          ...wrongOptions
-              .where((c) => c.capital != null)
-              .take(optionsCount - 1)
-              .map((c) => c.capital!),
-        ]..shuffle(_random);
+        // Build list of countries for options (target + wrong options with capitals)
+        final optionCountries = [
+          targetCountry,
+          ...wrongOptions.where((c) => c.capital != null).take(optionsCount - 1),
+        ];
+        // Create paired options (English and Arabic at same indices)
+        final pairedOptions = optionCountries.map((c) => (
+          en: c.capital!,
+          ar: c.capitalArabic ?? c.capital!,
+        )).toList();
+        // Shuffle while keeping pairs together
+        pairedOptions.shuffle(_random);
+        final options = pairedOptions.map((p) => p.en).toList();
+        final optionsArabic = pairedOptions.map((p) => p.ar).toList();
 
         return QuizQuestion(
           id: _uuid.v4(),
@@ -247,21 +255,32 @@ class QuizRepositoryImpl implements IQuizRepository {
           question: 'What is the capital of ${targetCountry.name}?',
           questionArabic: 'ما هي عاصمة ${targetCountry.nameArabic}؟',
           correctAnswer: targetCountry.capital!,
+          correctAnswerArabic: targetCountry.capitalArabic ?? targetCountry.capital,
           options: options,
+          optionsArabic: optionsArabic,
           countryCode: targetCountry.code,
           hint: includeHint ? 'This city is in ${targetCountry.region}' : null,
-          hintArabic: includeHint ? 'هذه المدينة في ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'هذه المدينة في ${ArabicCountryNames.getRegion(targetCountry.region)}' : null,
           explanation: '${targetCountry.capital} is the capital and largest city of ${targetCountry.name}.',
-          explanationArabic: '${targetCountry.capital} هي عاصمة وأكبر مدينة في ${targetCountry.nameArabic}.',
+          explanationArabic: '${targetCountry.capitalArabic ?? targetCountry.capital} هي عاصمة وأكبر مدينة في ${targetCountry.nameArabic}.',
           funFact: funFact,
           funFactArabic: funFactArabic,
         );
 
       case QuizMode.flags:
-        final options = [
-          targetCountry.name,
-          ...wrongOptions.take(optionsCount - 1).map((c) => c.name),
-        ]..shuffle(_random);
+        // Build list of countries for options
+        final flagOptionCountries = [
+          targetCountry,
+          ...wrongOptions.take(optionsCount - 1),
+        ];
+        // Create paired options (English and Arabic at same indices)
+        final flagPairedOptions = flagOptionCountries.map((c) => (
+          en: c.name,
+          ar: c.nameArabic,
+        )).toList();
+        flagPairedOptions.shuffle(_random);
+        final flagOptions = flagPairedOptions.map((p) => p.en).toList();
+        final flagOptionsArabic = flagPairedOptions.map((p) => p.ar).toList();
 
         return QuizQuestion(
           id: _uuid.v4(),
@@ -270,11 +289,13 @@ class QuizRepositoryImpl implements IQuizRepository {
           question: 'Which country does this flag belong to?',
           questionArabic: 'لأي دولة ينتمي هذا العلم؟',
           correctAnswer: targetCountry.name,
-          options: options,
+          correctAnswerArabic: targetCountry.nameArabic,
+          options: flagOptions,
+          optionsArabic: flagOptionsArabic,
           imageUrl: targetCountry.flagUrl,
           countryCode: targetCountry.code,
           hint: includeHint ? 'This country is located in ${targetCountry.region}' : null,
-          hintArabic: includeHint ? 'تقع هذه الدولة في ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'تقع هذه الدولة في ${ArabicCountryNames.getRegion(targetCountry.region)}' : null,
           explanation: 'This is the flag of ${targetCountry.name}.',
           explanationArabic: 'هذا هو علم ${targetCountry.nameArabic}.',
           funFact: funFact,
@@ -309,10 +330,19 @@ class QuizRepositoryImpl implements IQuizRepository {
         );
 
       case QuizMode.maps:
-        final options = [
-          targetCountry.name,
-          ...wrongOptions.take(optionsCount - 1).map((c) => c.name),
-        ]..shuffle(_random);
+        // Build list of countries for options
+        final mapOptionCountries = [
+          targetCountry,
+          ...wrongOptions.take(optionsCount - 1),
+        ];
+        // Create paired options (English and Arabic at same indices)
+        final mapPairedOptions = mapOptionCountries.map((c) => (
+          en: c.name,
+          ar: c.nameArabic,
+        )).toList();
+        mapPairedOptions.shuffle(_random);
+        final mapOptions = mapPairedOptions.map((p) => p.en).toList();
+        final mapOptionsArabic = mapPairedOptions.map((p) => p.ar).toList();
 
         return QuizQuestion(
           id: _uuid.v4(),
@@ -321,16 +351,18 @@ class QuizRepositoryImpl implements IQuizRepository {
           question: 'Identify this country on the map',
           questionArabic: 'حدد هذه الدولة على الخريطة',
           correctAnswer: targetCountry.name,
-          options: options,
+          correctAnswerArabic: targetCountry.nameArabic,
+          options: mapOptions,
+          optionsArabic: mapOptionsArabic,
           countryCode: targetCountry.code,
           metadata: {
             'latitude': targetCountry.coordinates.latitude,
             'longitude': targetCountry.coordinates.longitude,
           },
           hint: includeHint ? 'This country is in ${targetCountry.region}' : null,
-          hintArabic: includeHint ? 'تقع هذه الدولة في ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'تقع هذه الدولة في ${ArabicCountryNames.getRegion(targetCountry.region)}' : null,
           explanation: '${targetCountry.name} is located in ${targetCountry.region}.',
-          explanationArabic: 'تقع ${targetCountry.nameArabic} في ${targetCountry.region}.',
+          explanationArabic: 'تقع ${targetCountry.nameArabic} في ${ArabicCountryNames.getRegion(targetCountry.region)}.',
         );
 
       case QuizMode.population:
@@ -344,6 +376,8 @@ class QuizRepositoryImpl implements IQuizRepository {
           }
         }
         popOptions.shuffle(_random);
+        // Population numbers are the same in both languages
+        final popOptionsList = popOptions.map((c) => _formatPopulation(c.population)).toList();
 
         return QuizQuestion(
           id: _uuid.v4(),
@@ -352,10 +386,10 @@ class QuizRepositoryImpl implements IQuizRepository {
           question: 'What is the approximate population of ${targetCountry.name}?',
           questionArabic: 'ما هو عدد سكان ${targetCountry.nameArabic} تقريباً؟',
           correctAnswer: _formatPopulation(targetCountry.population),
-          options: popOptions.map((c) => _formatPopulation(c.population)).toList(),
+          options: popOptionsList,
           countryCode: targetCountry.code,
           hint: includeHint ? 'This is one of the ${targetCountry.population > 100000000 ? "most populous" : "smaller"} countries in ${targetCountry.region}' : null,
-          hintArabic: includeHint ? 'هذه واحدة من ${targetCountry.population > 100000000 ? "أكثر الدول سكاناً" : "الدول الأصغر"} في ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'هذه واحدة من ${targetCountry.population > 100000000 ? "أكثر الدول سكاناً" : "الدول الأصغر"} في ${ArabicCountryNames.getRegion(targetCountry.region)}' : null,
           explanation: '${targetCountry.name} has a population of approximately ${_formatPopulation(targetCountry.population)}.',
           explanationArabic: 'يبلغ عدد سكان ${targetCountry.nameArabic} حوالي ${_formatPopulation(targetCountry.population)}.',
           metadata: {
@@ -401,7 +435,8 @@ class QuizRepositoryImpl implements IQuizRepository {
             .map((c) => c.languages.first)
             .toList();
 
-        final options = [language, ...wrongLanguages]..shuffle(_random);
+        final langOptions = [language, ...wrongLanguages]..shuffle(_random);
+        // Language names are typically international (English/Latin script)
 
         return QuizQuestion(
           id: _uuid.v4(),
@@ -410,10 +445,10 @@ class QuizRepositoryImpl implements IQuizRepository {
           question: 'What is an official language of ${targetCountry.name}?',
           questionArabic: 'ما هي اللغة الرسمية في ${targetCountry.nameArabic}؟',
           correctAnswer: language,
-          options: options,
+          options: langOptions,
           countryCode: targetCountry.code,
           hint: includeHint ? 'This country is in ${targetCountry.region}' : null,
-          hintArabic: includeHint ? 'تقع هذه الدولة في ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'تقع هذه الدولة في ${ArabicCountryNames.getRegion(targetCountry.region)}' : null,
           explanation: '$language is one of the official languages spoken in ${targetCountry.name}.',
           explanationArabic: '$language هي إحدى اللغات الرسمية المتحدثة في ${targetCountry.nameArabic}.',
         );
@@ -422,29 +457,36 @@ class QuizRepositoryImpl implements IQuizRepository {
         // Multi-select question for neighboring countries
         if (targetCountry.borders.isEmpty) return null;
 
-        // Get actual border country names
-        final borderCountries = <String>[];
+        // Get actual border countries with both English and Arabic names
+        final borderCountryPairs = <({String en, String ar})>[];
         for (final borderCode in targetCountry.borders) {
           final borderCountry = allCountries.firstWhere(
             (c) => c.code == borderCode,
             orElse: () => allCountries.first,
           );
           if (borderCountry.code == borderCode) {
-            borderCountries.add(borderCountry.name);
+            borderCountryPairs.add((en: borderCountry.name, ar: borderCountry.nameArabic));
           }
         }
 
-        if (borderCountries.isEmpty) return null;
+        if (borderCountryPairs.isEmpty) return null;
 
         // Get some wrong options (countries that don't border)
-        final nonBorderingCountries = wrongOptions
+        final nonBorderingCountryPairs = wrongOptions
             .where((c) => !targetCountry.borders.contains(c.code))
             .take(4)
-            .map((c) => c.name)
+            .map((c) => (en: c.name, ar: c.nameArabic))
             .toList();
 
-        final allOptions = [...borderCountries, ...nonBorderingCountries]
+        // Combine and shuffle while keeping pairs together
+        final allBorderPairs = [...borderCountryPairs, ...nonBorderingCountryPairs]
           ..shuffle(_random);
+        final borderOptions = allBorderPairs.map((p) => p.en).toList();
+        final borderOptionsArabic = allBorderPairs.map((p) => p.ar).toList();
+
+        // Extract correct answers in both languages
+        final correctBorderAnswers = borderCountryPairs.map((p) => p.en).toList();
+        final correctBorderAnswersArabic = borderCountryPairs.map((p) => p.ar).toList();
 
         return QuizQuestion(
           id: _uuid.v4(),
@@ -452,14 +494,17 @@ class QuizRepositoryImpl implements IQuizRepository {
           questionType: QuestionType.multiSelect,
           question: 'Which countries border ${targetCountry.name}? (Select all)',
           questionArabic: 'ما هي الدول التي تحد ${targetCountry.nameArabic}؟ (اختر الكل)',
-          correctAnswer: borderCountries.first,
-          correctAnswers: borderCountries,
-          options: allOptions,
+          correctAnswer: correctBorderAnswers.first,
+          correctAnswerArabic: correctBorderAnswersArabic.first,
+          correctAnswers: correctBorderAnswers,
+          correctAnswersArabic: correctBorderAnswersArabic,
+          options: borderOptions,
+          optionsArabic: borderOptionsArabic,
           countryCode: targetCountry.code,
-          hint: includeHint ? '${targetCountry.name} has ${borderCountries.length} neighboring countries' : null,
-          hintArabic: includeHint ? '${targetCountry.nameArabic} لديها ${borderCountries.length} دول مجاورة' : null,
-          explanation: '${targetCountry.name} shares borders with ${borderCountries.join(", ")}.',
-          explanationArabic: '${targetCountry.nameArabic} تشترك في الحدود مع ${borderCountries.join("، ")}.',
+          hint: includeHint ? '${targetCountry.name} has ${borderCountryPairs.length} neighboring countries' : null,
+          hintArabic: includeHint ? '${targetCountry.nameArabic} لديها ${borderCountryPairs.length} دول مجاورة' : null,
+          explanation: '${targetCountry.name} shares borders with ${correctBorderAnswers.join(", ")}.',
+          explanationArabic: '${targetCountry.nameArabic} تشترك في الحدود مع ${correctBorderAnswersArabic.join("، ")}.',
         );
 
       case QuizMode.timezones:
@@ -476,8 +521,9 @@ class QuizRepositoryImpl implements IQuizRepository {
 
         if (wrongTimezones.length < optionsCount - 1) return null;
 
-        final options = [timezone, ...wrongTimezones.take(optionsCount - 1)]
+        final tzOptions = [timezone, ...wrongTimezones.take(optionsCount - 1)]
           ..shuffle(_random);
+        // Timezone codes are universal (UTC+X format)
 
         return QuizQuestion(
           id: _uuid.v4(),
@@ -486,10 +532,10 @@ class QuizRepositoryImpl implements IQuizRepository {
           question: 'What is the primary timezone of ${targetCountry.name}?',
           questionArabic: 'ما هي المنطقة الزمنية الرئيسية في ${targetCountry.nameArabic}؟',
           correctAnswer: timezone,
-          options: options,
+          options: tzOptions,
           countryCode: targetCountry.code,
           hint: includeHint ? 'This country is in ${targetCountry.region}' : null,
-          hintArabic: includeHint ? 'تقع هذه الدولة في ${targetCountry.region}' : null,
+          hintArabic: includeHint ? 'تقع هذه الدولة في ${ArabicCountryNames.getRegion(targetCountry.region)}' : null,
           explanation: '${targetCountry.name} uses $timezone as its primary timezone.',
           explanationArabic: '${targetCountry.nameArabic} تستخدم $timezone كمنطقتها الزمنية الرئيسية.',
         );

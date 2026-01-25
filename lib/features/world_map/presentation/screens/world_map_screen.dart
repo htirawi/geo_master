@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gm;
 
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/constants/arabic_country_names.dart';
 import '../../../../domain/entities/country.dart' hide LatLng;
 import '../../../../presentation/providers/subscription_provider.dart';
 import '../../../../presentation/providers/world_map_provider.dart';
@@ -65,6 +66,7 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     final mapStateAsync = ref.watch(worldMapProvider);
     final viewMode = ref.watch(mapViewModeProvider);
@@ -82,7 +84,7 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
             onMapCreated: _onMapCreated,
             onCameraMove: _onCameraMove,
             onTap: _onMapTap,
-            markers: _buildMarkers(mapState),
+            markers: _buildMarkers(mapState, isArabic),
             mapType: _getMapType(viewMode),
             style: viewMode == MapViewMode.normal
                 ? MapStyle.getStyle(isDark: isDark)
@@ -234,13 +236,19 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
     }
   }
 
-  Set<gm.Marker> _buildMarkers(WorldMapState state) {
+  Set<gm.Marker> _buildMarkers(WorldMapState state, bool isArabic) {
     if (state is! WorldMapLoaded) return {};
 
     final markers = <gm.Marker>{};
 
     for (final marker in state.markers) {
       final progressValue = marker.progressLevel.progressValue;
+      final displayName = isArabic
+          ? (ArabicCountryNames.getName(marker.countryCode) ?? marker.name)
+          : marker.name;
+      final exploredText = isArabic
+          ? '${(progressValue * 100).toInt()}% مستكشف'
+          : '${(progressValue * 100).toInt()}% explored';
 
       markers.add(gm.Marker(
         markerId: gm.MarkerId(marker.countryCode),
@@ -250,8 +258,8 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
         ),
         onTap: () => _onMarkerTap(marker.countryCode),
         infoWindow: gm.InfoWindow(
-          title: marker.name,
-          snippet: '${(progressValue * 100).toInt()}% explored',
+          title: displayName,
+          snippet: exploredText,
         ),
       ));
     }

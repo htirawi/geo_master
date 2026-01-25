@@ -225,7 +225,7 @@ class _CountrySearchItem extends StatelessWidget {
                     ),
                     if (country.capital != null)
                       Text(
-                        country.capital!,
+                        country.getDisplayCapital(isArabic: isArabic) ?? '',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -246,7 +246,7 @@ class _CountrySearchItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                   ),
                   child: Text(
-                    country.continents.first,
+                    country.getDisplayContinents(isArabic: isArabic).first,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),

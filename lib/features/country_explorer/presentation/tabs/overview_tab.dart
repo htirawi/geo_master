@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/constants/arabic_country_names.dart';
 import '../../../../domain/entities/country.dart';
 import '../../../../presentation/providers/country_content_provider.dart';
+import '../../../../presentation/providers/country_provider.dart';
 import '../../../../presentation/providers/timezone_provider.dart';
 import '../../../../presentation/providers/weather_provider.dart';
 
@@ -268,24 +270,32 @@ class _QuickFactsSection extends StatelessWidget {
             _FactRow(
               icon: Icons.public,
               label: isArabic ? 'المنطقة' : 'Region',
-              value: country.region,
+              value: country.getDisplayRegion(isArabic: isArabic),
             ),
             if (country.subregion != null)
               _FactRow(
                 icon: Icons.map,
                 label: isArabic ? 'المنطقة الفرعية' : 'Subregion',
-                value: country.subregion!,
+                value: country.getDisplaySubregion(isArabic: isArabic) ?? '',
               ),
             _FactRow(
               icon: Icons.translate,
               label: isArabic ? 'اللغات' : 'Languages',
-              value: country.languages.take(3).join(', '),
+              value: isArabic
+                  ? country.languages
+                      .take(3)
+                      .map((l) => ArabicCountryNames.getLanguage(l))
+                      .join('، ')
+                  : country.languages.take(3).join(', '),
             ),
             if (country.currencies.isNotEmpty)
               _FactRow(
                 icon: Icons.attach_money,
                 label: isArabic ? 'العملة' : 'Currency',
-                value: country.currencies.first.name,
+                value: isArabic
+                    ? ArabicCountryNames.getCurrency(
+                        country.currencies.first.name)
+                    : country.currencies.first.name,
               ),
           ],
         ),
@@ -397,7 +407,7 @@ class _FlagSection extends StatelessWidget {
                 Text(
                   isArabic
                       ? 'علم ${country.getDisplayName(isArabic: true)}'
-                      : 'Flag of ${country.name}',
+                      : 'Flag of ${country.getDisplayName(isArabic: false)}',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -482,7 +492,7 @@ class _WikipediaOverview extends ConsumerWidget {
 }
 
 /// Neighboring countries section
-class _NeighborsSection extends StatelessWidget {
+class _NeighborsSection extends ConsumerWidget {
   const _NeighborsSection({
     required this.country,
     required this.isArabic,
@@ -492,7 +502,7 @@ class _NeighborsSection extends StatelessWidget {
   final bool isArabic;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
     return Card(
@@ -522,9 +532,14 @@ class _NeighborsSection extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: country.borders.map((code) {
+                final neighborAsync = ref.watch(countryByCodeProvider(code));
+                final neighborName = neighborAsync.whenOrNull(
+                  data: (neighbor) =>
+                      neighbor?.getDisplayName(isArabic: isArabic),
+                );
                 return ActionChip(
                   avatar: const Icon(Icons.flag, size: 16),
-                  label: Text(code),
+                  label: Text(neighborName ?? code),
                   onPressed: () {
                     Navigator.of(context).pushNamed('/countries/$code');
                   },

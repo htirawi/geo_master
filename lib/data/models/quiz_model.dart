@@ -148,6 +148,8 @@ class QuizQuestionModel {
     required this.questionArabic,
     required this.correctAnswer,
     required this.options,
+    this.correctAnswerArabic,
+    this.optionsArabic,
     this.questionType = QuestionType.multipleChoice,
     this.imageUrl,
     this.countryCode,
@@ -157,6 +159,7 @@ class QuizQuestionModel {
     this.explanation,
     this.explanationArabic,
     this.correctAnswers,
+    this.correctAnswersArabic,
     this.matchingPairs,
     this.funFact,
     this.funFactArabic,
@@ -176,10 +179,14 @@ class QuizQuestionModel {
       question: json['question'] as String? ?? '',
       questionArabic: json['questionArabic'] as String? ?? '',
       correctAnswer: json['correctAnswer'] as String? ?? '',
+      correctAnswerArabic: json['correctAnswerArabic'] as String?,
       options: (json['options'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [],
+      optionsArabic: (json['optionsArabic'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
       imageUrl: json['imageUrl'] as String?,
       countryCode: json['countryCode'] as String?,
       metadata: json['metadata'] as Map<String, dynamic>?,
@@ -188,6 +195,9 @@ class QuizQuestionModel {
       explanation: json['explanation'] as String?,
       explanationArabic: json['explanationArabic'] as String?,
       correctAnswers: (json['correctAnswers'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
+      correctAnswersArabic: (json['correctAnswersArabic'] as List<dynamic>?)
           ?.map((e) => e.toString())
           .toList(),
       matchingPairs: (json['matchingPairs'] as Map<String, dynamic>?)
@@ -205,7 +215,9 @@ class QuizQuestionModel {
       question: entity.question,
       questionArabic: entity.questionArabic,
       correctAnswer: entity.correctAnswer,
+      correctAnswerArabic: entity.correctAnswerArabic,
       options: entity.options,
+      optionsArabic: entity.optionsArabic,
       imageUrl: entity.imageUrl,
       countryCode: entity.countryCode,
       metadata: entity.metadata,
@@ -214,6 +226,7 @@ class QuizQuestionModel {
       explanation: entity.explanation,
       explanationArabic: entity.explanationArabic,
       correctAnswers: entity.correctAnswers,
+      correctAnswersArabic: entity.correctAnswersArabic,
       matchingPairs: entity.matchingPairs,
       funFact: entity.funFact,
       funFactArabic: entity.funFactArabic,
@@ -226,7 +239,9 @@ class QuizQuestionModel {
   final String question;
   final String questionArabic;
   final String correctAnswer;
+  final String? correctAnswerArabic;
   final List<String> options;
+  final List<String>? optionsArabic;
   final String? imageUrl;
   final String? countryCode;
   final Map<String, dynamic>? metadata;
@@ -235,6 +250,7 @@ class QuizQuestionModel {
   final String? explanation;
   final String? explanationArabic;
   final List<String>? correctAnswers;
+  final List<String>? correctAnswersArabic;
   final Map<String, String>? matchingPairs;
   final String? funFact;
   final String? funFactArabic;
@@ -247,7 +263,9 @@ class QuizQuestionModel {
       'question': question,
       'questionArabic': questionArabic,
       'correctAnswer': correctAnswer,
+      'correctAnswerArabic': correctAnswerArabic,
       'options': options,
+      'optionsArabic': optionsArabic,
       'imageUrl': imageUrl,
       'countryCode': countryCode,
       'metadata': metadata,
@@ -256,6 +274,7 @@ class QuizQuestionModel {
       'explanation': explanation,
       'explanationArabic': explanationArabic,
       'correctAnswers': correctAnswers,
+      'correctAnswersArabic': correctAnswersArabic,
       'matchingPairs': matchingPairs,
       'funFact': funFact,
       'funFactArabic': funFactArabic,
@@ -270,7 +289,9 @@ class QuizQuestionModel {
       question: question,
       questionArabic: questionArabic,
       correctAnswer: correctAnswer,
+      correctAnswerArabic: correctAnswerArabic,
       options: options,
+      optionsArabic: optionsArabic,
       imageUrl: imageUrl,
       countryCode: countryCode,
       metadata: metadata,
@@ -279,6 +300,7 @@ class QuizQuestionModel {
       explanation: explanation,
       explanationArabic: explanationArabic,
       correctAnswers: correctAnswers,
+      correctAnswersArabic: correctAnswersArabic,
       matchingPairs: matchingPairs,
       funFact: funFact,
       funFactArabic: funFactArabic,

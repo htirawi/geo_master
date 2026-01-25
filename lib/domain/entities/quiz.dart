@@ -342,6 +342,8 @@ class QuizQuestion {
     required this.questionArabic,
     required this.correctAnswer,
     required this.options,
+    this.correctAnswerArabic,
+    this.optionsArabic,
     this.questionType = QuestionType.multipleChoice,
     this.imageUrl,
     this.countryCode,
@@ -351,6 +353,7 @@ class QuizQuestion {
     this.explanation,
     this.explanationArabic,
     this.correctAnswers, // For multi-select questions
+    this.correctAnswersArabic, // Arabic version for multi-select
     this.matchingPairs, // For drag-and-drop
     this.funFact,
     this.funFactArabic,
@@ -362,7 +365,9 @@ class QuizQuestion {
   final String question;
   final String questionArabic;
   final String correctAnswer;
+  final String? correctAnswerArabic;
   final List<String> options;
+  final List<String>? optionsArabic;
   final String? imageUrl; // For flag questions
   final String? countryCode; // For map questions
   final Map<String, dynamic>? metadata;
@@ -371,6 +376,7 @@ class QuizQuestion {
   final String? explanation;
   final String? explanationArabic;
   final List<String>? correctAnswers; // For multi-select
+  final List<String>? correctAnswersArabic; // Arabic version for multi-select
   final Map<String, String>? matchingPairs; // For drag-and-drop {"France": "Paris", "Italy": "Rome"}
   final String? funFact;
   final String? funFactArabic;
@@ -396,6 +402,32 @@ class QuizQuestion {
   String? getFunFact({required bool isArabic}) {
     if (funFact == null) return null;
     return isArabic ? (funFactArabic ?? funFact) : funFact;
+  }
+
+  /// Get display options based on locale
+  List<String> getDisplayOptions({required bool isArabic}) {
+    if (isArabic && optionsArabic != null && optionsArabic!.length == options.length) {
+      return optionsArabic!;
+    }
+    return options;
+  }
+
+  /// Get display correct answer based on locale
+  String getDisplayCorrectAnswer({required bool isArabic}) {
+    if (isArabic && correctAnswerArabic != null) {
+      return correctAnswerArabic!;
+    }
+    return correctAnswer;
+  }
+
+  /// Get display correct answers for multi-select based on locale
+  List<String>? getDisplayCorrectAnswers({required bool isArabic}) {
+    if (correctAnswers == null) return null;
+    if (isArabic && correctAnswersArabic != null &&
+        correctAnswersArabic!.length == correctAnswers!.length) {
+      return correctAnswersArabic;
+    }
+    return correctAnswers;
   }
 
   /// Check if this is a multi-select question

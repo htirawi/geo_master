@@ -145,16 +145,16 @@ class _LocationCard extends StatelessWidget {
             const SizedBox(height: AppDimensions.md),
             _InfoRow(
               label: isArabic ? 'القارة' : 'Continent',
-              value: country.continents.join(', '),
+              value: country.getDisplayContinents(isArabic: isArabic).join(', '),
             ),
             _InfoRow(
               label: isArabic ? 'المنطقة' : 'Region',
-              value: country.region,
+              value: country.getDisplayRegion(isArabic: isArabic),
             ),
             if (country.subregion != null)
               _InfoRow(
                 label: isArabic ? 'المنطقة الفرعية' : 'Subregion',
-                value: country.subregion!,
+                value: country.getDisplaySubregion(isArabic: isArabic) ?? '',
               ),
             _InfoRow(
               label: isArabic ? 'الإحداثيات' : 'Coordinates',

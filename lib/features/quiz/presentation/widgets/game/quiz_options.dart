@@ -26,13 +26,16 @@ class QuizOptionsSingle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Get localized options and correct answer
+    final displayOptions = question.getDisplayOptions(isArabic: isArabic);
+    final displayCorrectAnswer = question.getDisplayCorrectAnswer(isArabic: isArabic);
 
     return Column(
-      children: question.options.asMap().entries.map((entry) {
+      children: displayOptions.asMap().entries.map((entry) {
         final index = entry.key;
         final option = entry.value;
         final isSelected = selectedAnswer == option;
-        final isCorrect = question.correctAnswer == option;
+        final isCorrect = displayCorrectAnswer == option;
 
         Color? backgroundColor;
         Color? borderColor;
@@ -147,13 +150,16 @@ class QuizOptionsMulti extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Get localized options and correct answers
+    final displayOptions = question.getDisplayOptions(isArabic: isArabic);
+    final displayCorrectAnswers = question.getDisplayCorrectAnswers(isArabic: isArabic);
 
     return Column(
-      children: question.options.asMap().entries.map((entry) {
+      children: displayOptions.asMap().entries.map((entry) {
         final index = entry.key;
         final option = entry.value;
         final isSelected = selectedAnswers.contains(option);
-        final isCorrect = question.correctAnswers?.contains(option) ?? false;
+        final isCorrect = displayCorrectAnswers?.contains(option) ?? false;
 
         Color? backgroundColor;
         Color? borderColor;

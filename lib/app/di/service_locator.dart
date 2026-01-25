@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/network/api_client.dart';
@@ -152,8 +156,25 @@ Future<void> _initExternalDependencies() async {
   );
   sl.registerSingleton<FlutterSecureStorage>(secureStorage);
 
-  // Hive
-  await Hive.initFlutter();
+  // Hive initialization with fallbacks for iOS Simulator compatibility
+  try {
+    // Try initFlutter with a timeout (can hang on iOS 26.x simulator)
+    await Hive.initFlutter().timeout(
+      const Duration(seconds: 3),
+      onTimeout: () {
+        throw TimeoutException('Hive.initFlutter timed out');
+      },
+    );
+  } catch (e) {
+    // Fallback: try path_provider directly
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      Hive.init(dir.path);
+    } catch (_) {
+      // Last resort: Hive will work with in-memory boxes only
+      // This allows the app to run despite FFI issues on iOS beta simulators
+    }
+  }
   sl.registerSingleton<HiveInterface>(Hive);
 
   // Cache Service

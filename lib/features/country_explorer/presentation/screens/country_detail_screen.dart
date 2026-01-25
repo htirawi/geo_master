@@ -244,7 +244,7 @@ class _CountryDetailContent extends ConsumerWidget {
                             l10n.subregion,
                             country.getDisplaySubregion(isArabic: isArabic) ??
                                 country.subregion!),
-                      InfoItem(l10n.continents, country.continents.join(', ')),
+                      InfoItem(l10n.continents, country.getDisplayContinents(isArabic: isArabic).join(', ')),
                       InfoItem(l10n.coordinates,
                           '${country.coordinates.latitude.toStringAsFixed(2)}°, ${country.coordinates.longitude.toStringAsFixed(2)}°'),
                     ],

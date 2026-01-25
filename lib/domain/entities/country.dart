@@ -75,6 +75,14 @@ class Country {
     return subregion;
   }
 
+  /// Get display continents based on locale
+  List<String> getDisplayContinents({required bool isArabic}) {
+    if (isArabic) {
+      return continents.map((c) => ArabicCountryNames.getContinent(c)).toList();
+    }
+    return continents;
+  }
+
   /// Get formatted population
   String get formattedPopulation {
     if (population >= 1000000000) {

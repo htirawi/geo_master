@@ -100,7 +100,7 @@ class QuizFeedbackSection extends StatelessWidget {
                       ),
                       if (!isCorrect)
                         Text(
-                          l10n.theAnswerWas(question.correctAnswer),
+                          l10n.theAnswerWas(question.getDisplayCorrectAnswer(isArabic: isArabic)),
                           style: theme.textTheme.bodyMedium,
                         ),
                       // XP earned
