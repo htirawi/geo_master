@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/utils/responsive_utils.dart';
 import '../../../../domain/entities/quiz.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/auth_provider.dart';
@@ -174,11 +175,21 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
     final firstName = _getFirstName(user?.displayName, l10n);
     final isGameOver = widget.gameOverReason != null;
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final spacingLG = responsive.sp(AppDimensions.spacingLG);
+    final spacingSM = responsive.sp(AppDimensions.spacingSM);
+    final spacingMD = responsive.sp(AppDimensions.spacingMD);
+    final spacingXL = responsive.sp(AppDimensions.spacingXL);
+    final spacingXXL = responsive.sp(AppDimensions.spacingXXL);
+    final titleFontSize = responsive.sp(26);
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppDimensions.paddingLG),
-      child: Column(
+      padding: responsive.insets(AppDimensions.md),
+      child: ResponsiveCenter(
+        child: Column(
         children: [
-          const SizedBox(height: AppDimensions.spacingLG),
+          SizedBox(height: spacingLG),
 
           // Game Over or Success Header
           if (isGameOver)
@@ -190,19 +201,19 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
                   duration: 600.ms,
                   curve: Curves.elasticOut,
                 ),
-          const SizedBox(height: AppDimensions.spacingLG),
+          SizedBox(height: spacingLG),
 
           // Title
           Text(
             isGameOver ? l10n.gameOver : l10n.quizComplete,
             style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-              fontSize: 26,
+              fontSize: titleFontSize,
               fontWeight: FontWeight.bold,
             ),
           ).animate().fadeIn(delay: 200.ms),
 
           // Motivational message
-          const SizedBox(height: AppDimensions.spacingSM),
+          SizedBox(height: spacingSM),
           Text(
             result.accuracy >= 70
                 ? l10n.motivationalQuiz(firstName)
@@ -214,19 +225,19 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
           ).animate().fadeIn(delay: 300.ms),
 
           // Star Rating
-          const SizedBox(height: AppDimensions.spacingXL),
+          SizedBox(height: spacingXL),
           StarRatingDisplay(
             stars: result.starRating,
             animation: _starsAnimation,
           ).animate().fadeIn(delay: 400.ms),
 
           // Grade Badge
-          const SizedBox(height: AppDimensions.spacingMD),
+          SizedBox(height: spacingMD),
           GradeBadge(grade: result.grade).animate().fadeIn(delay: 500.ms),
 
           // Perfect Score Banner
           if (result.isPerfectScore) ...[
-            const SizedBox(height: AppDimensions.spacingMD),
+            SizedBox(height: spacingMD),
             const PerfectScoreBanner()
                 .animate()
                 .fadeIn(delay: 600.ms)
@@ -235,14 +246,14 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
 
           // Session type info
           if (result.sessionType != QuizSessionType.standard) ...[
-            const SizedBox(height: AppDimensions.spacingMD),
+            SizedBox(height: spacingMD),
             SessionTypeBadge(
               sessionType: result.sessionType,
               continent: result.continent,
             ).animate().fadeIn(delay: 600.ms),
           ],
 
-          const SizedBox(height: AppDimensions.spacingXL),
+          SizedBox(height: spacingXL),
 
           // Score card
           AnimatedBuilder(
@@ -256,7 +267,7 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
             ),
           ),
 
-          const SizedBox(height: AppDimensions.spacingLG),
+          SizedBox(height: spacingLG),
 
           // Stats row
           ResultStatsRow(
@@ -267,7 +278,7 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
 
           // Bonuses section
           if (result.sessionType != QuizSessionType.studyMode) ...[
-            const SizedBox(height: AppDimensions.spacingLG),
+            SizedBox(height: spacingLG),
             BonusesSection(
               streakBonus: result.streakBonus,
               speedBonus: result.speedBonus,
@@ -278,7 +289,7 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
 
           // XP earned
           if (result.sessionType != QuizSessionType.studyMode) ...[
-            const SizedBox(height: AppDimensions.spacingXL),
+            SizedBox(height: spacingXL),
             AnimatedBuilder(
               animation: _xpAnimation,
               builder: (context, child) {
@@ -299,7 +310,7 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
 
           // Weak/Strong areas
           if (result.weakAreas.isNotEmpty || result.strongAreas.isNotEmpty) ...[
-            const SizedBox(height: AppDimensions.spacingXL),
+            SizedBox(height: spacingXL),
             PerformanceAnalysisSection(
               strongAreas: result.strongAreas,
               weakAreas: result.weakAreas,
@@ -309,14 +320,14 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
 
           // Achievements unlocked
           if (result.newAchievements.isNotEmpty) ...[
-            const SizedBox(height: AppDimensions.spacingXL),
+            SizedBox(height: spacingXL),
             AchievementsSection(
               achievements: result.newAchievements,
               isArabic: isArabic,
             ).animate().fadeIn(delay: 1100.ms),
           ],
 
-          const SizedBox(height: AppDimensions.spacingXXL),
+          SizedBox(height: spacingXXL),
 
           // Action buttons
           const ResultActionButtons()
@@ -324,8 +335,9 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
               .fadeIn(delay: 1200.ms)
               .slideY(begin: 0.2, end: 0),
 
-          const SizedBox(height: AppDimensions.spacingLG),
+          SizedBox(height: spacingLG),
         ],
+        ),
       ),
     );
   }

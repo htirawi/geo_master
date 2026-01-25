@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -188,21 +188,10 @@ class _CountrySearchItem extends StatelessWidget {
               // Flag
               ClipRRect(
                 borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
-                child: SizedBox(
+                child: CountryFlag.fromCountryCode(
+                  country.code,
                   width: AppDimensions.xl,
                   height: AppDimensions.lg - 2,
-                  child: CachedNetworkImage(
-                    imageUrl: country.flagUrl,
-                    fit: BoxFit.cover,
-                    errorWidget: (_, __, ___) => Container(
-                      color: theme.colorScheme.surfaceContainerHighest,
-                      child: Icon(
-                        Icons.flag,
-                        size: AppDimensions.iconXS - 2,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
                 ),
               ),
               const SizedBox(width: AppDimensions.sm),

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/utils/responsive_utils.dart';
 import '../../../../domain/entities/user.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/auth_provider.dart';
@@ -32,26 +33,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final themeMode = ref.watch(themeModeProvider);
     final selectedLanguage = ref.watch(selectedLanguageProvider);
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final spacingMD = responsive.sp(AppDimensions.spacingMD);
+    final spacingSM = responsive.sp(AppDimensions.spacingSM);
+    final spacingXL = responsive.sp(AppDimensions.spacingXL);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.settings),
       ),
-      body: ListView(
-        children: [
+      body: ResponsiveCenter(
+        child: ListView(
+          children: [
           // Account Section
-          _buildSectionHeader(theme, l10n.account),
+          _buildSectionHeader(context, theme, l10n.account),
           _AccountTile(user: user),
           const Divider(height: 1),
 
           // Appearance Section
-          _buildSectionHeader(theme, l10n.appearance),
-          _buildThemeTile(theme, l10n, themeMode),
+          _buildSectionHeader(context, theme, l10n.appearance),
+          _buildThemeTile(context, theme, l10n, themeMode),
           const Divider(height: 1),
-          _buildLanguageTile(theme, l10n, selectedLanguage, isArabic),
+          _buildLanguageTile(context, theme, l10n, selectedLanguage, isArabic),
           const Divider(height: 1),
 
           // Preferences Section
-          _buildSectionHeader(theme, l10n.preferences),
+          _buildSectionHeader(context, theme, l10n.preferences),
           _buildSwitchTile(
             theme: theme,
             icon: Icons.volume_up,
@@ -74,7 +82,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const Divider(height: 1),
 
           // Notifications Section
-          _buildSectionHeader(theme, l10n.notifications),
+          _buildSectionHeader(context, theme, l10n.notifications),
           _buildSwitchTile(
             theme: theme,
             icon: Icons.notifications,
@@ -102,13 +110,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
           // Premium Section
           if (!(user?.isPremium ?? false)) ...[
-            _buildSectionHeader(theme, l10n.premium),
-            _buildPremiumTile(theme, l10n),
+            _buildSectionHeader(context, theme, l10n.premium),
+            _buildPremiumTile(context, theme, l10n),
             const Divider(height: 1),
           ],
 
           // About Section
-          _buildSectionHeader(theme, l10n.about),
+          _buildSectionHeader(context, theme, l10n.about),
           _buildNavigationTile(
             theme: theme,
             icon: Icons.privacy_tip,
@@ -141,28 +149,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const Divider(height: 1),
 
           // Sign Out
-          const SizedBox(height: AppDimensions.spacingMD),
-          _buildSignOutTile(theme, l10n),
+          SizedBox(height: spacingMD),
+          _buildSignOutTile(context, theme, l10n),
 
           // Delete Account
           if (!(user?.isAnonymous ?? true)) ...[
-            const SizedBox(height: AppDimensions.spacingSM),
-            _buildDeleteAccountTile(theme, l10n),
+            SizedBox(height: spacingSM),
+            _buildDeleteAccountTile(context, theme, l10n),
           ],
 
-          const SizedBox(height: AppDimensions.spacingXL),
+          SizedBox(height: spacingXL),
         ],
+        ),
       ),
     );
   }
 
-  Widget _buildSectionHeader(ThemeData theme, String title) {
+  Widget _buildSectionHeader(BuildContext context, ThemeData theme, String title) {
+    final responsive = ResponsiveUtils.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppDimensions.paddingMD,
-        AppDimensions.paddingLG,
-        AppDimensions.paddingMD,
-        AppDimensions.paddingSM,
+      padding: responsive.insetsOnly(
+        left: AppDimensions.paddingMD,
+        top: AppDimensions.paddingLG,
+        right: AppDimensions.paddingMD,
+        bottom: AppDimensions.paddingSM,
       ),
       child: Text(
         title.toUpperCase(),
@@ -176,6 +186,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Widget _buildThemeTile(
+    BuildContext context,
     ThemeData theme,
     AppLocalizations l10n,
     ThemeMode themeMode,
@@ -193,6 +204,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Widget _buildLanguageTile(
+    BuildContext context,
     ThemeData theme,
     AppLocalizations l10n,
     String selectedLanguage,
@@ -262,17 +274,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildPremiumTile(ThemeData theme, AppLocalizations l10n) {
+  Widget _buildPremiumTile(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+    final responsive = ResponsiveUtils.of(context);
+    final iconPadding = responsive.sp(8);
+    final iconRadius = responsive.sp(8);
+    final iconSize = responsive.sp(20);
+    final badgePaddingH = responsive.sp(12);
+    final badgePaddingV = responsive.sp(6);
+    final badgeRadius = responsive.sp(AppDimensions.radiusMD);
+
     return ListTile(
       leading: Container(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.all(iconPadding),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [AppColors.primary, AppColors.secondary],
           ),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(iconRadius),
         ),
-        child: const Icon(Icons.star, color: Colors.white, size: 20),
+        child: Icon(Icons.star, color: Colors.white, size: iconSize),
       ),
       title: Text(
         l10n.upgradeToPremium,
@@ -280,10 +300,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ),
       subtitle: Text(l10n.unlockAllFeatures),
       trailing: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: badgePaddingH, vertical: badgePaddingV),
         decoration: BoxDecoration(
           color: AppColors.primary,
-          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+          borderRadius: BorderRadius.circular(badgeRadius),
         ),
         child: Text(
           l10n.upgrade,
@@ -305,21 +325,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildSignOutTile(ThemeData theme, AppLocalizations l10n) {
+  Widget _buildSignOutTile(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+    final responsive = ResponsiveUtils.of(context);
+    final paddingMD = responsive.sp(AppDimensions.paddingMD);
+    final spacingSM = responsive.sp(AppDimensions.spacingSM);
+    final buttonPadding = responsive.sp(16);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingMD),
+      padding: EdgeInsets.symmetric(horizontal: paddingMD),
       child: OutlinedButton(
         onPressed: () => _showSignOutDialog(l10n),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.error,
           side: BorderSide(color: theme.colorScheme.error),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: EdgeInsets.symmetric(vertical: buttonPadding),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.logout),
-            const SizedBox(width: AppDimensions.spacingSM),
+            SizedBox(width: spacingSM),
             Text(l10n.signOut),
           ],
         ),
@@ -327,9 +352,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildDeleteAccountTile(ThemeData theme, AppLocalizations l10n) {
+  Widget _buildDeleteAccountTile(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+    final responsive = ResponsiveUtils.of(context);
+    final paddingMD = responsive.sp(AppDimensions.paddingMD);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingMD),
+      padding: EdgeInsets.symmetric(horizontal: paddingMD),
       child: TextButton(
         onPressed: () => _showDeleteAccountDialog(l10n),
         style: TextButton.styleFrom(
@@ -551,9 +579,16 @@ class _AccountTile extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final avatarRadius = responsive.sp(24);
+    final badgePaddingH = responsive.sp(8);
+    final badgePaddingV = responsive.sp(4);
+    final badgeRadius = responsive.sp(AppDimensions.radiusSM);
+
     return ListTile(
       leading: CircleAvatar(
-        radius: 24,
+        radius: avatarRadius,
         backgroundColor: theme.colorScheme.primaryContainer,
         backgroundImage: user?.photoUrl != null
             ? CachedNetworkImageProvider(user!.photoUrl!)
@@ -579,12 +614,12 @@ class _AccountTile extends StatelessWidget {
       ),
       trailing: user?.isPremium == true
           ? Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: badgePaddingH, vertical: badgePaddingV),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [AppColors.primary, AppColors.secondary],
                 ),
-                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                borderRadius: BorderRadius.circular(badgeRadius),
               ),
               child: Text(
                 l10n.proBadge,

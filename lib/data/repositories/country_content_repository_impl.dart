@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../app/di/service_locator.dart';
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../core/services/logger_service.dart';
@@ -26,11 +27,18 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
   static const String _contentCacheBoxName = 'country_content_cache';
   static const Duration _cacheDuration = Duration(days: 7);
 
-  Future<Box<String>> get _cacheBox async {
-    if (!_hive.isBoxOpen(_contentCacheBoxName)) {
-      return await _hive.openBox<String>(_contentCacheBoxName);
+  Future<Box<String>?> get _cacheBox async {
+    if (!isHiveAvailable) return null;
+
+    try {
+      if (!_hive.isBoxOpen(_contentCacheBoxName)) {
+        return await _hive.openBox<String>(_contentCacheBoxName);
+      }
+      return _hive.box<String>(_contentCacheBoxName);
+    } catch (e) {
+      logger.warning('Failed to open content cache box', tag: 'ContentRepo', error: e);
+      return null;
     }
-    return _hive.box<String>(_contentCacheBoxName);
   }
 
   @override
@@ -308,6 +316,8 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
   Future<Either<Failure, void>> clearCountryCache(String countryCode) async {
     try {
       final box = await _cacheBox;
+      if (box == null) return const Right(null); // Hive not available
+
       final keysToDelete = box.keys
           .where((key) => key.toString().contains(countryCode.toLowerCase()))
           .toList();
@@ -326,6 +336,8 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
   Future<Either<Failure, void>> clearAllCache() async {
     try {
       final box = await _cacheBox;
+      if (box == null) return const Right(null); // Hive not available
+
       await box.clear();
       return const Right(null);
     } catch (e) {
@@ -337,6 +349,8 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
   Future<T?> _getCached<T>(String key) async {
     try {
       final box = await _cacheBox;
+      if (box == null) return null; // Hive not available
+
       final data = box.get(key);
       if (data == null) return null;
 
@@ -357,6 +371,8 @@ class CountryContentRepositoryImpl implements ICountryContentRepository {
   Future<void> _setCache(String key, dynamic data) async {
     try {
       final box = await _cacheBox;
+      if (box == null) return; // Hive not available
+
       final cacheEntry = jsonEncode({
         'timestamp': DateTime.now().toIso8601String(),
         'data': data,

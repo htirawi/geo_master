@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/utils/responsive_utils.dart';
 import '../../../../presentation/providers/auth_provider.dart';
 import '../widgets/compass_actions.dart';
 import '../widgets/daily_challenge_card.dart';
@@ -21,6 +22,11 @@ class HomeScreen extends ConsumerWidget {
     final user = ref.watch(currentUserProvider);
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final sectionSpacing = responsive.sp(AppDimensions.spacingLG);
+    final bottomPadding = responsive.sp(AppDimensions.bottomNavHeight);
+
     return Scaffold(
       body: CustomScrollView(
         cacheExtent: 500,
@@ -33,43 +39,47 @@ class HomeScreen extends ConsumerWidget {
               isArabic: isArabic,
             ),
           ),
-          // Main Content
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingMD),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                const SizedBox(height: AppDimensions.spacingLG),
-                // Today's Destination (Country of the Day) - Most prominent
-                TodaysDestinationCard(isArabic: isArabic)
-                    .animate()
-                    .fadeIn(delay: 200.ms, duration: 500.ms)
-                    .slideY(begin: 0.1, end: 0),
-                const SizedBox(height: AppDimensions.spacingLG),
-                // Quick Actions - Compass Style
-                const CompassActions()
-                    .animate()
-                    .fadeIn(delay: 300.ms, duration: 500.ms)
-                    .slideY(begin: 0.1, end: 0),
-                const SizedBox(height: AppDimensions.spacingLG),
-                // Daily Challenge Card
-                const DailyChallengeCard()
-                    .animate()
-                    .fadeIn(delay: 400.ms, duration: 500.ms)
-                    .slideY(begin: 0.1, end: 0),
-                const SizedBox(height: AppDimensions.spacingLG),
-                // Expedition Progress (Streak + Stats)
-                const ExpeditionProgressCard()
-                    .animate()
-                    .fadeIn(delay: 500.ms, duration: 500.ms)
-                    .slideY(begin: 0.1, end: 0),
-                const SizedBox(height: AppDimensions.spacingLG),
-                // World Progress Map Preview
-                const WorldProgressPreview()
-                    .animate()
-                    .fadeIn(delay: 600.ms, duration: 500.ms)
-                    .slideY(begin: 0.1, end: 0),
-                const SizedBox(height: AppDimensions.bottomNavHeight), // Bottom padding for nav bar
-              ]),
+          // Main Content - Wrapped in ResponsiveCenter for tablet/desktop
+          SliverToBoxAdapter(
+            child: ResponsiveCenter(
+              child: Padding(
+                padding: responsive.insetsSymmetric(horizontal: AppDimensions.md),
+                child: Column(
+                  children: [
+                    SizedBox(height: sectionSpacing),
+                    // Today's Destination (Country of the Day) - Most prominent
+                    TodaysDestinationCard(isArabic: isArabic)
+                        .animate()
+                        .fadeIn(delay: 200.ms, duration: 500.ms)
+                        .slideY(begin: 0.1, end: 0),
+                    SizedBox(height: sectionSpacing),
+                    // Quick Actions - Compass Style
+                    const CompassActions()
+                        .animate()
+                        .fadeIn(delay: 300.ms, duration: 500.ms)
+                        .slideY(begin: 0.1, end: 0),
+                    SizedBox(height: sectionSpacing),
+                    // Daily Challenge Card
+                    const DailyChallengeCard()
+                        .animate()
+                        .fadeIn(delay: 400.ms, duration: 500.ms)
+                        .slideY(begin: 0.1, end: 0),
+                    SizedBox(height: sectionSpacing),
+                    // Expedition Progress (Streak + Stats)
+                    const ExpeditionProgressCard()
+                        .animate()
+                        .fadeIn(delay: 500.ms, duration: 500.ms)
+                        .slideY(begin: 0.1, end: 0),
+                    SizedBox(height: sectionSpacing),
+                    // World Progress Map Preview
+                    const WorldProgressPreview()
+                        .animate()
+                        .fadeIn(delay: 600.ms, duration: 500.ms)
+                        .slideY(begin: 0.1, end: 0),
+                    SizedBox(height: bottomPadding), // Bottom padding for nav bar
+                  ],
+                ),
+              ),
             ),
           ),
         ],

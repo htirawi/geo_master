@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -85,24 +85,16 @@ class CountryListCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Flag image with contain to show full flag
+                      // Professional flag display using country_flags package
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(AppDimensions.xs),
-                          child: CachedNetworkImage(
-                            imageUrl: country.flagUrl,
-                            fit: BoxFit.contain,
-                            placeholder: (_, __) => Center(
-                              child: Text(
-                                country.flagEmoji,
-                                style: const TextStyle(fontSize: 40),
-                              ),
-                            ),
-                            errorWidget: (_, __, ___) => Center(
-                              child: Text(
-                                country.flagEmoji,
-                                style: const TextStyle(fontSize: 40),
-                              ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: CountryFlag.fromCountryCode(
+                              country.code,
+                              height: 56,
+                              width: 84,
                             ),
                           ),
                         ),

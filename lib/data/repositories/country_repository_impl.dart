@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../app/di/service_locator.dart';
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../core/services/logger_service.dart';
@@ -44,11 +45,20 @@ class CountryRepositoryImpl implements ICountryRepository {
     return _excludedCountryCodes.contains(code.toUpperCase());
   }
 
-  Future<Box<String>> get _cacheBox async {
-    if (!_hive.isBoxOpen(_cacheBoxName)) {
-      return await _hive.openBox<String>(_cacheBoxName);
+  Future<Box<String>?> get _cacheBox async {
+    // Check if Hive was successfully initialized
+    if (!isHiveAvailable) {
+      return null;
     }
-    return _hive.box<String>(_cacheBoxName);
+    try {
+      if (!_hive.isBoxOpen(_cacheBoxName)) {
+        return await _hive.openBox<String>(_cacheBoxName);
+      }
+      return _hive.box<String>(_cacheBoxName);
+    } catch (e) {
+      logger.warning('Failed to open Hive cache box', tag: 'CountryRepo', error: e);
+      return null;
+    }
   }
 
   @override
@@ -280,6 +290,8 @@ class CountryRepositoryImpl implements ICountryRepository {
   Future<List<Country>?> _getCachedCountries() async {
     try {
       final box = await _cacheBox;
+      if (box == null) return null; // Hive not available
+
       final cachedData = box.get(_allCountriesKey);
       if (cachedData == null) return null;
 
@@ -315,6 +327,8 @@ class CountryRepositoryImpl implements ICountryRepository {
   Future<void> _cacheCountries(List<CountryModel> countries) async {
     try {
       final box = await _cacheBox;
+      if (box == null) return; // Hive not available, skip caching
+
       final cacheData = jsonEncode({
         'timestamp': DateTime.now().toIso8601String(),
         'data': countries.map((c) => c.toJson()).toList(),
@@ -335,6 +349,10 @@ class CountryRepositoryImpl implements ICountryRepository {
   Future<Either<Failure, void>> clearCache() async {
     try {
       final box = await _cacheBox;
+      if (box == null) {
+        // Hive not available, nothing to clear
+        return const Right(null);
+      }
       await box.clear();
       return const Right(null);
     } catch (e) {

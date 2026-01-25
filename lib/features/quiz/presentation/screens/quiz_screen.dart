@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/utils/responsive_utils.dart';
 import '../../../../domain/entities/quiz.dart';
 import '../../../../domain/repositories/i_quiz_repository.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -80,41 +81,46 @@ class QuizScreen extends ConsumerWidget {
           ),
           // Topic Categories
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppDimensions.lg - 4,
-                AppDimensions.xl - 4,
-                AppDimensions.lg - 4,
-                AppDimensions.md,
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.category_rounded,
-                    color: AppColors.primary,
-                    size: AppDimensions.iconMD - 2,
+            child: Builder(
+              builder: (context) {
+                final responsive = ResponsiveUtils.of(context);
+                return Padding(
+                  padding: responsive.insetsOnly(
+                    left: AppDimensions.lg - 4,
+                    top: AppDimensions.xl - 4,
+                    right: AppDimensions.lg - 4,
+                    bottom: AppDimensions.md,
                   ),
-                  const SizedBox(width: AppDimensions.sm - 2),
-                  Text(
-                    isArabic ? 'اختر نوع السؤال' : 'Choose Topic',
-                    style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.titleLarge?.color,
-                    ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.category_rounded,
+                        color: AppColors.primary,
+                        size: responsive.sp(AppDimensions.iconMD - 2),
+                      ),
+                      SizedBox(width: responsive.sp(AppDimensions.sm - 2)),
+                      Text(
+                        isArabic ? 'اختر نوع السؤال' : 'Choose Topic',
+                        style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
+                          fontSize: responsive.sp(20),
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).textTheme.titleLarge?.color,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ).animate().fadeIn(delay: 450.ms, duration: AppDimensions.durationMedium),
+                ).animate().fadeIn(delay: 450.ms, duration: AppDimensions.durationMedium);
+              },
+            ),
           ),
           // Topic Cards Grid
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.lg - 4),
+            padding: EdgeInsets.symmetric(horizontal: context.sp(AppDimensions.md)),
             sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: AppDimensions.md - 2,
-                mainAxisSpacing: AppDimensions.md - 2,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: Responsive.gridColumns(context),
+                crossAxisSpacing: context.sp(AppDimensions.md - 2),
+                mainAxisSpacing: context.sp(AppDimensions.md - 2),
                 childAspectRatio: 0.85,
               ),
               delegate: SliverChildListDelegate([
@@ -248,46 +254,47 @@ class _ModernHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final responsive = ResponsiveUtils.of(context);
 
     return Container(
       decoration: BoxDecoration(
         gradient: HeaderGradients.quiz,
         borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(AppDimensions.radiusXL + 8),
+          bottom: Radius.circular(responsive.sp(AppDimensions.radiusXL + 8)),
         ),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFFFF6D00).withValues(alpha: 0.3),
-            blurRadius: AppDimensions.blurHeavy,
-            offset: const Offset(0, AppDimensions.sm - 2),
+            blurRadius: responsive.sp(AppDimensions.blurHeavy),
+            offset: Offset(0, responsive.sp(AppDimensions.sm - 2)),
           ),
         ],
       ),
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppDimensions.lg,
-            AppDimensions.md,
-            AppDimensions.lg,
-            AppDimensions.xl - 4,
+          padding: responsive.insetsOnly(
+            left: AppDimensions.lg,
+            top: AppDimensions.md,
+            right: AppDimensions.lg,
+            bottom: AppDimensions.xl - 4,
           ),
           child: Row(
             children: [
               // Icon
               Container(
-                padding: const EdgeInsets.all(AppDimensions.md - 2),
+                padding: EdgeInsets.all(responsive.sp(AppDimensions.md - 2)),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.25),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 2),
+                  borderRadius: BorderRadius.circular(responsive.sp(AppDimensions.radiusLG + 2)),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.flash_on_rounded,
                   color: Colors.white,
-                  size: AppDimensions.iconLG - 4,
+                  size: responsive.sp(AppDimensions.iconLG - 4),
                 ),
               ),
-              const SizedBox(width: AppDimensions.md),
+              SizedBox(width: responsive.sp(AppDimensions.md)),
               // Title
               Expanded(
                 child: Column(
@@ -296,17 +303,17 @@ class _ModernHeader extends StatelessWidget {
                     Text(
                       l10n.challengeArena,
                       style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-                        fontSize: 24,
+                        fontSize: responsive.sp(24),
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         height: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: responsive.sp(2)),
                     Text(
                       l10n.selectChallenge,
                       style: GoogleFonts.poppins(
-                        fontSize: 13,
+                        fontSize: responsive.sp(13),
                         color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
@@ -316,27 +323,27 @@ class _ModernHeader extends StatelessWidget {
               // Streak badge
               if (streak > 0)
                 Container(
-                  padding: const EdgeInsets.symmetric(
+                  padding: responsive.insetsSymmetric(
                     horizontal: AppDimensions.md - 2,
                     vertical: AppDimensions.sm - 2,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.25),
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusMD + 4),
+                    borderRadius: BorderRadius.circular(responsive.sp(AppDimensions.radiusMD + 4)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.local_fire_department_rounded,
                         color: Colors.white,
-                        size: AppDimensions.iconMD - 2,
+                        size: responsive.sp(AppDimensions.iconMD - 2),
                       ),
-                      const SizedBox(width: AppDimensions.xxs + 2),
+                      SizedBox(width: responsive.sp(AppDimensions.xxs + 2)),
                       Text(
                         '$streak',
                         style: GoogleFonts.poppins(
-                          fontSize: 18,
+                          fontSize: responsive.sp(18),
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -361,14 +368,14 @@ class _StatsCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final responsive = ResponsiveUtils.of(context);
 
     return stats.when(
       data: (statistics) => Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppDimensions.lg - 4,
-          AppDimensions.lg - 4,
-          AppDimensions.lg - 4,
-          0,
+        padding: responsive.insetsOnly(
+          left: AppDimensions.lg - 4,
+          top: AppDimensions.lg - 4,
+          right: AppDimensions.lg - 4,
         ),
         child: Row(
           children: [
@@ -380,7 +387,7 @@ class _StatsCards extends StatelessWidget {
                 color: AppColors.success,
               ),
             ),
-            const SizedBox(width: AppDimensions.sm),
+            SizedBox(width: responsive.sp(AppDimensions.sm)),
             Expanded(
               child: _StatCard(
                 icon: Icons.gps_fixed_rounded,
@@ -389,7 +396,7 @@ class _StatsCards extends StatelessWidget {
                 color: AppColors.primary,
               ),
             ),
-            const SizedBox(width: AppDimensions.sm),
+            SizedBox(width: responsive.sp(AppDimensions.sm)),
             Expanded(
               child: _StatCard(
                 icon: Icons.local_fire_department_rounded,
@@ -402,17 +409,16 @@ class _StatsCards extends StatelessWidget {
         ),
       ),
       loading: () => Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppDimensions.lg - 4,
-          AppDimensions.lg - 4,
-          AppDimensions.lg - 4,
-          0,
+        padding: responsive.insetsOnly(
+          left: AppDimensions.lg - 4,
+          top: AppDimensions.lg - 4,
+          right: AppDimensions.lg - 4,
         ),
         child: Container(
-          height: 100,
+          height: responsive.sp(100),
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusXL - 4),
+            borderRadius: BorderRadius.circular(responsive.sp(AppDimensions.radiusXL - 4)),
           ),
           child: const Center(
             child: CircularProgressIndicator(
@@ -442,46 +448,48 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final responsive = ResponsiveUtils.of(context);
+
     return Container(
-      padding: const EdgeInsets.symmetric(
+      padding: responsive.insetsSymmetric(
         vertical: AppDimensions.md,
         horizontal: AppDimensions.sm,
       ),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLG + 2),
+        borderRadius: BorderRadius.circular(responsive.sp(AppDimensions.radiusLG + 2)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: AppDimensions.blurLight,
-            offset: const Offset(0, AppDimensions.xxs),
+            blurRadius: responsive.sp(AppDimensions.blurLight),
+            offset: Offset(0, responsive.sp(AppDimensions.xxs)),
           ),
         ],
       ),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(AppDimensions.sm - 2),
+            padding: EdgeInsets.all(responsive.sp(AppDimensions.sm - 2)),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: color, size: AppDimensions.iconMD - 2),
+            child: Icon(icon, color: color, size: responsive.sp(AppDimensions.iconMD - 2)),
           ),
-          const SizedBox(height: AppDimensions.sm - 2),
+          SizedBox(height: responsive.sp(AppDimensions.sm - 2)),
           Text(
             value,
             style: GoogleFonts.poppins(
-              fontSize: 20,
+              fontSize: responsive.sp(20),
               fontWeight: FontWeight.bold,
               color: Theme.of(context).textTheme.titleLarge?.color,
             ),
           ),
-          const SizedBox(height: 2),
+          SizedBox(height: responsive.sp(2)),
           Text(
             label,
             style: GoogleFonts.poppins(
-              fontSize: 10,
+              fontSize: responsive.sp(10),
               color: Colors.grey[600],
               fontWeight: FontWeight.w500,
             ),
@@ -510,13 +518,13 @@ class _GameModesGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPremium = ref.watch(isPremiumProvider);
+    final responsive = ResponsiveUtils.of(context);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppDimensions.lg - 4,
-        AppDimensions.lg,
-        AppDimensions.lg - 4,
-        0,
+      padding: responsive.insetsOnly(
+        left: AppDimensions.lg - 4,
+        top: AppDimensions.lg,
+        right: AppDimensions.lg - 4,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -526,27 +534,27 @@ class _GameModesGrid extends ConsumerWidget {
               Icon(
                 Icons.sports_esports_rounded,
                 color: AppColors.primary,
-                size: AppDimensions.iconMD - 2,
+                size: responsive.sp(AppDimensions.iconMD - 2),
               ),
-              const SizedBox(width: AppDimensions.sm - 2),
+              SizedBox(width: responsive.sp(AppDimensions.sm - 2)),
               Text(
                 isArabic ? 'أوضاع اللعب' : 'Game Modes',
                 style: (isArabic ? GoogleFonts.cairo : GoogleFonts.poppins)(
-                  fontSize: 20,
+                  fontSize: responsive.sp(20),
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).textTheme.titleLarge?.color,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: AppDimensions.md),
+          SizedBox(height: responsive.sp(AppDimensions.md)),
           // Game modes in clean grid
           GridView.count(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 3,
-            crossAxisSpacing: AppDimensions.sm,
-            mainAxisSpacing: AppDimensions.sm,
+            crossAxisCount: Responsive.gridColumns(context, mobileColumns: 3),
+            crossAxisSpacing: responsive.sp(AppDimensions.sm),
+            mainAxisSpacing: responsive.sp(AppDimensions.sm),
             childAspectRatio: 0.95,
             children: [
               _GameModeCard(

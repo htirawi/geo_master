@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../app/di/service_locator.dart';
 import 'logger_service.dart';
 
 /// Centralized cache service for managing app-wide caching
@@ -24,12 +25,19 @@ class CacheService {
   static const Duration longCache = Duration(days: 7);
   static const Duration permanentCache = Duration(days: 365);
 
-  /// Open a cache box
-  Future<Box<String>> _openBox(String boxName) async {
-    if (!_hive.isBoxOpen(boxName)) {
-      return await _hive.openBox<String>(boxName);
+  /// Open a cache box, returns null if Hive is not available
+  Future<Box<String>?> _openBox(String boxName) async {
+    if (!isHiveAvailable) return null;
+
+    try {
+      if (!_hive.isBoxOpen(boxName)) {
+        return await _hive.openBox<String>(boxName);
+      }
+      return _hive.box<String>(boxName);
+    } catch (e) {
+      logger.warning('Failed to open cache box: $boxName', tag: 'CacheService', error: e);
+      return null;
     }
-    return _hive.box<String>(boxName);
   }
 
   /// Get cached data with expiration check
@@ -40,6 +48,8 @@ class CacheService {
   }) async {
     try {
       final box = await _openBox(boxName);
+      if (box == null) return null; // Hive not available
+
       final data = box.get(key);
       if (data == null) return null;
 
@@ -68,6 +78,8 @@ class CacheService {
   }) async {
     try {
       final box = await _openBox(boxName);
+      if (box == null) return; // Hive not available
+
       final cacheEntry = jsonEncode({
         'timestamp': DateTime.now().toIso8601String(),
         'data': data,
@@ -85,6 +97,8 @@ class CacheService {
   }) async {
     try {
       final box = await _openBox(boxName);
+      if (box == null) return; // Hive not available
+
       await box.delete(key);
     } catch (e) {
       logger.warning('Error deleting cache', tag: 'CacheService', error: e);
@@ -95,6 +109,8 @@ class CacheService {
   Future<void> clearBox(String boxName) async {
     try {
       final box = await _openBox(boxName);
+      if (box == null) return; // Hive not available
+
       await box.clear();
       logger.info('Cleared cache box: $boxName', tag: 'CacheService');
     } catch (e) {
@@ -132,6 +148,8 @@ class CacheService {
 
   /// Get cache size in bytes (approximate)
   Future<int> getCacheSize() async {
+    if (!isHiveAvailable) return 0;
+
     int totalSize = 0;
     final boxNames = [
       countriesBox,
@@ -145,6 +163,8 @@ class CacheService {
     for (final name in boxNames) {
       try {
         final box = await _openBox(name);
+        if (box == null) continue;
+
         for (final key in box.keys) {
           final value = box.get(key);
           if (value != null) {

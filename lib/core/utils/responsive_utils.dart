@@ -212,8 +212,124 @@ class ResponsivePadding extends StatelessWidget {
   }
 }
 
+/// Responsive utilities class with scaleFactor-based scaling
+///
+/// Usage:
+/// ```dart
+/// final responsive = ResponsiveUtils.of(context);
+/// Text('Hello', style: TextStyle(fontSize: responsive.sp(16)));
+/// SizedBox(height: responsive.sp(24));
+/// EdgeInsets.all(responsive.sp(16));
+/// ```
+class ResponsiveUtils {
+  ResponsiveUtils._(this.context) {
+    _screenWidth = MediaQuery.sizeOf(context).width;
+    _screenHeight = MediaQuery.sizeOf(context).height;
+    // Base width is iPhone 8 (375px) - scales proportionally
+    scaleFactor = (_screenWidth / _baseWidth).clamp(0.85, 1.4);
+  }
+
+  static const double _baseWidth = 375.0;
+
+  final BuildContext context;
+  late final double _screenWidth;
+  late final double _screenHeight;
+  late final double scaleFactor;
+
+  /// Factory constructor for easy access
+  static ResponsiveUtils of(BuildContext context) => ResponsiveUtils._(context);
+
+  /// Screen width
+  double get screenWidth => _screenWidth;
+
+  /// Screen height
+  double get screenHeight => _screenHeight;
+
+  /// Scaled pixels - use for ALL dimensions (fontSize, padding, margins, etc.)
+  /// This ensures consistent proportional scaling across all device sizes
+  double sp(double size) => size * scaleFactor;
+
+  /// Width percentage - get percentage of screen width
+  double wp(double percentage) => _screenWidth * (percentage / 100);
+
+  /// Height percentage - get percentage of screen height
+  double hp(double percentage) => _screenHeight * (percentage / 100);
+
+  /// Check if device is a phone (width < 600)
+  bool get isPhone => _screenWidth < 600;
+
+  /// Check if device is a tablet (600 <= width < 1200)
+  bool get isTablet => _screenWidth >= 600 && _screenWidth < 1200;
+
+  /// Check if device is desktop (width >= 1200)
+  bool get isDesktop => _screenWidth >= 1200;
+
+  /// Check if device is in landscape
+  bool get isLandscape => _screenWidth > _screenHeight;
+
+  /// Get responsive grid columns
+  int get gridColumns {
+    if (_screenWidth >= 1200) return 4;
+    if (_screenWidth >= 600) return 3;
+    return 2;
+  }
+
+  /// Get responsive grid columns with custom mobile count
+  int gridColumnsCustom({int mobile = 2, int tablet = 3, int desktop = 4}) {
+    if (_screenWidth >= 1200) return desktop;
+    if (_screenWidth >= 600) return tablet;
+    return mobile;
+  }
+
+  /// Get responsive value based on device type
+  T value<T>({required T mobile, T? tablet, T? desktop}) {
+    if (isDesktop) return desktop ?? tablet ?? mobile;
+    if (isTablet) return tablet ?? mobile;
+    return mobile;
+  }
+
+  /// Scaled EdgeInsets.all
+  EdgeInsets insets(double value) => EdgeInsets.all(sp(value));
+
+  /// Scaled EdgeInsets.symmetric
+  EdgeInsets insetsSymmetric({double horizontal = 0, double vertical = 0}) =>
+      EdgeInsets.symmetric(
+        horizontal: sp(horizontal),
+        vertical: sp(vertical),
+      );
+
+  /// Scaled EdgeInsets.only
+  EdgeInsets insetsOnly({
+    double left = 0,
+    double top = 0,
+    double right = 0,
+    double bottom = 0,
+  }) =>
+      EdgeInsets.only(
+        left: sp(left),
+        top: sp(top),
+        right: sp(right),
+        bottom: sp(bottom),
+      );
+
+  /// Scaled BorderRadius.circular
+  BorderRadius radius(double value) => BorderRadius.circular(sp(value));
+
+  /// Scaled SizedBox height
+  SizedBox verticalSpace(double height) => SizedBox(height: sp(height));
+
+  /// Scaled SizedBox width
+  SizedBox horizontalSpace(double width) => SizedBox(width: sp(width));
+}
+
 /// Extension on BuildContext for responsive utilities
 extension ResponsiveContextExtension on BuildContext {
+  /// Get ResponsiveUtils instance
+  ResponsiveUtils get r => ResponsiveUtils.of(this);
+
+  /// Shorthand for sp() scaling
+  double sp(double size) => ResponsiveUtils.of(this).sp(size);
+
   /// Get device type
   DeviceType get deviceType => Responsive.getDeviceType(this);
 

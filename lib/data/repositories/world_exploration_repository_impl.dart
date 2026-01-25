@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../app/di/service_locator.dart';
 import '../../core/error/failures.dart';
 import '../../core/services/logger_service.dart';
 import '../../domain/entities/continent.dart';
@@ -27,18 +28,32 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
   static const String _progressBoxName = 'country_progress';
   static const String _continentBoxName = 'continents_cache';
 
-  Future<Box<String>> get _progressBox async {
-    if (!_hive.isBoxOpen(_progressBoxName)) {
-      return await _hive.openBox<String>(_progressBoxName);
+  Future<Box<String>?> get _progressBox async {
+    if (!isHiveAvailable) return null;
+
+    try {
+      if (!_hive.isBoxOpen(_progressBoxName)) {
+        return await _hive.openBox<String>(_progressBoxName);
+      }
+      return _hive.box<String>(_progressBoxName);
+    } catch (e) {
+      logger.warning('Failed to open progress box', tag: 'WorldExplRepo', error: e);
+      return null;
     }
-    return _hive.box<String>(_progressBoxName);
   }
 
-  Future<Box<String>> get _continentBox async {
-    if (!_hive.isBoxOpen(_continentBoxName)) {
-      return await _hive.openBox<String>(_continentBoxName);
+  Future<Box<String>?> get _continentBox async {
+    if (!isHiveAvailable) return null;
+
+    try {
+      if (!_hive.isBoxOpen(_continentBoxName)) {
+        return await _hive.openBox<String>(_continentBoxName);
+      }
+      return _hive.box<String>(_continentBoxName);
+    } catch (e) {
+      logger.warning('Failed to open continent box', tag: 'WorldExplRepo', error: e);
+      return null;
     }
-    return _hive.box<String>(_continentBoxName);
   }
 
   // Continent data - static for now
@@ -239,6 +254,8 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
   ) async {
     try {
       final box = await _continentBox;
+      if (box == null) return const Right(ContinentProgress()); // Hive not available
+
       final data = box.get('progress_$continentId');
 
       if (data != null) {
@@ -259,6 +276,8 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
   ) async {
     try {
       final box = await _continentBox;
+      if (box == null) return const Right(null); // Hive not available, skip saving
+
       final model = ContinentProgressModel.fromEntity(progress);
       await box.put('progress_$continentId', jsonEncode(model.toJson()));
       return const Right(null);
@@ -273,6 +292,11 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
   ) async {
     try {
       final box = await _progressBox;
+      if (box == null) {
+        // Hive not available, return default progress
+        return Right(CountryProgress(countryCode: countryCode.toUpperCase()));
+      }
+
       final data = box.get(countryCode.toUpperCase());
 
       if (data != null) {
@@ -290,6 +314,8 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
   Future<Either<Failure, Map<String, CountryProgress>>> getAllCountryProgress() async {
     try {
       final box = await _progressBox;
+      if (box == null) return const Right({}); // Hive not available
+
       final progress = <String, CountryProgress>{};
 
       for (final key in box.keys) {
@@ -312,6 +338,8 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
   ) async {
     try {
       final box = await _progressBox;
+      if (box == null) return const Right(null); // Hive not available, skip saving
+
       final model = CountryProgressModel.fromEntity(progress);
       await box.put(progress.countryCode.toUpperCase(), jsonEncode(model.toJson()));
       return const Right(null);
@@ -573,8 +601,10 @@ class WorldExplorationRepositoryImpl implements IWorldExplorationRepository {
     try {
       final progressBox = await _progressBox;
       final continentBox = await _continentBox;
-      await progressBox.clear();
-      await continentBox.clear();
+
+      if (progressBox != null) await progressBox.clear();
+      if (continentBox != null) await continentBox.clear();
+
       return const Right(null);
     } catch (e) {
       return Left(CacheFailure(message: 'Failed to clear cache'));

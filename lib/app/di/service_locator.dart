@@ -51,6 +51,12 @@ import '../../domain/repositories/i_world_exploration_repository.dart';
 /// Global service locator instance
 final GetIt sl = GetIt.instance;
 
+/// Flag to track if Hive was successfully initialized
+bool _hiveInitialized = false;
+
+/// Check if Hive is available for caching operations
+bool get isHiveAvailable => _hiveInitialized;
+
 /// API Keys - Configure via environment variables (--dart-define)
 /// Example: flutter run --dart-define=CLAUDE_API_KEY=your_key_here
 ///
@@ -164,14 +170,20 @@ Future<void> _initExternalDependencies() async {
         throw TimeoutException('Hive.initFlutter timed out');
       },
     );
+    _hiveInitialized = true;
   } catch (e) {
     // Fallback: try path_provider directly
     try {
       final dir = await getApplicationDocumentsDirectory();
       Hive.init(dir.path);
-    } catch (_) {
-      // Last resort: Hive will work with in-memory boxes only
+      _hiveInitialized = true;
+    } catch (e2) {
+      // Last resort: Hive is not available for persistent storage
       // This allows the app to run despite FFI issues on iOS beta simulators
+      // Cache operations will be skipped gracefully
+      _hiveInitialized = false;
+      // ignore: avoid_print
+      print('WARNING: Hive initialization failed. Caching disabled. Error: $e2');
     }
   }
   sl.registerSingleton<HiveInterface>(Hive);

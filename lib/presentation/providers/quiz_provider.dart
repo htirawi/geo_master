@@ -443,13 +443,25 @@ class QuizSessionNotifier extends StateNotifier<AsyncValue<QuizState>> {
       }
 
       // Determine correctness
+      // Note: Answer may be in English OR Arabic depending on the UI locale
+      // We need to check against both language versions
       bool isCorrect;
       if (selectedAnswers != null && correctAnswers != null) {
-        // Multi-select validation
-        isCorrect = selectedAnswers.toSet().containsAll(correctAnswers.toSet()) &&
-            selectedAnswers.length == correctAnswers.length;
+        // Multi-select validation - check both English and Arabic correct answers
+        final correctSet = correctAnswers.toSet();
+        final arabicCorrectAnswers = currentQuestion.correctAnswersArabic;
+        final arabicCorrectSet = arabicCorrectAnswers?.toSet();
+
+        isCorrect = (selectedAnswers.toSet().containsAll(correctSet) &&
+            selectedAnswers.length == correctAnswers.length) ||
+            (arabicCorrectSet != null &&
+             selectedAnswers.toSet().containsAll(arabicCorrectSet) &&
+             selectedAnswers.length == arabicCorrectSet.length);
       } else {
-        isCorrect = answer == currentQuestion.correctAnswer;
+        // Single answer validation - check both English and Arabic correct answer
+        final correctAnswerArabic = currentQuestion.correctAnswerArabic;
+        isCorrect = answer == currentQuestion.correctAnswer ||
+            (correctAnswerArabic != null && answer == correctAnswerArabic);
       }
 
       // Calculate XP for this answer
@@ -468,14 +480,33 @@ class QuizSessionNotifier extends StateNotifier<AsyncValue<QuizState>> {
       }
 
       // Create the answer
+      // Store correctAnswer in the same language as selectedAnswer for proper isCorrect comparison
+      final storedCorrectAnswer = (currentQuestion.correctAnswerArabic != null &&
+              answer == currentQuestion.correctAnswerArabic)
+          ? currentQuestion.correctAnswerArabic!
+          : currentQuestion.correctAnswer;
+
+      // For multi-select, determine which language version to store
+      List<String>? storedCorrectAnswers;
+      if (selectedAnswers != null && currentQuestion.correctAnswersArabic != null) {
+        // Check if user selected Arabic answers by comparing first answer
+        final isArabicSelection = currentQuestion.correctAnswersArabic!
+            .any((arabic) => selectedAnswers.contains(arabic));
+        storedCorrectAnswers = isArabicSelection
+            ? currentQuestion.correctAnswersArabic
+            : (correctAnswers ?? currentQuestion.correctAnswers);
+      } else {
+        storedCorrectAnswers = correctAnswers ?? currentQuestion.correctAnswers;
+      }
+
       final quizAnswer = QuizAnswer(
         questionId: currentQuestion.id,
         selectedAnswer: answer,
-        correctAnswer: currentQuestion.correctAnswer,
+        correctAnswer: storedCorrectAnswer,
         timeTaken: timeTaken,
         answeredAt: DateTime.now(),
         selectedAnswers: selectedAnswers,
-        correctAnswers: correctAnswers ?? currentQuestion.correctAnswers,
+        correctAnswers: storedCorrectAnswers,
         usedHint: usedHint,
         speedBonus: speedBonus,
         xpEarned: answerXp,

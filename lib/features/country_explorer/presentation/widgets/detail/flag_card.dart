@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_dimensions.dart';
@@ -17,17 +17,19 @@ class FlagCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
+    final flagWidth = size.width * 0.7;
+    final flagHeight = flagWidth * 2 / 3; // 3:2 aspect ratio
 
     return Center(
       child: Container(
-        width: size.width * 0.7,
+        width: flagWidth,
+        height: flagHeight,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.12),
+              color: Colors.black.withValues(alpha: 0.15),
               blurRadius: AppDimensions.lg,
               offset: const Offset(0, AppDimensions.xs),
             ),
@@ -35,27 +37,10 @@ class FlagCard extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-          child: CachedNetworkImage(
-            imageUrl: country.flagUrl,
-            fit: BoxFit.contain,
-            placeholder: (_, __) => AspectRatio(
-              aspectRatio: 3 / 2,
-              child: Container(
-                color: theme.colorScheme.surfaceContainerHighest,
-                child: Center(
-                  child: Text(country.flagEmoji, style: const TextStyle(fontSize: AppDimensions.avatarMD)),
-                ),
-              ),
-            ),
-            errorWidget: (_, __, ___) => AspectRatio(
-              aspectRatio: 3 / 2,
-              child: Container(
-                color: theme.colorScheme.surfaceContainerHighest,
-                child: Center(
-                  child: Text(country.flagEmoji, style: const TextStyle(fontSize: AppDimensions.iconXXL)),
-                ),
-              ),
-            ),
+          child: CountryFlag.fromCountryCode(
+            country.code,
+            height: flagHeight,
+            width: flagWidth,
           ),
         ),
       ),

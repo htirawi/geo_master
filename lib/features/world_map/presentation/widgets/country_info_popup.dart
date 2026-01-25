@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -392,23 +393,10 @@ class CountryInfoBottomSheet extends ConsumerWidget {
                   // Flag
                   ClipRRect(
                     borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-                    child: SizedBox(
+                    child: CountryFlag.fromCountryCode(
+                      country.code,
                       width: AppDimensions.flagWidthMD,
                       height: AppDimensions.flagWidthMD / AppDimensions.flagAspectRatio,
-                      child: CachedNetworkImage(
-                        imageUrl: country.flagUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
-                          color: theme.colorScheme.primaryContainer,
-                        ),
-                        errorWidget: (context, url, error) => Container(
-                          color: theme.colorScheme.primaryContainer,
-                          child: Icon(
-                            Icons.flag,
-                            color: theme.colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                      ),
                     ),
                   ),
                   const SizedBox(width: AppDimensions.md),

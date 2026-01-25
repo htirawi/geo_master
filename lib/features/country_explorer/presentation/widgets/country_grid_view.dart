@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/utils/responsive_utils.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/country_provider.dart';
 import 'country_grid_card.dart';
@@ -50,10 +51,10 @@ class CountryGridView extends ConsumerWidget {
         }
 
         return SliverPadding(
-          padding: const EdgeInsets.all(AppDimensions.md),
+          padding: EdgeInsets.all(context.responsivePadding),
           sliver: SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: Responsive.gridColumns(context),
               mainAxisSpacing: AppDimensions.sm,
               crossAxisSpacing: AppDimensions.sm,
               childAspectRatio: 0.85,

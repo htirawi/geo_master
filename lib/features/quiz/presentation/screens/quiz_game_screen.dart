@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/utils/responsive_utils.dart';
 import '../../../../domain/entities/quiz.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/quiz_provider.dart';
@@ -286,8 +287,9 @@ class _QuizGameScreenState extends ConsumerState<QuizGameScreen>
         // Question content
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppDimensions.paddingMD),
-            child: Column(
+            padding: EdgeInsets.all(context.responsivePadding),
+            child: ResponsiveCenter(
+              child: Column(
               children: [
                 // Question
                 QuizQuestionDisplay(
@@ -371,6 +373,7 @@ class _QuizGameScreenState extends ConsumerState<QuizGameScreen>
                   ),
                 ],
               ],
+              ),
             ),
           ),
         ),
@@ -378,7 +381,7 @@ class _QuizGameScreenState extends ConsumerState<QuizGameScreen>
         // Next button
         if (showFeedback)
           Padding(
-            padding: const EdgeInsets.all(AppDimensions.paddingMD),
+            padding: EdgeInsets.all(context.responsivePadding),
             child: SizedBox(
               width: double.infinity,
               height: AppDimensions.buttonHeightL,

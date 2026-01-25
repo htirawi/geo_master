@@ -4,6 +4,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../app/di/service_locator.dart';
 import 'logger_service.dart';
 
 /// Layered translation service for Arabic country names and related data.
@@ -287,6 +288,8 @@ class TranslationService {
 
   /// Cache translations to Hive for offline access
   Future<void> cacheTranslations() async {
+    if (!isHiveAvailable) return; // Hive not available
+
     try {
       final box = await _hive.openBox<String>(_translationsBox);
       if (_localTranslations != null) {
@@ -307,6 +310,8 @@ class TranslationService {
 
   /// Load cached translations (for offline use)
   Future<void> loadCachedTranslations() async {
+    if (!isHiveAvailable) return; // Hive not available
+
     try {
       final box = await _hive.openBox<String>(_translationsBox);
 

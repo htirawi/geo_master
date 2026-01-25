@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/utils/responsive_utils.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/components/backgrounds/onboarding_background.dart';
 import '../../../../presentation/providers/onboarding_provider.dart';
@@ -53,6 +54,14 @@ class _PersonalizationScreenState extends ConsumerState<PersonalizationScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final horizontalPadding = responsive.sp(24);
+    final progressRadius = responsive.sp(4);
+    final progressHeight = responsive.sp(6);
+    final spacingSM = responsive.sp(8);
+    final paddingLG = responsive.sp(AppDimensions.paddingLG);
 
     final pages = [
       _InterestsPage(
@@ -125,20 +134,20 @@ class _PersonalizationScreenState extends ConsumerState<PersonalizationScreen> {
             children: [
               // Progress indicator
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(progressRadius),
                   child: LinearProgressIndicator(
                     value: (_currentPage + 1) / pages.length,
                     backgroundColor: Colors.white.withValues(alpha: 0.1),
                     valueColor: const AlwaysStoppedAnimation<Color>(
                       AppColors.primary,
                     ),
-                    minHeight: 6,
+                    minHeight: progressHeight,
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: spacingSM),
               // Page view
               Expanded(
                 child: PageView.builder(
@@ -151,7 +160,7 @@ class _PersonalizationScreenState extends ConsumerState<PersonalizationScreen> {
               ),
               // Navigation
               Padding(
-                padding: const EdgeInsets.all(AppDimensions.paddingLG),
+                padding: EdgeInsets.all(paddingLG),
                 child: PremiumButton.primary(
                   text:
                       _currentPage < pages.length - 1 ? l10n.next : l10n.letsGo,
@@ -213,19 +222,24 @@ class _PersonalizationScreenState extends ConsumerState<PersonalizationScreen> {
   }
 
   void _showErrorSnackBar(BuildContext context, String message) {
+    final responsive = ResponsiveUtils.of(context);
+    final sm = responsive.sp(AppDimensions.sm);
+    final md = responsive.sp(AppDimensions.md);
+    final radius = responsive.sp(12);
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
             const Icon(Icons.error_outline, color: Colors.white),
-            const SizedBox(width: AppDimensions.sm),
+            SizedBox(width: sm),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: AppColors.error,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(AppDimensions.md),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
+        margin: EdgeInsets.all(md),
       ),
     );
   }
@@ -243,6 +257,13 @@ class _InterestsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final paddingLG = responsive.sp(AppDimensions.paddingLG);
+    final titleFontSize = responsive.sp(22);
+    final subtitleFontSize = responsive.sp(13);
+    final gridSpacing = responsive.sp(14);
 
     final interests = [
       _Interest(
@@ -284,14 +305,14 @@ class _InterestsPage extends StatelessWidget {
     ];
 
     return Padding(
-      padding: const EdgeInsets.all(AppDimensions.paddingLG),
+      padding: EdgeInsets.all(paddingLG),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             l10n.whatInterestsYou,
             style: GoogleFonts.poppins(
-              fontSize: 22,
+              fontSize: titleFontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -299,25 +320,25 @@ class _InterestsPage extends StatelessWidget {
               .animate()
               .fadeIn(duration: 400.ms)
               .slideY(begin: 0.2, end: 0, duration: 400.ms),
-          const SizedBox(height: 4),
+          SizedBox(height: responsive.sp(4)),
           Text(
             l10n.selectAtLeastOne,
             style: GoogleFonts.poppins(
-              fontSize: 13,
+              fontSize: subtitleFontSize,
               color: Colors.white.withValues(alpha: 0.7),
             ),
           )
               .animate()
               .fadeIn(delay: 100.ms, duration: 400.ms)
               .slideY(begin: 0.2, end: 0, delay: 100.ms, duration: 400.ms),
-          const SizedBox(height: 12),
+          SizedBox(height: responsive.sp(12)),
           Expanded(
             child: GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 14,
-                mainAxisSpacing: 14,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: Responsive.gridColumns(context),
+                crossAxisSpacing: gridSpacing,
+                mainAxisSpacing: gridSpacing,
                 childAspectRatio: 1.15,
               ),
               itemCount: interests.length,
@@ -374,6 +395,16 @@ class _InterestCardState extends State<_InterestCard>
     final color = widget.interest.color;
     final isSelected = widget.isSelected;
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final radiusXL = responsive.sp(AppDimensions.radiusXL);
+    final iconContainerSize = responsive.sp(52);
+    final iconSize = responsive.sp(26);
+    final labelFontSize = responsive.sp(14);
+    final checkSize = responsive.sp(24);
+    final checkIconSize = responsive.sp(16);
+    final glowSize = responsive.sp(60);
+
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) {
@@ -388,7 +419,7 @@ class _InterestCardState extends State<_InterestCard>
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+            borderRadius: BorderRadius.circular(radiusXL),
             border: Border.all(
               color: isSelected ? color : Colors.white.withValues(alpha: 0.15),
               width: isSelected ? 2.5 : 1,
@@ -410,9 +441,9 @@ class _InterestCardState extends State<_InterestCard>
                 ? [
                     BoxShadow(
                       color: color.withValues(alpha: 0.3),
-                      blurRadius: 12,
+                      blurRadius: responsive.sp(12),
                       spreadRadius: 0,
-                      offset: const Offset(0, 4),
+                      offset: Offset(0, responsive.sp(4)),
                     ),
                   ]
                 : null,
@@ -422,11 +453,11 @@ class _InterestCardState extends State<_InterestCard>
               // Subtle glow effect when selected
               if (isSelected)
                 Positioned(
-                  top: -20,
-                  right: -20,
+                  top: responsive.sp(-20),
+                  right: responsive.sp(-20),
                   child: Container(
-                    width: 60,
-                    height: 60,
+                    width: glowSize,
+                    height: glowSize,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
@@ -446,8 +477,8 @@ class _InterestCardState extends State<_InterestCard>
                     // Icon container
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                      width: 52,
-                      height: 52,
+                      width: iconContainerSize,
+                      height: iconContainerSize,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isSelected
@@ -462,16 +493,16 @@ class _InterestCardState extends State<_InterestCard>
                       ),
                       child: Icon(
                         widget.interest.icon,
-                        size: 26,
+                        size: iconSize,
                         color: isSelected ? color : Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: responsive.sp(10)),
                     // Label
                     Text(
                       widget.interest.label,
                       style: GoogleFonts.poppins(
-                        fontSize: 14,
+                        fontSize: labelFontSize,
                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                         color: isSelected ? color : Colors.white.withValues(alpha: 0.9),
                       ),
@@ -483,25 +514,25 @@ class _InterestCardState extends State<_InterestCard>
               // Checkmark badge when selected
               if (isSelected)
                 Positioned(
-                  top: 8,
-                  right: 8,
+                  top: responsive.sp(8),
+                  right: responsive.sp(8),
                   child: Container(
-                    width: 24,
-                    height: 24,
+                    width: checkSize,
+                    height: checkSize,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: color,
                       boxShadow: [
                         BoxShadow(
                           color: color.withValues(alpha: 0.4),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
+                          blurRadius: responsive.sp(4),
+                          offset: Offset(0, responsive.sp(2)),
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.check_rounded,
-                      size: 16,
+                      size: checkIconSize,
                       color: Colors.white,
                     ),
                   )
@@ -542,6 +573,15 @@ class _DifficultyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final paddingLG = responsive.sp(AppDimensions.paddingLG);
+    final titleFontSize = responsive.sp(24);
+    final subtitleFontSize = responsive.sp(14);
+    final spacingSM = responsive.sp(AppDimensions.spacingSM);
+    final spacingXL = responsive.sp(AppDimensions.spacingXL);
+    final cardSpacing = responsive.sp(14);
+
     final difficulties = [
       _Difficulty(
         'easy',
@@ -567,14 +607,14 @@ class _DifficultyPage extends StatelessWidget {
     ];
 
     return Padding(
-      padding: const EdgeInsets.all(AppDimensions.paddingLG),
+      padding: EdgeInsets.all(paddingLG),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             l10n.chooseDifficulty,
             style: GoogleFonts.poppins(
-              fontSize: 24,
+              fontSize: titleFontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -582,20 +622,20 @@ class _DifficultyPage extends StatelessWidget {
               .animate()
               .fadeIn(duration: 400.ms)
               .slideY(begin: 0.2, end: 0, duration: 400.ms),
-          const SizedBox(height: AppDimensions.spacingSM),
+          SizedBox(height: spacingSM),
           Text(
             l10n.canChangeAnytime,
             style: GoogleFonts.poppins(
-              fontSize: 14,
+              fontSize: subtitleFontSize,
               color: Colors.white.withValues(alpha: 0.7),
             ),
           )
               .animate()
               .fadeIn(delay: 100.ms, duration: 400.ms)
               .slideY(begin: 0.2, end: 0, delay: 100.ms, duration: 400.ms),
-          const SizedBox(height: AppDimensions.spacingXL),
+          SizedBox(height: spacingXL),
           ...difficulties.asMap().entries.map((entry) => Padding(
-                padding: const EdgeInsets.only(bottom: 14),
+                padding: EdgeInsets.only(bottom: cardSpacing),
                 child: _DifficultyCard(
                   difficulty: entry.value,
                   isSelected: selectedDifficulty == entry.value.id,
@@ -650,6 +690,21 @@ class _DifficultyCardState extends State<_DifficultyCard> {
     final color = widget.difficulty.color;
     final isSelected = widget.isSelected;
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final paddingMD = responsive.sp(AppDimensions.md);
+    final radiusLG = responsive.sp(AppDimensions.radiusLG);
+    final iconContainerSize = responsive.sp(52);
+    final iconContainerRadius = responsive.sp(14);
+    final iconSize = responsive.sp(26);
+    final spacingMD = responsive.sp(AppDimensions.md);
+    final labelFontSize = responsive.sp(16);
+    final descFontSize = responsive.sp(13);
+    final radioSize = responsive.sp(24);
+    final checkIconSize = responsive.sp(16);
+    final blurRadius = responsive.sp(10);
+    final shadowOffset = responsive.sp(4);
+
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) {
@@ -663,9 +718,9 @@ class _DifficultyCardState extends State<_DifficultyCard> {
         duration: const Duration(milliseconds: 150),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(AppDimensions.md),
+          padding: EdgeInsets.all(paddingMD),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+            borderRadius: BorderRadius.circular(radiusLG),
             border: Border.all(
               color: isSelected ? color : Colors.white.withValues(alpha: 0.15),
               width: isSelected ? 2 : 1,
@@ -687,8 +742,8 @@ class _DifficultyCardState extends State<_DifficultyCard> {
                 ? [
                     BoxShadow(
                       color: color.withValues(alpha: 0.25),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+                      blurRadius: blurRadius,
+                      offset: Offset(0, shadowOffset),
                     ),
                   ]
                 : null,
@@ -698,10 +753,10 @@ class _DifficultyCardState extends State<_DifficultyCard> {
               // Icon container
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                width: 52,
-                height: 52,
+                width: iconContainerSize,
+                height: iconContainerSize,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(iconContainerRadius),
                   color: isSelected
                       ? color.withValues(alpha: 0.2)
                       : Colors.white.withValues(alpha: 0.1),
@@ -715,10 +770,10 @@ class _DifficultyCardState extends State<_DifficultyCard> {
                 child: Icon(
                   widget.difficulty.icon,
                   color: isSelected ? color : Colors.white.withValues(alpha: 0.7),
-                  size: 26,
+                  size: iconSize,
                 ),
               ),
-              const SizedBox(width: AppDimensions.md),
+              SizedBox(width: spacingMD),
               // Text content
               Expanded(
                 child: Column(
@@ -727,16 +782,16 @@ class _DifficultyCardState extends State<_DifficultyCard> {
                     Text(
                       widget.difficulty.label,
                       style: GoogleFonts.poppins(
-                        fontSize: 16,
+                        fontSize: labelFontSize,
                         fontWeight: FontWeight.w600,
                         color: isSelected ? color : Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: responsive.sp(2)),
                     Text(
                       widget.difficulty.description,
                       style: GoogleFonts.poppins(
-                        fontSize: 13,
+                        fontSize: descFontSize,
                         color: Colors.white.withValues(alpha: 0.6),
                       ),
                     ),
@@ -746,8 +801,8 @@ class _DifficultyCardState extends State<_DifficultyCard> {
               // Radio indicator
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                width: 24,
-                height: 24,
+                width: radioSize,
+                height: radioSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
@@ -757,9 +812,9 @@ class _DifficultyCardState extends State<_DifficultyCard> {
                   color: isSelected ? color : Colors.transparent,
                 ),
                 child: isSelected
-                    ? const Icon(
+                    ? Icon(
                         Icons.check_rounded,
-                        size: 16,
+                        size: checkIconSize,
                         color: Colors.white,
                       )
                     : null,
@@ -793,6 +848,15 @@ class _GoalPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final paddingLG = responsive.sp(AppDimensions.paddingLG);
+    final titleFontSize = responsive.sp(24);
+    final subtitleFontSize = responsive.sp(14);
+    final spacingSM = responsive.sp(AppDimensions.spacingSM);
+    final spacingXL = responsive.sp(AppDimensions.spacingXL);
+    final cardSpacing = responsive.sp(12);
+
     final goals = [
       _Goal(
         'casual',
@@ -825,14 +889,14 @@ class _GoalPage extends StatelessWidget {
     ];
 
     return Padding(
-      padding: const EdgeInsets.all(AppDimensions.paddingLG),
+      padding: EdgeInsets.all(paddingLG),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             l10n.setYourGoal,
             style: GoogleFonts.poppins(
-              fontSize: 24,
+              fontSize: titleFontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -840,20 +904,20 @@ class _GoalPage extends StatelessWidget {
               .animate()
               .fadeIn(duration: 400.ms)
               .slideY(begin: 0.2, end: 0, duration: 400.ms),
-          const SizedBox(height: AppDimensions.spacingSM),
+          SizedBox(height: spacingSM),
           Text(
             l10n.howMuchTimePerDay,
             style: GoogleFonts.poppins(
-              fontSize: 14,
+              fontSize: subtitleFontSize,
               color: Colors.white.withValues(alpha: 0.7),
             ),
           )
               .animate()
               .fadeIn(delay: 100.ms, duration: 400.ms)
               .slideY(begin: 0.2, end: 0, delay: 100.ms, duration: 400.ms),
-          const SizedBox(height: AppDimensions.spacingXL),
+          SizedBox(height: spacingXL),
           ...goals.asMap().entries.map((entry) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.only(bottom: cardSpacing),
                 child: _GoalCard(
                   goal: entry.value,
                   isSelected: selectedGoal == entry.value.id,
@@ -902,6 +966,22 @@ class _GoalCardState extends State<_GoalCard> {
     final color = widget.goal.color;
     final isSelected = widget.isSelected;
 
+    // Responsive scaling
+    final responsive = ResponsiveUtils.of(context);
+    final radiusLG = responsive.sp(AppDimensions.radiusLG);
+    final radiusMD = responsive.sp(AppDimensions.radiusMD);
+    final horizontalPadding = responsive.sp(16);
+    final verticalPadding = responsive.sp(14);
+    final iconContainerSize = responsive.sp(44);
+    final iconSize = responsive.sp(22);
+    final spacing = responsive.sp(14);
+    final labelFontSize = responsive.sp(15);
+    final descFontSize = responsive.sp(12);
+    final radioSize = responsive.sp(22);
+    final checkIconSize = responsive.sp(14);
+    final blurRadius = responsive.sp(10);
+    final shadowOffset = responsive.sp(4);
+
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) {
@@ -915,9 +995,9 @@ class _GoalCardState extends State<_GoalCard> {
         duration: const Duration(milliseconds: 150),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+            borderRadius: BorderRadius.circular(radiusLG),
             border: Border.all(
               color: isSelected ? color : Colors.white.withValues(alpha: 0.15),
               width: isSelected ? 2 : 1,
@@ -939,8 +1019,8 @@ class _GoalCardState extends State<_GoalCard> {
                 ? [
                     BoxShadow(
                       color: color.withValues(alpha: 0.25),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+                      blurRadius: blurRadius,
+                      offset: Offset(0, shadowOffset),
                     ),
                   ]
                 : null,
@@ -950,10 +1030,10 @@ class _GoalCardState extends State<_GoalCard> {
               // Icon container
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                width: 44,
-                height: 44,
+                width: iconContainerSize,
+                height: iconContainerSize,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+                  borderRadius: BorderRadius.circular(radiusMD),
                   color: isSelected
                       ? color.withValues(alpha: 0.2)
                       : Colors.white.withValues(alpha: 0.1),
@@ -967,10 +1047,10 @@ class _GoalCardState extends State<_GoalCard> {
                 child: Icon(
                   widget.goal.icon,
                   color: isSelected ? color : Colors.white.withValues(alpha: 0.7),
-                  size: 22,
+                  size: iconSize,
                 ),
               ),
-              const SizedBox(width: 14),
+              SizedBox(width: spacing),
               // Text content
               Expanded(
                 child: Column(
@@ -979,7 +1059,7 @@ class _GoalCardState extends State<_GoalCard> {
                     Text(
                       widget.goal.label,
                       style: GoogleFonts.poppins(
-                        fontSize: 15,
+                        fontSize: labelFontSize,
                         fontWeight: FontWeight.w600,
                         color: isSelected ? color : Colors.white,
                       ),
@@ -987,7 +1067,7 @@ class _GoalCardState extends State<_GoalCard> {
                     Text(
                       widget.goal.description,
                       style: GoogleFonts.poppins(
-                        fontSize: 12,
+                        fontSize: descFontSize,
                         color: Colors.white.withValues(alpha: 0.6),
                       ),
                     ),
@@ -997,8 +1077,8 @@ class _GoalCardState extends State<_GoalCard> {
               // Radio indicator
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                width: 22,
-                height: 22,
+                width: radioSize,
+                height: radioSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
@@ -1008,9 +1088,9 @@ class _GoalCardState extends State<_GoalCard> {
                   color: isSelected ? color : Colors.transparent,
                 ),
                 child: isSelected
-                    ? const Icon(
+                    ? Icon(
                         Icons.check_rounded,
-                        size: 14,
+                        size: checkIconSize,
                         color: Colors.white,
                       )
                     : null,

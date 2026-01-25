@@ -400,16 +400,24 @@ class QuizRepositoryImpl implements IQuizRepository {
       case QuizMode.currencies:
         if (targetCountry.currencies.isEmpty) return null;
         final currency = targetCountry.currencies.first;
-        final wrongCurrencies = wrongOptions
-            .where((c) => c.currencies.isNotEmpty)
-            .take(optionsCount - 1)
-            .map((c) => '${c.currencies.first.name} (${c.currencies.first.symbol})')
-            .toList();
+        final currencyDisplayEn = '${currency.name} (${currency.symbol})';
+        final currencyDisplayAr = '${ArabicCountryNames.getCurrency(currency.name)} (${currency.symbol})';
 
-        final options = [
-          '${currency.name} (${currency.symbol})',
-          ...wrongCurrencies,
-        ]..shuffle(_random);
+        // Build paired options for currencies
+        final currencyOptionCountries = [
+          targetCountry,
+          ...wrongOptions.where((c) => c.currencies.isNotEmpty).take(optionsCount - 1),
+        ];
+        final currencyPairedOptions = currencyOptionCountries.map((c) {
+          final curr = c.currencies.first;
+          return (
+            en: '${curr.name} (${curr.symbol})',
+            ar: '${ArabicCountryNames.getCurrency(curr.name)} (${curr.symbol})',
+          );
+        }).toList();
+        currencyPairedOptions.shuffle(_random);
+        final currencyOptions = currencyPairedOptions.map((p) => p.en).toList();
+        final currencyOptionsArabic = currencyPairedOptions.map((p) => p.ar).toList();
 
         return QuizQuestion(
           id: _uuid.v4(),
@@ -417,26 +425,37 @@ class QuizRepositoryImpl implements IQuizRepository {
           questionType: QuestionType.multipleChoice,
           question: 'What currency is used in ${targetCountry.name}?',
           questionArabic: 'ما هي العملة المستخدمة في ${targetCountry.nameArabic}؟',
-          correctAnswer: '${currency.name} (${currency.symbol})',
-          options: options,
+          correctAnswer: currencyDisplayEn,
+          correctAnswerArabic: currencyDisplayAr,
+          options: currencyOptions,
+          optionsArabic: currencyOptionsArabic,
           countryCode: targetCountry.code,
           hint: includeHint ? 'The currency symbol is ${currency.symbol}' : null,
           hintArabic: includeHint ? 'رمز العملة هو ${currency.symbol}' : null,
           explanation: '${currency.name} is the official currency of ${targetCountry.name}.',
-          explanationArabic: '${currency.name} هي العملة الرسمية في ${targetCountry.nameArabic}.',
+          explanationArabic: '${ArabicCountryNames.getCurrency(currency.name)} هي العملة الرسمية في ${targetCountry.nameArabic}.',
         );
 
       case QuizMode.languages:
         if (targetCountry.languages.isEmpty) return null;
         final language = targetCountry.languages.first;
-        final wrongLanguages = wrongOptions
-            .where((c) => c.languages.isNotEmpty)
-            .take(optionsCount - 1)
-            .map((c) => c.languages.first)
-            .toList();
+        final languageArabic = ArabicCountryNames.getLanguage(language);
 
-        final langOptions = [language, ...wrongLanguages]..shuffle(_random);
-        // Language names are typically international (English/Latin script)
+        // Build paired options for languages
+        final languageOptionCountries = [
+          targetCountry,
+          ...wrongOptions.where((c) => c.languages.isNotEmpty).take(optionsCount - 1),
+        ];
+        final languagePairedOptions = languageOptionCountries.map((c) {
+          final lang = c.languages.first;
+          return (
+            en: lang,
+            ar: ArabicCountryNames.getLanguage(lang),
+          );
+        }).toList();
+        languagePairedOptions.shuffle(_random);
+        final langOptions = languagePairedOptions.map((p) => p.en).toList();
+        final langOptionsArabic = languagePairedOptions.map((p) => p.ar).toList();
 
         return QuizQuestion(
           id: _uuid.v4(),
@@ -445,12 +464,14 @@ class QuizRepositoryImpl implements IQuizRepository {
           question: 'What is an official language of ${targetCountry.name}?',
           questionArabic: 'ما هي اللغة الرسمية في ${targetCountry.nameArabic}؟',
           correctAnswer: language,
+          correctAnswerArabic: languageArabic,
           options: langOptions,
+          optionsArabic: langOptionsArabic,
           countryCode: targetCountry.code,
           hint: includeHint ? 'This country is in ${targetCountry.region}' : null,
           hintArabic: includeHint ? 'تقع هذه الدولة في ${ArabicCountryNames.getRegion(targetCountry.region)}' : null,
           explanation: '$language is one of the official languages spoken in ${targetCountry.name}.',
-          explanationArabic: '$language هي إحدى اللغات الرسمية المتحدثة في ${targetCountry.nameArabic}.',
+          explanationArabic: '$languageArabic هي إحدى اللغات الرسمية المتحدثة في ${targetCountry.nameArabic}.',
         );
 
       case QuizMode.borders:
