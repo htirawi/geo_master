@@ -229,6 +229,12 @@ class StreakData {
   }
 }
 
+/// Callback for streak milestone events
+typedef StreakMilestoneCallback = void Function(int previousStreak, int newStreak);
+
+/// Callback for XP milestone events (level up detection)
+typedef XpMilestoneCallback = void Function(int previousXp, int newXp);
+
 /// Streak data state notifier with persistence
 class StreakDataNotifier extends StateNotifier<StreakData> {
   StreakDataNotifier(this._prefs) : super(const StreakData()) {
@@ -243,6 +249,12 @@ class StreakDataNotifier extends StateNotifier<StreakData> {
   static const _keyPerfectQuizzes = 'user_perfect_quizzes';
 
   final SharedPreferences _prefs;
+
+  /// Callback for streak milestones
+  StreakMilestoneCallback? onStreakMilestone;
+
+  /// Callback for XP milestones (level up)
+  XpMilestoneCallback? onXpMilestone;
 
   void _loadStreakData() {
     final currentStreak = _prefs.getInt(_keyCurrentStreak) ?? 0;
@@ -283,13 +295,16 @@ class StreakDataNotifier extends StateNotifier<StreakData> {
   }
 
   /// Record a quiz completion and update streak
-  Future<void> recordQuizCompletion({
+  /// Returns a record with milestone info for celebration triggers
+  Future<({int previousStreak, int newStreak, int previousXp, int newXp})> recordQuizCompletion({
     required int xpEarned,
     required bool isPerfect,
   }) async {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 
+    final previousStreak = state.currentStreak;
+    final previousXp = state.totalXp;
     int newCurrentStreak = state.currentStreak;
 
     // Check if this is a new day
@@ -318,11 +333,13 @@ class StreakDataNotifier extends StateNotifier<StreakData> {
         ? newCurrentStreak
         : state.bestStreak;
 
+    final newXp = state.totalXp + xpEarned;
+
     // Save to preferences
     await _prefs.setInt(_keyCurrentStreak, newCurrentStreak);
     await _prefs.setInt(_keyBestStreak, newBestStreak);
     await _prefs.setString(_keyLastActivity, now.toIso8601String());
-    await _prefs.setInt(_keyTotalXp, state.totalXp + xpEarned);
+    await _prefs.setInt(_keyTotalXp, newXp);
     await _prefs.setInt(_keyTotalQuizzes, state.totalQuizzes + 1);
     if (isPerfect) {
       await _prefs.setInt(_keyPerfectQuizzes, state.perfectQuizzes + 1);
@@ -332,9 +349,24 @@ class StreakDataNotifier extends StateNotifier<StreakData> {
       currentStreak: newCurrentStreak,
       bestStreak: newBestStreak,
       lastActivityDate: now,
-      totalXp: state.totalXp + xpEarned,
+      totalXp: newXp,
       totalQuizzes: state.totalQuizzes + 1,
       perfectQuizzes: isPerfect ? state.perfectQuizzes + 1 : null,
+    );
+
+    // Trigger milestone callbacks
+    if (previousStreak != newCurrentStreak) {
+      onStreakMilestone?.call(previousStreak, newCurrentStreak);
+    }
+    if (xpEarned > 0) {
+      onXpMilestone?.call(previousXp, newXp);
+    }
+
+    return (
+      previousStreak: previousStreak,
+      newStreak: newCurrentStreak,
+      previousXp: previousXp,
+      newXp: newXp,
     );
   }
 

@@ -3,12 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app/routes/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/components/backgrounds/onboarding_background.dart';
+import '../../../../presentation/components/mascot/mascot.dart';
 import '../../../../presentation/providers/onboarding_provider.dart';
 import '../../../../presentation/widgets/premium_button.dart';
 
@@ -71,6 +73,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
           end: Alignment.bottomRight,
           colors: [Color(0xFF4FC3F7), Color(0xFF1E88E5)],
         ),
+        atlasState: AtlasState.wave,
+        atlasMessage: l10n.atlasWelcome,
       ),
       _OnboardingPageData(
         icon: Icons.explore_rounded,
@@ -82,6 +86,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
           end: Alignment.bottomRight,
           colors: [Color(0xFFFFB74D), Color(0xFFFF9800)],
         ),
+        atlasState: AtlasState.thinking,
+        atlasMessage: l10n.atlasQuiz,
       ),
       _OnboardingPageData(
         icon: Icons.travel_explore_rounded,
@@ -93,6 +99,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
           end: Alignment.bottomRight,
           colors: [Color(0xFF4DB6AC), Color(0xFF26A69A)],
         ),
+        atlasState: AtlasState.idle,
+        atlasMessage: l10n.atlasAskMe,
       ),
       _OnboardingPageData(
         icon: Icons.emoji_events_rounded,
@@ -104,6 +112,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
           end: Alignment.bottomRight,
           colors: [Color(0xFFFFD54F), Color(0xFFFFC107)],
         ),
+        atlasState: AtlasState.celebrate,
+        atlasMessage: l10n.atlasAchievements,
       ),
     ];
   }
@@ -292,6 +302,8 @@ class _OnboardingPageData {
     required this.description,
     required this.color,
     required this.gradient,
+    this.atlasState = AtlasState.idle,
+    this.atlasMessage,
   });
 
   final IconData icon;
@@ -299,6 +311,8 @@ class _OnboardingPageData {
   final String description;
   final Color color;
   final Gradient gradient;
+  final AtlasState atlasState;
+  final String? atlasMessage;
 }
 
 /// Individual onboarding page with animated content
@@ -316,6 +330,7 @@ class _OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     return Padding(
       padding: const EdgeInsets.all(AppDimensions.paddingXL),
@@ -323,13 +338,72 @@ class _OnboardingPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _buildIllustration(),
-          const SizedBox(height: AppDimensions.spacingXXL),
+          const SizedBox(height: AppDimensions.spacingLG),
+          // Atlas mascot with speech bubble
+          if (data.atlasMessage != null)
+            _buildAtlasSection(context, isArabic)
+          else
+            const SizedBox(height: AppDimensions.spacingXL),
+          const SizedBox(height: AppDimensions.spacingLG),
           _buildTitle(theme),
           const SizedBox(height: AppDimensions.spacingMD),
           _buildDescription(theme),
         ],
       ),
     );
+  }
+
+  Widget _buildAtlasSection(BuildContext context, bool isArabic) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+      children: [
+        // Atlas mascot
+        AtlasAnimated(
+          state: data.atlasState,
+          size: 60,
+        ).animate(target: isActive ? 1 : 0).scale(
+              begin: const Offset(0.8, 0.8),
+              end: const Offset(1, 1),
+              duration: 300.ms,
+              curve: Curves.easeOut,
+            ),
+        const SizedBox(width: 12),
+        // Speech bubble
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: data.color.withValues(alpha: 0.4),
+                width: 1,
+              ),
+            ),
+            child: Text(
+              data.atlasMessage!,
+              style: GoogleFonts.poppins(
+                fontSize: 13,
+                color: Colors.white.withValues(alpha: 0.9),
+                fontStyle: FontStyle.italic,
+              ),
+              textAlign: isArabic ? TextAlign.right : TextAlign.left,
+            ),
+          )
+              .animate(target: isActive ? 1 : 0)
+              .fadeIn(delay: 200.ms, duration: 400.ms)
+              .slideX(
+                begin: isArabic ? 0.2 : -0.2,
+                end: 0,
+                delay: 200.ms,
+                duration: 400.ms,
+              ),
+        ),
+      ],
+    )
+        .animate(target: isActive ? 1 : 0)
+        .fadeIn(delay: 100.ms, duration: 400.ms);
   }
 
   Widget _buildIllustration() {

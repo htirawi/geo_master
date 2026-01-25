@@ -105,6 +105,13 @@ abstract final class AppColors {
   static const Color achievementLight = Color(0xFFC084FC);
   static const Color achievementDark = Color(0xFF7C3AED);
 
+  // Achievement tier colors
+  static const Color achievementBronze = Color(0xFFCD7F32);
+  static const Color achievementSilver = Color(0xFFC0C0C0);
+  static const Color achievementGold = Color(0xFFFFD700);
+  static const Color achievementPlatinum = Color(0xFFE5E4E2);
+  static const Color achievementDiamond = Color(0xFFB9F2FF);
+
   static const Color levelUp = Color(0xFF06B6D4);
   static const Color levelUpLight = Color(0xFF67E8F9);
   static const Color levelUpDark = Color(0xFF0891B2);

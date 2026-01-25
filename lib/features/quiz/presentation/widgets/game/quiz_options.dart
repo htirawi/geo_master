@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
@@ -24,14 +24,33 @@ class QuizOptionsSingle extends StatelessWidget {
   final ValueChanged<String> onAnswerSelected;
   final bool isArabic;
 
+  /// Check if options should be displayed as images
+  bool get _isImageOptions =>
+      question.metadata?['isImageOptions'] == true;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     // Get localized options and correct answer
-    final displayOptions = question.getDisplayOptions(isArabic: isArabic);
-    final displayCorrectAnswer = question.getDisplayCorrectAnswer(isArabic: isArabic);
+    // For image options (reverse flags), don't localize - use original URLs
+    final displayOptions = _isImageOptions
+        ? question.options
+        : question.getDisplayOptions(isArabic: isArabic);
+    final displayCorrectAnswer = _isImageOptions
+        ? question.correctAnswer
+        : question.getDisplayCorrectAnswer(isArabic: isArabic);
 
-    // Build option widgets
+    // Use image grid layout for flag options
+    if (_isImageOptions) {
+      return _buildImageOptionsGrid(
+        context: context,
+        theme: theme,
+        options: displayOptions,
+        correctAnswer: displayCorrectAnswer,
+      );
+    }
+
+    // Build text option widgets
     final optionWidgets = displayOptions.asMap().entries.map((entry) {
       final index = entry.key;
       final option = entry.value;
@@ -52,6 +71,209 @@ class QuizOptionsSingle extends StatelessWidget {
       mobile: Column(children: optionWidgets),
       tablet: _buildGridLayout(optionWidgets),
       desktop: _buildGridLayout(optionWidgets),
+    );
+  }
+
+  /// Build a 2x2 grid layout for image options (flags)
+  Widget _buildImageOptionsGrid({
+    required BuildContext context,
+    required ThemeData theme,
+    required List<String> options,
+    required String correctAnswer,
+  }) {
+    // Use Column + Row layout instead of GridView to avoid scroll conflicts
+    final rows = <Widget>[];
+    for (var i = 0; i < options.length; i += 2) {
+      final hasSecond = i + 1 < options.length;
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: AppDimensions.spacingSM),
+          child: Row(
+            children: [
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 1.4,
+                  child: _buildImageOptionCard(
+                    context: context,
+                    theme: theme,
+                    imageUrl: options[i],
+                    index: i,
+                    isSelected: selectedAnswer == options[i],
+                    isCorrect: correctAnswer == options[i],
+                    showFeedback: showFeedback,
+                    onTap: showFeedback ? null : () => onAnswerSelected(options[i]),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppDimensions.spacingSM),
+              if (hasSecond)
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: 1.4,
+                    child: _buildImageOptionCard(
+                      context: context,
+                      theme: theme,
+                      imageUrl: options[i + 1],
+                      index: i + 1,
+                      isSelected: selectedAnswer == options[i + 1],
+                      isCorrect: correctAnswer == options[i + 1],
+                      showFeedback: showFeedback,
+                      onTap: showFeedback ? null : () => onAnswerSelected(options[i + 1]),
+                    ),
+                  ),
+                )
+              else
+                const Expanded(child: SizedBox()),
+            ],
+          ),
+        ),
+      );
+    }
+    return Column(children: rows);
+  }
+
+  /// Build a single image option card (for flag selection)
+  Widget _buildImageOptionCard({
+    required BuildContext context,
+    required ThemeData theme,
+    required String imageUrl,
+    required int index,
+    required bool isSelected,
+    required bool isCorrect,
+    required bool showFeedback,
+    required VoidCallback? onTap,
+  }) {
+    Color? backgroundColor;
+    Color borderColor;
+
+    if (showFeedback) {
+      if (isCorrect) {
+        backgroundColor = AppColors.quizCorrect.withValues(alpha: 0.15);
+        borderColor = AppColors.quizCorrect;
+      } else if (isSelected && !isCorrect) {
+        backgroundColor = AppColors.quizIncorrect.withValues(alpha: 0.15);
+        borderColor = AppColors.quizIncorrect;
+      } else {
+        borderColor = theme.colorScheme.outline.withValues(alpha: 0.3);
+      }
+    } else if (isSelected) {
+      backgroundColor = theme.colorScheme.primary.withValues(alpha: 0.1);
+      borderColor = theme.colorScheme.primary;
+    } else {
+      borderColor = theme.colorScheme.outline.withValues(alpha: 0.3);
+    }
+
+    return Material(
+      color: backgroundColor ?? theme.colorScheme.surface,
+      borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: borderColor,
+              width: isSelected || (showFeedback && isCorrect) ? 3 : 1.5,
+            ),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+          ),
+          child: Stack(
+            children: [
+              // Flag image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMD - 2),
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                  placeholder: (context, url) => Container(
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    child: const Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    child: const Center(
+                      child: Icon(Icons.flag, size: 40),
+                    ),
+                  ),
+                ),
+              ),
+              // Option letter badge
+              Positioned(
+                top: 8,
+                right: isArabic ? null : 8,
+                left: isArabic ? 8 : null,
+                child: Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: (showFeedback && isCorrect)
+                        ? AppColors.quizCorrect
+                        : (showFeedback && isSelected && !isCorrect)
+                            ? AppColors.quizIncorrect
+                            : theme.colorScheme.surface.withValues(alpha: 0.9),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: borderColor,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      String.fromCharCode(65 + index), // A, B, C, D
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: (showFeedback && (isCorrect || (isSelected && !isCorrect)))
+                            ? Colors.white
+                            : theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Feedback icon overlay
+              if (showFeedback && isCorrect)
+                Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: AppColors.quizCorrect,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                )
+              else if (showFeedback && isSelected && !isCorrect)
+                Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: AppColors.quizIncorrect,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -184,7 +406,7 @@ class QuizOptionsSingle extends StatelessWidget {
           ),
         ),
       ),
-    ).animate().fadeIn(delay: Duration(milliseconds: 100 * index));
+    );
   }
 }
 
@@ -370,6 +592,6 @@ class QuizOptionsMulti extends StatelessWidget {
           ),
         ),
       ),
-    ).animate().fadeIn(delay: Duration(milliseconds: 100 * index));
+    );
   }
 }

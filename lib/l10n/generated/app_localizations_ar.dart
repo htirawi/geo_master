@@ -1929,4 +1929,66 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get timeUp => 'انتهى الوقت!';
+
+  @override
+  String get atlasWelcome => 'مرحباً! أنا أطلس، مرشدك الجغرافي!';
+
+  @override
+  String get atlasQuiz => 'هيا نختبر ما تعلمته!';
+
+  @override
+  String get atlasAskMe => 'اسألني أي شيء عن العالم!';
+
+  @override
+  String get atlasAchievements => 'احصل على الإنجازات وكن أسطورة!';
+
+  @override
+  String get levelUpTitle => 'مستوى جديد!';
+
+  @override
+  String nextLevelXp(String xp) {
+    return 'المستوى التالي: $xp نقطة';
+  }
+
+  @override
+  String get tapToContinue => 'اضغط للمتابعة';
+
+  @override
+  String get consecutiveDayStreak => 'يوم متتالي';
+
+  @override
+  String get xpBonusLabel => 'مكافأة';
+
+  @override
+  String get streakGettingStarted => 'بداية موفقة!';
+
+  @override
+  String get streakWeekWarrior => 'محارب الأسبوع!';
+
+  @override
+  String get streakTwoWeekChampion => 'بطل الأسبوعين!';
+
+  @override
+  String get streakMonthlyMaster => 'سيد الشهر!';
+
+  @override
+  String get streakCenturyLegend => 'أسطورة المئة!';
+
+  @override
+  String get levelNovice => 'مستكشف مبتدئ';
+
+  @override
+  String get levelApprentice => 'متدرب';
+
+  @override
+  String get levelJourneyman => 'رحالة';
+
+  @override
+  String get levelExpert => 'خبير';
+
+  @override
+  String get levelMaster => 'أستاذ';
+
+  @override
+  String get levelGrandmaster => 'أسطورة';
 }

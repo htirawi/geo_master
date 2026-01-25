@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/network/api_client.dart';
+import '../../core/services/audio_service.dart';
 import '../../core/services/cache_service.dart';
 import '../../core/services/translation_service.dart';
 import '../../data/datasources/local/bookmarks_local_datasource.dart';
@@ -216,6 +217,11 @@ Future<void> _initExternalDependencies() async {
       remoteConfig: sl<FirebaseRemoteConfig>(),
       hive: sl<HiveInterface>(),
     ),
+  );
+
+  // Audio Service (sound effects and celebrations)
+  sl.registerLazySingleton<AudioService>(
+    () => AudioService(prefs: sl<SharedPreferences>()),
   );
 }
 

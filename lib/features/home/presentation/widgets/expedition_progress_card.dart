@@ -4,8 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../domain/entities/explorer_level.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/components/cards/explorer_card.dart';
+import '../../../../presentation/components/celebrations/level_up_overlay.dart';
 import '../../../../presentation/providers/auth_provider.dart';
 import '../../../../presentation/providers/user_provider.dart';
 import 'mini_stat_item.dart';
@@ -40,6 +42,9 @@ class ExpeditionProgressCard extends ConsumerWidget {
     final streak = progress.currentStreak;
     final user = ref.watch(currentUserProvider);
     final firstName = _getFirstName(user?.displayName, l10n);
+
+    // Get current explorer level based on XP
+    final currentLevel = ExplorerLevel.fromXp(progress.totalXp);
 
     return ExplorerCard.elevated(
       padding: const EdgeInsets.all(AppDimensions.lg),
@@ -124,6 +129,14 @@ class ExpeditionProgressCard extends ConsumerWidget {
           const SizedBox(height: AppDimensions.lg),
           // Week progress visualization
           WeekProgressBar(streak: streak),
+          const SizedBox(height: AppDimensions.lg),
+          // Level progress bar
+          LevelProgressBar(
+            currentXp: progress.totalXp,
+            currentLevel: currentLevel,
+            height: 6,
+            showLabel: true,
+          ),
           const SizedBox(height: AppDimensions.lg),
           // Stats row
           Row(

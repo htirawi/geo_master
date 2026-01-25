@@ -1252,5 +1252,95 @@
   "timeUp": "Time's up!",
   "@timeUp": {
     "description": "Game over reason for timed blitz"
+  },
+
+  "atlasWelcome": "Hi! I'm Atlas, your geography guide!",
+  "@atlasWelcome": {
+    "description": "Atlas mascot welcome message"
+  },
+  "atlasQuiz": "Let's test what you've learned!",
+  "@atlasQuiz": {
+    "description": "Atlas message for quiz section"
+  },
+  "atlasAskMe": "Ask me anything about the world!",
+  "@atlasAskMe": {
+    "description": "Atlas message for AI tutor section"
+  },
+  "atlasAchievements": "Earn achievements and become a legend!",
+  "@atlasAchievements": {
+    "description": "Atlas message for achievements section"
+  },
+
+  "levelUpTitle": "LEVEL UP!",
+  "@levelUpTitle": {
+    "description": "Level up celebration title"
+  },
+  "nextLevelXp": "Next level: {xp} XP",
+  "@nextLevelXp": {
+    "description": "XP needed for next level",
+    "placeholders": {
+      "xp": {
+        "type": "String",
+        "example": "5000"
+      }
+    }
+  },
+  "tapToContinue": "Tap to continue",
+  "@tapToContinue": {
+    "description": "Dismiss instruction for overlays"
+  },
+  "consecutiveDayStreak": "Day Streak",
+  "@consecutiveDayStreak": {
+    "description": "Label for consecutive day count"
+  },
+  "xpBonusLabel": "Bonus",
+  "@xpBonusLabel": {
+    "description": "XP bonus label"
+  },
+
+  "streakGettingStarted": "Getting Started!",
+  "@streakGettingStarted": {
+    "description": "3-day streak milestone title"
+  },
+  "streakWeekWarrior": "Week Warrior!",
+  "@streakWeekWarrior": {
+    "description": "7-day streak milestone title"
+  },
+  "streakTwoWeekChampion": "Two Week Champion!",
+  "@streakTwoWeekChampion": {
+    "description": "14-day streak milestone title"
+  },
+  "streakMonthlyMaster": "Monthly Master!",
+  "@streakMonthlyMaster": {
+    "description": "30-day streak milestone title"
+  },
+  "streakCenturyLegend": "Century Legend!",
+  "@streakCenturyLegend": {
+    "description": "100-day streak milestone title"
+  },
+
+  "levelNovice": "Novice Explorer",
+  "@levelNovice": {
+    "description": "Explorer level 1 title"
+  },
+  "levelApprentice": "Apprentice",
+  "@levelApprentice": {
+    "description": "Explorer level 2 title"
+  },
+  "levelJourneyman": "Journeyman",
+  "@levelJourneyman": {
+    "description": "Explorer level 3 title"
+  },
+  "levelExpert": "Expert",
+  "@levelExpert": {
+    "description": "Explorer level 4 title"
+  },
+  "levelMaster": "Master",
+  "@levelMaster": {
+    "description": "Explorer level 5 title"
+  },
+  "levelGrandmaster": "Grandmaster",
+  "@levelGrandmaster": {
+    "description": "Explorer level 6 title"
   }
 }

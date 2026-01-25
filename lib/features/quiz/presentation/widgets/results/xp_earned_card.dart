@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../domain/entities/quiz.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
+import '../../../../../presentation/components/celebrations/animated_counter.dart';
 
-/// XP earned card with multiplier info
-class XpEarnedCard extends StatelessWidget {
+/// XP earned card with multiplier info and animated counter
+class XpEarnedCard extends ConsumerWidget {
   const XpEarnedCard({
     super.key,
     required this.xpEarned,
     required this.sessionType,
     required this.isArabic,
+    this.animate = true,
   });
 
   final int xpEarned;
   final QuizSessionType sessionType;
   final bool isArabic;
+  final bool animate;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
@@ -48,14 +52,23 @@ class XpEarnedCard extends StatelessWidget {
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    Text(
-                      '+$xpEarned XP',
-                      style: GoogleFonts.poppins(
+                    if (animate)
+                      XpCounter(
+                        value: xpEarned,
+                        duration: const Duration(milliseconds: 1500),
+                        playSound: true,
                         fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.xpGold,
+                        showPlusSign: true,
+                      )
+                    else
+                      Text(
+                        '+$xpEarned XP',
+                        style: GoogleFonts.poppins(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.xpGold,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ],

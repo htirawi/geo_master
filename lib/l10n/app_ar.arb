@@ -690,5 +690,29 @@
 
   "livesRemaining": "{count} أرواح",
   "outOfLives": "نفدت الأرواح!",
-  "timeUp": "انتهى الوقت!"
+  "timeUp": "انتهى الوقت!",
+
+  "atlasWelcome": "مرحباً! أنا أطلس، مرشدك الجغرافي!",
+  "atlasQuiz": "هيا نختبر ما تعلمته!",
+  "atlasAskMe": "اسألني أي شيء عن العالم!",
+  "atlasAchievements": "احصل على الإنجازات وكن أسطورة!",
+
+  "levelUpTitle": "مستوى جديد!",
+  "nextLevelXp": "المستوى التالي: {xp} نقطة",
+  "tapToContinue": "اضغط للمتابعة",
+  "consecutiveDayStreak": "يوم متتالي",
+  "xpBonusLabel": "مكافأة",
+
+  "streakGettingStarted": "بداية موفقة!",
+  "streakWeekWarrior": "محارب الأسبوع!",
+  "streakTwoWeekChampion": "بطل الأسبوعين!",
+  "streakMonthlyMaster": "سيد الشهر!",
+  "streakCenturyLegend": "أسطورة المئة!",
+
+  "levelNovice": "مستكشف مبتدئ",
+  "levelApprentice": "متدرب",
+  "levelJourneyman": "رحالة",
+  "levelExpert": "خبير",
+  "levelMaster": "أستاذ",
+  "levelGrandmaster": "أسطورة"
 }

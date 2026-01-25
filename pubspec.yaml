@@ -135,8 +135,13 @@ flutter:
     - assets/images/icons/
     - assets/images/backgrounds/
     - assets/animations/lottie/
+    - assets/animations/lottie/celebrations/
+    - assets/animations/lottie/feedback/
+    - assets/animations/lottie/mascot/
+    - assets/animations/lottie/progress/
     - assets/sounds/ui/
     - assets/sounds/feedback/
+    - assets/sounds/celebration/
     - assets/data/
 
   # Fonts are loaded dynamically via google_fonts package for better licensing and smaller app size

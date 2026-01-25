@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/services/audio_service.dart';
 import '../../core/services/translation_service.dart';
 import '../../data/datasources/remote/weather_datasource.dart';
 import '../../domain/repositories/i_ai_tutor_repository.dart';
@@ -87,4 +88,9 @@ final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
 /// Translation service provider
 final translationServiceProvider = Provider<TranslationService>((ref) {
   return sl<TranslationService>();
+});
+
+/// Audio service provider (for sound effects and celebrations)
+final audioServiceFromDiProvider = Provider<AudioService>((ref) {
+  return sl<AudioService>();
 });

@@ -1933,4 +1933,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timeUp => 'Time\'s up!';
+
+  @override
+  String get atlasWelcome => 'Hi! I\'m Atlas, your geography guide!';
+
+  @override
+  String get atlasQuiz => 'Let\'s test what you\'ve learned!';
+
+  @override
+  String get atlasAskMe => 'Ask me anything about the world!';
+
+  @override
+  String get atlasAchievements => 'Earn achievements and become a legend!';
+
+  @override
+  String get levelUpTitle => 'LEVEL UP!';
+
+  @override
+  String nextLevelXp(String xp) {
+    return 'Next level: $xp XP';
+  }
+
+  @override
+  String get tapToContinue => 'Tap to continue';
+
+  @override
+  String get consecutiveDayStreak => 'Day Streak';
+
+  @override
+  String get xpBonusLabel => 'Bonus';
+
+  @override
+  String get streakGettingStarted => 'Getting Started!';
+
+  @override
+  String get streakWeekWarrior => 'Week Warrior!';
+
+  @override
+  String get streakTwoWeekChampion => 'Two Week Champion!';
+
+  @override
+  String get streakMonthlyMaster => 'Monthly Master!';
+
+  @override
+  String get streakCenturyLegend => 'Century Legend!';
+
+  @override
+  String get levelNovice => 'Novice Explorer';
+
+  @override
+  String get levelApprentice => 'Apprentice';
+
+  @override
+  String get levelJourneyman => 'Journeyman';
+
+  @override
+  String get levelExpert => 'Expert';
+
+  @override
+  String get levelMaster => 'Master';
+
+  @override
+  String get levelGrandmaster => 'Grandmaster';
 }

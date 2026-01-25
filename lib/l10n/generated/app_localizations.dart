@@ -3811,6 +3811,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time\'s up!'**
   String get timeUp;
+
+  /// Atlas mascot welcome message
+  ///
+  /// In en, this message translates to:
+  /// **'Hi! I\'m Atlas, your geography guide!'**
+  String get atlasWelcome;
+
+  /// Atlas message for quiz section
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s test what you\'ve learned!'**
+  String get atlasQuiz;
+
+  /// Atlas message for AI tutor section
+  ///
+  /// In en, this message translates to:
+  /// **'Ask me anything about the world!'**
+  String get atlasAskMe;
+
+  /// Atlas message for achievements section
+  ///
+  /// In en, this message translates to:
+  /// **'Earn achievements and become a legend!'**
+  String get atlasAchievements;
+
+  /// Level up celebration title
+  ///
+  /// In en, this message translates to:
+  /// **'LEVEL UP!'**
+  String get levelUpTitle;
+
+  /// XP needed for next level
+  ///
+  /// In en, this message translates to:
+  /// **'Next level: {xp} XP'**
+  String nextLevelXp(String xp);
+
+  /// Dismiss instruction for overlays
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to continue'**
+  String get tapToContinue;
+
+  /// Label for consecutive day count
+  ///
+  /// In en, this message translates to:
+  /// **'Day Streak'**
+  String get consecutiveDayStreak;
+
+  /// XP bonus label
+  ///
+  /// In en, this message translates to:
+  /// **'Bonus'**
+  String get xpBonusLabel;
+
+  /// 3-day streak milestone title
+  ///
+  /// In en, this message translates to:
+  /// **'Getting Started!'**
+  String get streakGettingStarted;
+
+  /// 7-day streak milestone title
+  ///
+  /// In en, this message translates to:
+  /// **'Week Warrior!'**
+  String get streakWeekWarrior;
+
+  /// 14-day streak milestone title
+  ///
+  /// In en, this message translates to:
+  /// **'Two Week Champion!'**
+  String get streakTwoWeekChampion;
+
+  /// 30-day streak milestone title
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Master!'**
+  String get streakMonthlyMaster;
+
+  /// 100-day streak milestone title
+  ///
+  /// In en, this message translates to:
+  /// **'Century Legend!'**
+  String get streakCenturyLegend;
+
+  /// Explorer level 1 title
+  ///
+  /// In en, this message translates to:
+  /// **'Novice Explorer'**
+  String get levelNovice;
+
+  /// Explorer level 2 title
+  ///
+  /// In en, this message translates to:
+  /// **'Apprentice'**
+  String get levelApprentice;
+
+  /// Explorer level 3 title
+  ///
+  /// In en, this message translates to:
+  /// **'Journeyman'**
+  String get levelJourneyman;
+
+  /// Explorer level 4 title
+  ///
+  /// In en, this message translates to:
+  /// **'Expert'**
+  String get levelExpert;
+
+  /// Explorer level 5 title
+  ///
+  /// In en, this message translates to:
+  /// **'Master'**
+  String get levelMaster;
+
+  /// Explorer level 6 title
+  ///
+  /// In en, this message translates to:
+  /// **'Grandmaster'**
+  String get levelGrandmaster;
 }
 
 class _AppLocalizationsDelegate

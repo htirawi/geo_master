@@ -12,7 +12,11 @@ import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/utils/responsive_utils.dart';
 import '../../../../domain/entities/quiz.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../presentation/components/celebrations/celebration_overlay.dart';
+import '../../../../presentation/components/mascot/mascot.dart';
+import '../../../../presentation/providers/audio_provider.dart';
 import '../../../../presentation/providers/auth_provider.dart';
+import '../../../../presentation/providers/celebration_provider.dart';
 import '../../../../presentation/providers/quiz_provider.dart';
 import '../../../../presentation/providers/user_preferences_provider.dart';
 import '../widgets/results/achievements_section.dart';
@@ -86,20 +90,83 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
         // Record completion to streak data for persistence
         // Study mode doesn't earn XP so we don't record it
         if (state.result.sessionType != QuizSessionType.studyMode) {
-          ref.read(streakDataProvider.notifier).recordQuizCompletion(
-            xpEarned: state.result.xpEarned,
-            isPerfect: state.result.isPerfectScore,
-          );
+          _recordCompletionWithMilestones(state.result);
         }
 
-        if (state.result.isPerfectScore) {
-          _confettiController.play();
-          HapticFeedback.heavyImpact();
-        } else {
-          HapticFeedback.mediumImpact();
-        }
+        // Play celebration based on performance
+        _playCelebration(state.result);
       }
     });
+  }
+
+  /// Record quiz completion and check for milestone celebrations
+  Future<void> _recordCompletionWithMilestones(QuizResult result) async {
+    final milestones = await ref.read(streakDataProvider.notifier).recordQuizCompletion(
+      xpEarned: result.xpEarned,
+      isPerfect: result.isPerfectScore,
+    );
+
+    // Queue celebrations for milestones after a delay to let results screen show first
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+
+      final celebrationNotifier = ref.read(celebrationProvider.notifier);
+
+      // Check for streak milestones
+      celebrationNotifier.checkStreakMilestone(
+        milestones.previousStreak,
+        milestones.newStreak,
+      );
+
+      // Check for level up
+      celebrationNotifier.checkLevelUp(
+        milestones.previousXp,
+        milestones.newXp,
+      );
+    });
+  }
+
+  /// Play celebration sounds and effects based on quiz performance
+  Future<void> _playCelebration(QuizResult result) async {
+    final audioService = ref.read(audioServiceProvider);
+
+    if (result.isPerfectScore) {
+      // Perfect score - big celebration
+      _confettiController.play();
+      HapticFeedback.heavyImpact();
+      await audioService.playLevelUp();
+
+      // Show celebration overlay for perfect scores
+      if (mounted) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            CelebrationOverlay.show(
+              context,
+              type: CelebrationType.perfect,
+              message: AppLocalizations.of(context).perfectScore,
+              autoDismiss: true,
+              dismissDuration: const Duration(seconds: 3),
+            );
+          }
+        });
+      }
+    } else if (result.accuracy >= 90) {
+      // Excellent performance
+      _confettiController.play();
+      HapticFeedback.mediumImpact();
+      await audioService.playAchievement();
+    } else if (result.accuracy >= 80) {
+      // Good performance
+      HapticFeedback.mediumImpact();
+      await audioService.playConfetti();
+    } else if (result.accuracy >= 60) {
+      // Okay performance
+      HapticFeedback.lightImpact();
+      await audioService.playCorrect();
+    } else {
+      // Needs improvement
+      HapticFeedback.lightImpact();
+    }
   }
 
   @override
@@ -113,6 +180,11 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
   Widget build(BuildContext context) {
     final quizState = ref.watch(quizStateProvider);
     final l10n = AppLocalizations.of(context);
+
+    // Set up celebration context
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(celebrationProvider.notifier).setContext(context);
+    });
 
     return Scaffold(
       body: Stack(
@@ -212,16 +284,30 @@ class _QuizResultsScreenState extends ConsumerState<QuizResultsScreen>
             ),
           ).animate().fadeIn(delay: 200.ms),
 
-          // Motivational message
+          // Motivational message with Atlas
           SizedBox(height: spacingSM),
-          Text(
-            result.accuracy >= 70
-                ? l10n.motivationalQuiz(firstName)
-                : l10n.motivationalProgress(firstName),
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            textAlign: TextAlign.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AtlasAnimated(
+                state: result.accuracy >= 70
+                    ? AtlasState.celebrate
+                    : AtlasState.encourage,
+                size: 50,
+              ),
+              const SizedBox(width: 12),
+              Flexible(
+                child: Text(
+                  result.accuracy >= 70
+                      ? l10n.motivationalQuiz(firstName)
+                      : l10n.motivationalProgress(firstName),
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ).animate().fadeIn(delay: 300.ms),
 
           // Star Rating
