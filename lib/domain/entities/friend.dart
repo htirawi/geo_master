@@ -52,6 +52,28 @@ class Friend {
     this.friendCode,
   });
 
+  factory Friend.fromJson(Map<String, dynamic> json) {
+    return Friend(
+      userId: json['userId'] as String,
+      displayName: json['displayName'] as String,
+      avatarUrl: json['avatarUrl'] as String?,
+      level: json['level'] as int? ?? 1,
+      totalXp: json['totalXp'] as int? ?? 0,
+      currentStreak: json['currentStreak'] as int? ?? 0,
+      status: FriendStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => FriendStatus.pending,
+      ),
+      friendSince: json['friendSince'] != null
+          ? DateTime.parse(json['friendSince'] as String)
+          : null,
+      lastActive: json['lastActive'] != null
+          ? DateTime.parse(json['lastActive'] as String)
+          : null,
+      friendCode: json['friendCode'] as String?,
+    );
+  }
+
   /// Unique user ID
   final String userId;
 
@@ -116,7 +138,7 @@ class Friend {
     String? friendCode,
   }) {
     return Friend(
-      userId: newUserId ?? this.userId,
+      userId: newUserId ?? userId,
       displayName: displayName ?? this.displayName,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       level: level ?? this.level,
@@ -144,28 +166,6 @@ class Friend {
     };
   }
 
-  factory Friend.fromJson(Map<String, dynamic> json) {
-    return Friend(
-      userId: json['userId'] as String,
-      displayName: json['displayName'] as String,
-      avatarUrl: json['avatarUrl'] as String?,
-      level: json['level'] as int? ?? 1,
-      totalXp: json['totalXp'] as int? ?? 0,
-      currentStreak: json['currentStreak'] as int? ?? 0,
-      status: FriendStatus.values.firstWhere(
-        (e) => e.name == json['status'],
-        orElse: () => FriendStatus.pending,
-      ),
-      friendSince: json['friendSince'] != null
-          ? DateTime.parse(json['friendSince'] as String)
-          : null,
-      lastActive: json['lastActive'] != null
-          ? DateTime.parse(json['lastActive'] as String)
-          : null,
-      friendCode: json['friendCode'] as String?,
-    );
-  }
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -189,6 +189,19 @@ class FriendRequest {
     required this.sentAt,
     this.message,
   });
+
+  factory FriendRequest.fromJson(Map<String, dynamic> json) {
+    return FriendRequest(
+      id: json['id'] as String,
+      fromUserId: json['fromUserId'] as String,
+      fromUserName: json['fromUserName'] as String,
+      fromUserAvatar: json['fromUserAvatar'] as String?,
+      fromUserLevel: json['fromUserLevel'] as int? ?? 1,
+      toUserId: json['toUserId'] as String,
+      sentAt: DateTime.parse(json['sentAt'] as String),
+      message: json['message'] as String?,
+    );
+  }
 
   /// Request ID
   final String id;
@@ -254,19 +267,6 @@ class FriendRequest {
     };
   }
 
-  factory FriendRequest.fromJson(Map<String, dynamic> json) {
-    return FriendRequest(
-      id: json['id'] as String,
-      fromUserId: json['fromUserId'] as String,
-      fromUserName: json['fromUserName'] as String,
-      fromUserAvatar: json['fromUserAvatar'] as String?,
-      fromUserLevel: json['fromUserLevel'] as int? ?? 1,
-      toUserId: json['toUserId'] as String,
-      sentAt: DateTime.parse(json['sentAt'] as String),
-      message: json['message'] as String?,
-    );
-  }
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -289,6 +289,30 @@ class SocialStats {
     required this.globalRank,
     required this.friendsRank,
   });
+
+  factory SocialStats.fromJson(Map<String, dynamic> json) {
+    return SocialStats(
+      friendsCount: json['friendsCount'] as int? ?? 0,
+      pendingRequestsCount: json['pendingRequestsCount'] as int? ?? 0,
+      duelsWon: json['duelsWon'] as int? ?? 0,
+      duelsLost: json['duelsLost'] as int? ?? 0,
+      duelWinStreak: json['duelWinStreak'] as int? ?? 0,
+      globalRank: json['globalRank'] as int? ?? 0,
+      friendsRank: json['friendsRank'] as int? ?? 0,
+    );
+  }
+
+  factory SocialStats.initial() {
+    return const SocialStats(
+      friendsCount: 0,
+      pendingRequestsCount: 0,
+      duelsWon: 0,
+      duelsLost: 0,
+      duelWinStreak: 0,
+      globalRank: 0,
+      friendsRank: 0,
+    );
+  }
 
   final int friendsCount;
   final int pendingRequestsCount;
@@ -338,30 +362,6 @@ class SocialStats {
       'globalRank': globalRank,
       'friendsRank': friendsRank,
     };
-  }
-
-  factory SocialStats.fromJson(Map<String, dynamic> json) {
-    return SocialStats(
-      friendsCount: json['friendsCount'] as int? ?? 0,
-      pendingRequestsCount: json['pendingRequestsCount'] as int? ?? 0,
-      duelsWon: json['duelsWon'] as int? ?? 0,
-      duelsLost: json['duelsLost'] as int? ?? 0,
-      duelWinStreak: json['duelWinStreak'] as int? ?? 0,
-      globalRank: json['globalRank'] as int? ?? 0,
-      friendsRank: json['friendsRank'] as int? ?? 0,
-    );
-  }
-
-  factory SocialStats.initial() {
-    return const SocialStats(
-      friendsCount: 0,
-      pendingRequestsCount: 0,
-      duelsWon: 0,
-      duelsLost: 0,
-      duelWinStreak: 0,
-      globalRank: 0,
-      friendsRank: 0,
-    );
   }
 }
 

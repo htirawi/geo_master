@@ -2533,4 +2533,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get target => 'Target';
+
+  @override
+  String get yourInterests => 'Your Interests';
+
+  @override
+  String get quizDifficulty => 'Quiz Difficulty';
+
+  @override
+  String get dailyLearningGoal => 'Daily Learning Goal';
+
+  @override
+  String get preferencesUpdated => 'Preferences updated';
+
+  @override
+  String get syncingPreferences => 'Syncing preferences...';
+
+  @override
+  String get noInterestsSelected => 'No interests selected';
+
+  @override
+  String get selectYourInterests => 'Select Your Interests';
+
+  @override
+  String get recommendedForYou => 'Recommended for You';
+
+  @override
+  String get basedOnYourInterests => 'Based on your interests';
 }

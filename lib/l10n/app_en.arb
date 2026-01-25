@@ -1942,5 +1942,42 @@
   "selectDifficulty": "Select Difficulty",
   "selectGoalType": "Select Goal Type",
   "target": "Target",
-  "customGoal": "Custom"
+  "customGoal": "Custom",
+
+  "yourInterests": "Your Interests",
+  "@yourInterests": {
+    "description": "Label for interests selection in settings"
+  },
+  "quizDifficulty": "Quiz Difficulty",
+  "@quizDifficulty": {
+    "description": "Label for quiz difficulty setting"
+  },
+  "dailyLearningGoal": "Daily Learning Goal",
+  "@dailyLearningGoal": {
+    "description": "Label for daily learning goal setting"
+  },
+  "preferencesUpdated": "Preferences updated",
+  "@preferencesUpdated": {
+    "description": "Confirmation message when preferences are saved"
+  },
+  "syncingPreferences": "Syncing preferences...",
+  "@syncingPreferences": {
+    "description": "Loading message while syncing preferences"
+  },
+  "noInterestsSelected": "No interests selected",
+  "@noInterestsSelected": {
+    "description": "Placeholder when no interests are selected"
+  },
+  "selectYourInterests": "Select Your Interests",
+  "@selectYourInterests": {
+    "description": "Title for interests selection dialog"
+  },
+  "recommendedForYou": "Recommended for You",
+  "@recommendedForYou": {
+    "description": "Label for recommended content based on interests"
+  },
+  "basedOnYourInterests": "Based on your interests",
+  "@basedOnYourInterests": {
+    "description": "Subtitle for recommended content"
+  }
 }

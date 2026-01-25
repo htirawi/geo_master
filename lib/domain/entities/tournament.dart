@@ -123,6 +123,16 @@ class TournamentReward {
     this.title,
   });
 
+  factory TournamentReward.fromJson(Map<String, dynamic> json) {
+    return TournamentReward(
+      minRank: json['minRank'] as int,
+      maxRank: json['maxRank'] as int,
+      xpBonus: json['xpBonus'] as int,
+      badgeId: json['badgeId'] as String?,
+      title: json['title'] as String?,
+    );
+  }
+
   /// Minimum rank to qualify (inclusive)
   final int minRank;
 
@@ -151,16 +161,6 @@ class TournamentReward {
     };
   }
 
-  factory TournamentReward.fromJson(Map<String, dynamic> json) {
-    return TournamentReward(
-      minRank: json['minRank'] as int,
-      maxRank: json['maxRank'] as int,
-      xpBonus: json['xpBonus'] as int,
-      badgeId: json['badgeId'] as String?,
-      title: json['title'] as String?,
-    );
-  }
-
   /// Standard reward tiers
   static const List<TournamentReward> standardRewards = [
     TournamentReward(minRank: 1, maxRank: 1, xpBonus: 500, title: 'Champion'),
@@ -187,6 +187,23 @@ class TournamentParticipant {
     this.quizzesCompleted = 0,
     this.perfectScores = 0,
   });
+
+  factory TournamentParticipant.fromJson(Map<String, dynamic> json) {
+    return TournamentParticipant(
+      userId: json['userId'] as String,
+      displayName: json['displayName'] as String,
+      avatarUrl: json['avatarUrl'] as String?,
+      score: json['score'] as int? ?? 0,
+      rank: json['rank'] as int? ?? 0,
+      joinedAt: DateTime.parse(json['joinedAt'] as String),
+      lastUpdated: json['lastUpdated'] != null
+          ? DateTime.parse(json['lastUpdated'] as String)
+          : null,
+      level: json['level'] as int? ?? 1,
+      quizzesCompleted: json['quizzesCompleted'] as int? ?? 0,
+      perfectScores: json['perfectScores'] as int? ?? 0,
+    );
+  }
 
   final String userId;
   final String displayName;
@@ -240,23 +257,6 @@ class TournamentParticipant {
     };
   }
 
-  factory TournamentParticipant.fromJson(Map<String, dynamic> json) {
-    return TournamentParticipant(
-      userId: json['userId'] as String,
-      displayName: json['displayName'] as String,
-      avatarUrl: json['avatarUrl'] as String?,
-      score: json['score'] as int? ?? 0,
-      rank: json['rank'] as int? ?? 0,
-      joinedAt: DateTime.parse(json['joinedAt'] as String),
-      lastUpdated: json['lastUpdated'] != null
-          ? DateTime.parse(json['lastUpdated'] as String)
-          : null,
-      level: json['level'] as int? ?? 1,
-      quizzesCompleted: json['quizzesCompleted'] as int? ?? 0,
-      perfectScores: json['perfectScores'] as int? ?? 0,
-    );
-  }
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -289,6 +289,37 @@ class Tournament {
     this.continent,
     this.quizType,
   });
+
+  factory Tournament.fromJson(Map<String, dynamic> json) {
+    return Tournament(
+      id: json['id'] as String,
+      titleEn: json['titleEn'] as String,
+      titleAr: json['titleAr'] as String,
+      descriptionEn: json['descriptionEn'] as String?,
+      descriptionAr: json['descriptionAr'] as String?,
+      type: TournamentType.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => TournamentType.weekly,
+      ),
+      status: TournamentStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => TournamentStatus.upcoming,
+      ),
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
+      rewards: (json['rewards'] as List?)
+              ?.map((r) => TournamentReward.fromJson(r as Map<String, dynamic>))
+              .toList() ??
+          TournamentReward.standardRewards,
+      participantCount: json['participantCount'] as int? ?? 0,
+      maxParticipants: json['maxParticipants'] as int?,
+      requiredLevel: json['requiredLevel'] as int? ?? 1,
+      entryFee: json['entryFee'] as int? ?? 0,
+      prizePool: json['prizePool'] as int? ?? 0,
+      continent: json['continent'] as String?,
+      quizType: json['quizType'] as String?,
+    );
+  }
 
   /// Unique tournament ID
   final String id;
@@ -456,37 +487,6 @@ class Tournament {
     };
   }
 
-  factory Tournament.fromJson(Map<String, dynamic> json) {
-    return Tournament(
-      id: json['id'] as String,
-      titleEn: json['titleEn'] as String,
-      titleAr: json['titleAr'] as String,
-      descriptionEn: json['descriptionEn'] as String?,
-      descriptionAr: json['descriptionAr'] as String?,
-      type: TournamentType.values.firstWhere(
-        (e) => e.name == json['type'],
-        orElse: () => TournamentType.weekly,
-      ),
-      status: TournamentStatus.values.firstWhere(
-        (e) => e.name == json['status'],
-        orElse: () => TournamentStatus.upcoming,
-      ),
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
-      rewards: (json['rewards'] as List?)
-              ?.map((r) => TournamentReward.fromJson(r as Map<String, dynamic>))
-              .toList() ??
-          TournamentReward.standardRewards,
-      participantCount: json['participantCount'] as int? ?? 0,
-      maxParticipants: json['maxParticipants'] as int?,
-      requiredLevel: json['requiredLevel'] as int? ?? 1,
-      entryFee: json['entryFee'] as int? ?? 0,
-      prizePool: json['prizePool'] as int? ?? 0,
-      continent: json['continent'] as String?,
-      quizType: json['quizType'] as String?,
-    );
-  }
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -545,19 +545,19 @@ class TournamentGenerator {
       status: TournamentStatus.upcoming,
       startDate: monthStart,
       endDate: monthEnd,
-      rewards: [
-        const TournamentReward(
+      rewards: const [
+        TournamentReward(
           minRank: 1,
           maxRank: 1,
           xpBonus: 2000,
           title: 'Grand Champion',
           badgeId: 'monthly_champion',
         ),
-        const TournamentReward(minRank: 2, maxRank: 2, xpBonus: 1000, title: 'First Runner-up'),
-        const TournamentReward(minRank: 3, maxRank: 3, xpBonus: 500, title: 'Second Runner-up'),
-        const TournamentReward(minRank: 4, maxRank: 10, xpBonus: 250),
-        const TournamentReward(minRank: 11, maxRank: 50, xpBonus: 100),
-        const TournamentReward(minRank: 51, maxRank: 100, xpBonus: 50),
+        TournamentReward(minRank: 2, maxRank: 2, xpBonus: 1000, title: 'First Runner-up'),
+        TournamentReward(minRank: 3, maxRank: 3, xpBonus: 500, title: 'Second Runner-up'),
+        TournamentReward(minRank: 4, maxRank: 10, xpBonus: 250),
+        TournamentReward(minRank: 11, maxRank: 50, xpBonus: 100),
+        TournamentReward(minRank: 51, maxRank: 100, xpBonus: 50),
       ],
     );
   }

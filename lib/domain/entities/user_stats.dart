@@ -25,6 +25,73 @@ class UserStats {
     this.lastUpdated,
   });
 
+  factory UserStats.fromJson(Map<String, dynamic> json) {
+    return UserStats(
+      userId: json['userId'] as String,
+      totalXp: json['totalXp'] as int? ?? 0,
+      level: json['level'] as int? ?? 1,
+      totalQuizzes: json['totalQuizzes'] as int? ?? 0,
+      perfectScores: json['perfectScores'] as int? ?? 0,
+      averageScore: (json['averageScore'] as num?)?.toDouble() ?? 0,
+      totalQuestions: json['totalQuestions'] as int? ?? 0,
+      correctAnswers: json['correctAnswers'] as int? ?? 0,
+      accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0,
+      totalStudyTime:
+          Duration(minutes: json['totalStudyTime'] as int? ?? 0),
+      currentStreak: json['currentStreak'] as int? ?? 0,
+      longestStreak: json['longestStreak'] as int? ?? 0,
+      countriesPerContinent: (json['countriesPerContinent'] as Map<String, dynamic>?)
+              ?.map((k, v) => MapEntry(k, v as int)) ??
+          {},
+      accuracyPerContinent: (json['accuracyPerContinent'] as Map?)?.map(
+            (k, v) => MapEntry(k as String, (v as num).toDouble()),
+          ) ??
+          {},
+      accuracyPerQuizType: (json['accuracyPerQuizType'] as Map?)?.map(
+            (k, v) => MapEntry(k as String, (v as num).toDouble()),
+          ) ??
+          {},
+      activityHistory: (json['activityHistory'] as List?)
+              ?.map((a) => DailyActivity.fromJson(a as Map<String, dynamic>))
+              .toList() ??
+          [],
+      weakAreas: (json['weakAreas'] as List?)
+              ?.map((w) => WeakArea.fromJson(w as Map<String, dynamic>))
+              .toList() ??
+          [],
+      strongAreas: (json['strongAreas'] as List?)
+              ?.map((s) => StrongArea.fromJson(s as Map<String, dynamic>))
+              .toList() ??
+          [],
+      lastUpdated: json['lastUpdated'] != null
+          ? DateTime.parse(json['lastUpdated'] as String)
+          : null,
+    );
+  }
+
+  factory UserStats.initial(String userId) {
+    return UserStats(
+      userId: userId,
+      totalXp: 0,
+      level: 1,
+      totalQuizzes: 0,
+      perfectScores: 0,
+      averageScore: 0,
+      totalQuestions: 0,
+      correctAnswers: 0,
+      accuracy: 0,
+      totalStudyTime: Duration.zero,
+      currentStreak: 0,
+      longestStreak: 0,
+      countriesPerContinent: const {},
+      accuracyPerContinent: const {},
+      accuracyPerQuizType: const {},
+      activityHistory: const [],
+      weakAreas: const [],
+      strongAreas: const [],
+    );
+  }
+
   final String userId;
   final int totalXp;
   final int level;
@@ -137,73 +204,6 @@ class UserStats {
       'lastUpdated': lastUpdated?.toIso8601String(),
     };
   }
-
-  factory UserStats.fromJson(Map<String, dynamic> json) {
-    return UserStats(
-      userId: json['userId'] as String,
-      totalXp: json['totalXp'] as int? ?? 0,
-      level: json['level'] as int? ?? 1,
-      totalQuizzes: json['totalQuizzes'] as int? ?? 0,
-      perfectScores: json['perfectScores'] as int? ?? 0,
-      averageScore: (json['averageScore'] as num?)?.toDouble() ?? 0,
-      totalQuestions: json['totalQuestions'] as int? ?? 0,
-      correctAnswers: json['correctAnswers'] as int? ?? 0,
-      accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0,
-      totalStudyTime:
-          Duration(minutes: json['totalStudyTime'] as int? ?? 0),
-      currentStreak: json['currentStreak'] as int? ?? 0,
-      longestStreak: json['longestStreak'] as int? ?? 0,
-      countriesPerContinent: (json['countriesPerContinent'] as Map<String, dynamic>?)
-              ?.map((k, v) => MapEntry(k, v as int)) ??
-          {},
-      accuracyPerContinent: (json['accuracyPerContinent'] as Map?)?.map(
-            (k, v) => MapEntry(k as String, (v as num).toDouble()),
-          ) ??
-          {},
-      accuracyPerQuizType: (json['accuracyPerQuizType'] as Map?)?.map(
-            (k, v) => MapEntry(k as String, (v as num).toDouble()),
-          ) ??
-          {},
-      activityHistory: (json['activityHistory'] as List?)
-              ?.map((a) => DailyActivity.fromJson(a as Map<String, dynamic>))
-              .toList() ??
-          [],
-      weakAreas: (json['weakAreas'] as List?)
-              ?.map((w) => WeakArea.fromJson(w as Map<String, dynamic>))
-              .toList() ??
-          [],
-      strongAreas: (json['strongAreas'] as List?)
-              ?.map((s) => StrongArea.fromJson(s as Map<String, dynamic>))
-              .toList() ??
-          [],
-      lastUpdated: json['lastUpdated'] != null
-          ? DateTime.parse(json['lastUpdated'] as String)
-          : null,
-    );
-  }
-
-  factory UserStats.initial(String userId) {
-    return UserStats(
-      userId: userId,
-      totalXp: 0,
-      level: 1,
-      totalQuizzes: 0,
-      perfectScores: 0,
-      averageScore: 0,
-      totalQuestions: 0,
-      correctAnswers: 0,
-      accuracy: 0,
-      totalStudyTime: Duration.zero,
-      currentStreak: 0,
-      longestStreak: 0,
-      countriesPerContinent: const {},
-      accuracyPerContinent: const {},
-      accuracyPerQuizType: const {},
-      activityHistory: const [],
-      weakAreas: const [],
-      strongAreas: const [],
-    );
-  }
 }
 
 /// Daily activity record for activity heatmap
@@ -218,6 +218,18 @@ class DailyActivity {
     this.correctAnswers = 0,
     this.perfectScores = 0,
   });
+
+  factory DailyActivity.fromJson(Map<String, dynamic> json) {
+    return DailyActivity(
+      date: DateTime.parse(json['date'] as String),
+      xpEarned: json['xpEarned'] as int? ?? 0,
+      quizzesCompleted: json['quizzesCompleted'] as int? ?? 0,
+      questionsAnswered: json['questionsAnswered'] as int? ?? 0,
+      studyTime: Duration(minutes: json['studyTime'] as int? ?? 0),
+      correctAnswers: json['correctAnswers'] as int? ?? 0,
+      perfectScores: json['perfectScores'] as int? ?? 0,
+    );
+  }
 
   final DateTime date;
   final int xpEarned;
@@ -253,18 +265,6 @@ class DailyActivity {
       'perfectScores': perfectScores,
     };
   }
-
-  factory DailyActivity.fromJson(Map<String, dynamic> json) {
-    return DailyActivity(
-      date: DateTime.parse(json['date'] as String),
-      xpEarned: json['xpEarned'] as int? ?? 0,
-      quizzesCompleted: json['quizzesCompleted'] as int? ?? 0,
-      questionsAnswered: json['questionsAnswered'] as int? ?? 0,
-      studyTime: Duration(minutes: json['studyTime'] as int? ?? 0),
-      correctAnswers: json['correctAnswers'] as int? ?? 0,
-      perfectScores: json['perfectScores'] as int? ?? 0,
-    );
-  }
 }
 
 /// Weak area identification for improvement suggestions
@@ -280,6 +280,19 @@ class WeakArea {
     required this.recommendationEn,
     required this.recommendationAr,
   });
+
+  factory WeakArea.fromJson(Map<String, dynamic> json) {
+    return WeakArea(
+      areaType: json['areaType'] as String,
+      areaId: json['areaId'] as String,
+      nameEn: json['nameEn'] as String,
+      nameAr: json['nameAr'] as String,
+      accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0,
+      questionsAttempted: json['questionsAttempted'] as int? ?? 0,
+      recommendationEn: json['recommendationEn'] as String,
+      recommendationAr: json['recommendationAr'] as String,
+    );
+  }
 
   /// Type of weak area (continent, quiz_type, country_set)
   final String areaType;
@@ -329,19 +342,6 @@ class WeakArea {
       'recommendationAr': recommendationAr,
     };
   }
-
-  factory WeakArea.fromJson(Map<String, dynamic> json) {
-    return WeakArea(
-      areaType: json['areaType'] as String,
-      areaId: json['areaId'] as String,
-      nameEn: json['nameEn'] as String,
-      nameAr: json['nameAr'] as String,
-      accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0,
-      questionsAttempted: json['questionsAttempted'] as int? ?? 0,
-      recommendationEn: json['recommendationEn'] as String,
-      recommendationAr: json['recommendationAr'] as String,
-    );
-  }
 }
 
 /// Strong area for highlighting achievements
@@ -355,6 +355,17 @@ class StrongArea {
     required this.accuracy,
     required this.questionsAttempted,
   });
+
+  factory StrongArea.fromJson(Map<String, dynamic> json) {
+    return StrongArea(
+      areaType: json['areaType'] as String,
+      areaId: json['areaId'] as String,
+      nameEn: json['nameEn'] as String,
+      nameAr: json['nameAr'] as String,
+      accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0,
+      questionsAttempted: json['questionsAttempted'] as int? ?? 0,
+    );
+  }
 
   final String areaType;
   final String areaId;
@@ -375,17 +386,6 @@ class StrongArea {
       'questionsAttempted': questionsAttempted,
     };
   }
-
-  factory StrongArea.fromJson(Map<String, dynamic> json) {
-    return StrongArea(
-      areaType: json['areaType'] as String,
-      areaId: json['areaId'] as String,
-      nameEn: json['nameEn'] as String,
-      nameAr: json['nameAr'] as String,
-      accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0,
-      questionsAttempted: json['questionsAttempted'] as int? ?? 0,
-    );
-  }
 }
 
 /// Stats summary for compact display
@@ -400,13 +400,6 @@ class StatsSummary {
     required this.quizzesCompleted,
   });
 
-  final int totalXp;
-  final int level;
-  final int currentStreak;
-  final double accuracy;
-  final int countriesLearned;
-  final int quizzesCompleted;
-
   factory StatsSummary.fromUserStats(UserStats stats) {
     return StatsSummary(
       totalXp: stats.totalXp,
@@ -417,4 +410,11 @@ class StatsSummary {
       quizzesCompleted: stats.totalQuizzes,
     );
   }
+
+  final int totalXp;
+  final int level;
+  final int currentStreak;
+  final double accuracy;
+  final int countriesLearned;
+  final int quizzesCompleted;
 }

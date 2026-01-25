@@ -896,5 +896,15 @@
   "selectDifficulty": "اختر الصعوبة",
   "selectGoalType": "اختر نوع الهدف",
   "target": "الهدف",
-  "customGoal": "مخصص"
+  "customGoal": "مخصص",
+
+  "yourInterests": "اهتماماتك",
+  "quizDifficulty": "صعوبة الاختبار",
+  "dailyLearningGoal": "هدف التعلم اليومي",
+  "preferencesUpdated": "تم تحديث التفضيلات",
+  "syncingPreferences": "جاري مزامنة التفضيلات...",
+  "noInterestsSelected": "لم يتم اختيار اهتمامات",
+  "selectYourInterests": "اختر اهتماماتك",
+  "recommendedForYou": "موصى به لك",
+  "basedOnYourInterests": "بناءً على اهتماماتك"
 }

@@ -43,7 +43,7 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen>
   void _showAddFriendDialog() {
     final l10n = AppLocalizations.of(context);
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.addFriendTitle),
@@ -368,7 +368,7 @@ class _FriendCard extends StatelessWidget {
         ),
         subtitle: Row(
           children: [
-            Icon(
+            const Icon(
               Icons.star,
               size: 14,
               color: AppColors.xpGold,
@@ -496,7 +496,7 @@ class _EmptyFriendsState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.people_outline,
             size: 64,
             color: AppColors.textHintLight,

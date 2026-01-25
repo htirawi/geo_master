@@ -76,6 +76,22 @@ class DuelConfig {
     this.difficulty = DuelDifficulty.medium,
   });
 
+  factory DuelConfig.fromJson(Map<String, dynamic> json) {
+    return DuelConfig(
+      questionCount: json['questionCount'] as int? ?? 10,
+      timePerQuestion: json['timePerQuestion'] as int? ?? 15,
+      continent: json['continent'] as String?,
+      quizType: DuelQuizType.values.firstWhere(
+        (e) => e.name == json['quizType'],
+        orElse: () => DuelQuizType.mixed,
+      ),
+      difficulty: DuelDifficulty.values.firstWhere(
+        (e) => e.name == json['difficulty'],
+        orElse: () => DuelDifficulty.medium,
+      ),
+    );
+  }
+
   /// Number of questions in the duel
   final int questionCount;
 
@@ -118,22 +134,6 @@ class DuelConfig {
       'quizType': quizType.name,
       'difficulty': difficulty.name,
     };
-  }
-
-  factory DuelConfig.fromJson(Map<String, dynamic> json) {
-    return DuelConfig(
-      questionCount: json['questionCount'] as int? ?? 10,
-      timePerQuestion: json['timePerQuestion'] as int? ?? 15,
-      continent: json['continent'] as String?,
-      quizType: DuelQuizType.values.firstWhere(
-        (e) => e.name == json['quizType'],
-        orElse: () => DuelQuizType.mixed,
-      ),
-      difficulty: DuelDifficulty.values.firstWhere(
-        (e) => e.name == json['difficulty'],
-        orElse: () => DuelDifficulty.medium,
-      ),
-    );
   }
 
   /// Default configuration
@@ -251,6 +251,18 @@ class DuelPlayerResult {
     required this.averageTime,
   });
 
+  factory DuelPlayerResult.fromJson(Map<String, dynamic> json) {
+    return DuelPlayerResult(
+      userId: json['userId'] as String,
+      displayName: json['displayName'] as String,
+      avatarUrl: json['avatarUrl'] as String?,
+      score: json['score'] as int? ?? 0,
+      correctAnswers: json['correctAnswers'] as int? ?? 0,
+      totalTime: json['totalTime'] as int? ?? 0,
+      averageTime: (json['averageTime'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+
   /// Player's user ID
   final String userId;
 
@@ -282,7 +294,7 @@ class DuelPlayerResult {
     double? averageTime,
   }) {
     return DuelPlayerResult(
-      userId: newUserId ?? this.userId,
+      userId: newUserId ?? userId,
       displayName: displayName ?? this.displayName,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       score: score ?? this.score,
@@ -302,18 +314,6 @@ class DuelPlayerResult {
       'totalTime': totalTime,
       'averageTime': averageTime,
     };
-  }
-
-  factory DuelPlayerResult.fromJson(Map<String, dynamic> json) {
-    return DuelPlayerResult(
-      userId: json['userId'] as String,
-      displayName: json['displayName'] as String,
-      avatarUrl: json['avatarUrl'] as String?,
-      score: json['score'] as int? ?? 0,
-      correctAnswers: json['correctAnswers'] as int? ?? 0,
-      totalTime: json['totalTime'] as int? ?? 0,
-      averageTime: (json['averageTime'] as num?)?.toDouble() ?? 0.0,
-    );
   }
 }
 
@@ -338,6 +338,40 @@ class Duel {
     this.winnerId,
     this.xpReward = 0,
   });
+
+  factory Duel.fromJson(Map<String, dynamic> json) {
+    return Duel(
+      id: json['id'] as String,
+      challengerId: json['challengerId'] as String,
+      challengerName: json['challengerName'] as String,
+      challengerAvatar: json['challengerAvatar'] as String?,
+      opponentId: json['opponentId'] as String,
+      opponentName: json['opponentName'] as String,
+      opponentAvatar: json['opponentAvatar'] as String?,
+      config: DuelConfig.fromJson(json['config'] as Map<String, dynamic>),
+      status: DuelStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => DuelStatus.pending,
+      ),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      startedAt: json['startedAt'] != null
+          ? DateTime.parse(json['startedAt'] as String)
+          : null,
+      completedAt: json['completedAt'] != null
+          ? DateTime.parse(json['completedAt'] as String)
+          : null,
+      challengerResult: json['challengerResult'] != null
+          ? DuelPlayerResult.fromJson(
+              json['challengerResult'] as Map<String, dynamic>)
+          : null,
+      opponentResult: json['opponentResult'] != null
+          ? DuelPlayerResult.fromJson(
+              json['opponentResult'] as Map<String, dynamic>)
+          : null,
+      winnerId: json['winnerId'] as String?,
+      xpReward: json['xpReward'] as int? ?? 0,
+    );
+  }
 
   /// Unique duel ID
   final String id;
@@ -489,40 +523,6 @@ class Duel {
       'winnerId': winnerId,
       'xpReward': xpReward,
     };
-  }
-
-  factory Duel.fromJson(Map<String, dynamic> json) {
-    return Duel(
-      id: json['id'] as String,
-      challengerId: json['challengerId'] as String,
-      challengerName: json['challengerName'] as String,
-      challengerAvatar: json['challengerAvatar'] as String?,
-      opponentId: json['opponentId'] as String,
-      opponentName: json['opponentName'] as String,
-      opponentAvatar: json['opponentAvatar'] as String?,
-      config: DuelConfig.fromJson(json['config'] as Map<String, dynamic>),
-      status: DuelStatus.values.firstWhere(
-        (e) => e.name == json['status'],
-        orElse: () => DuelStatus.pending,
-      ),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      startedAt: json['startedAt'] != null
-          ? DateTime.parse(json['startedAt'] as String)
-          : null,
-      completedAt: json['completedAt'] != null
-          ? DateTime.parse(json['completedAt'] as String)
-          : null,
-      challengerResult: json['challengerResult'] != null
-          ? DuelPlayerResult.fromJson(
-              json['challengerResult'] as Map<String, dynamic>)
-          : null,
-      opponentResult: json['opponentResult'] != null
-          ? DuelPlayerResult.fromJson(
-              json['opponentResult'] as Map<String, dynamic>)
-          : null,
-      winnerId: json['winnerId'] as String?,
-      xpReward: json['xpReward'] as int? ?? 0,
-    );
   }
 
   @override

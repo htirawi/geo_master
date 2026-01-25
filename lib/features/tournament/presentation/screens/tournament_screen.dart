@@ -471,7 +471,7 @@ class _NoActiveTournament extends StatelessWidget {
       child: Center(
         child: Column(
           children: [
-            Icon(
+            const Icon(
               Icons.emoji_events_outlined,
               size: 48,
               color: AppColors.textHintLight,
@@ -561,14 +561,14 @@ class _LeaderboardTab extends ConsumerWidget {
                           ? _getRankColor(index)
                           : AppColors.primary.withValues(alpha: 0.1),
                       child: isTopThree
-                          ? Icon(
+                          ? const Icon(
                               Icons.emoji_events,
                               color: Colors.white,
                               size: 20,
                             )
                           : Text(
                               '${entry.rank}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -582,7 +582,7 @@ class _LeaderboardTab extends ConsumerWidget {
                     ),
                     subtitle: Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.star,
                           size: 14,
                           color: AppColors.xpGold,
@@ -707,7 +707,7 @@ class _UpcomingTournamentCard extends ConsumerWidget {
             const SizedBox(height: AppDimensions.sm),
             Row(
               children: [
-                Icon(Icons.calendar_today,
+                const Icon(Icons.calendar_today,
                     size: 14, color: AppColors.textSecondaryLight),
                 const SizedBox(width: 4),
                 Text(

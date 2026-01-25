@@ -23,10 +23,9 @@ class _WeeklyGoalsScreenState extends ConsumerState<WeeklyGoalsScreen> {
   static const _userId = 'current_user';
 
   void _showAddGoalDialog() {
-    final l10n = AppLocalizations.of(context);
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) => _AddGoalBottomSheet(
@@ -265,7 +264,7 @@ class _ProgressSummary extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: progress.overallProgress,
                   backgroundColor: AppColors.primary.withValues(alpha: 0.2),
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                  valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
                   minHeight: 8,
                 ),
               ),
@@ -384,7 +383,7 @@ class _GoalCard extends StatelessWidget {
                 if (goal.isCompleted)
                   Container(
                     padding: const EdgeInsets.all(AppDimensions.xs),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppColors.success,
                       shape: BoxShape.circle,
                     ),
@@ -551,7 +550,7 @@ class _EmptyGoalsState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.flag_outlined,
             size: 64,
             color: AppColors.textHintLight,

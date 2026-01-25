@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app/di/repository_providers.dart';
+import '../../domain/entities/user.dart';
 
 /// Local learning preferences (stored in SharedPreferences)
 /// Used for personalization before/without cloud sync
@@ -142,6 +143,46 @@ class LocalLearningPreferencesNotifier extends StateNotifier<LocalLearningPrefer
     await _prefs.remove(_keyDailyGoal);
 
     state = const LocalLearningPreferences();
+  }
+
+  /// Sync from cloud UserPreferences to local storage
+  /// Called when user logs in or when cloud preferences are updated
+  Future<void> syncFromCloud(UserPreferences cloudPrefs) async {
+    final cloudDailyGoal = _minutesToGoalString(cloudPrefs.dailyGoalMinutes);
+
+    await savePreferences(
+      interests: cloudPrefs.interests.toSet(),
+      difficulty: cloudPrefs.difficultyLevel,
+      dailyGoal: cloudDailyGoal,
+    );
+  }
+
+  /// Check if local preferences differ from cloud preferences
+  bool needsSync(UserPreferences cloudPrefs) {
+    final cloudDailyGoal = _minutesToGoalString(cloudPrefs.dailyGoalMinutes);
+
+    return state.interests.toSet().difference(cloudPrefs.interests.toSet()).isNotEmpty ||
+        cloudPrefs.interests.toSet().difference(state.interests).isNotEmpty ||
+        state.difficulty != cloudPrefs.difficultyLevel ||
+        state.dailyGoal != cloudDailyGoal;
+  }
+
+  /// Convert daily goal minutes to goal string
+  String _minutesToGoalString(int minutes) {
+    if (minutes <= 5) return 'casual';
+    if (minutes <= 10) return 'regular';
+    if (minutes <= 15) return 'serious';
+    return 'intense';
+  }
+
+  /// Get current preferences as UserPreferences-compatible format
+  /// Used when syncing local to cloud
+  ({List<String> interests, String difficultyLevel, int dailyGoalMinutes}) toCloudFormat() {
+    return (
+      interests: state.interests.toList(),
+      difficultyLevel: state.difficulty,
+      dailyGoalMinutes: state.dailyGoalMinutes,
+    );
   }
 }
 

@@ -19,7 +19,6 @@ class StatsDashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final userStats = ref.watch(userStatsProvider(_userId));
 
@@ -565,7 +564,7 @@ class _WeakAreasSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.trending_down, color: AppColors.error, size: 20),
+              const Icon(Icons.trending_down, color: AppColors.error, size: 20),
               const SizedBox(width: AppDimensions.xs),
               Text(
                 l10n.weakAreas,
@@ -584,7 +583,7 @@ class _WeakAreasSection extends StatelessWidget {
                   backgroundColor: AppColors.error.withValues(alpha: 0.1),
                   child: Text(
                     '${(area.accuracy * 100).toInt()}%',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.error,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
@@ -641,7 +640,7 @@ class _StrongAreasSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.trending_up, color: AppColors.success, size: 20),
+              const Icon(Icons.trending_up, color: AppColors.success, size: 20),
               const SizedBox(width: AppDimensions.xs),
               Text(
                 l10n.strongAreas,

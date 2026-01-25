@@ -12,6 +12,7 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../presentation/providers/auth_provider.dart';
 import '../../../../presentation/providers/onboarding_provider.dart';
 import '../../../../presentation/providers/theme_provider.dart';
+import '../../../../presentation/providers/user_preferences_provider.dart';
 import '../../../../presentation/providers/user_provider.dart';
 
 /// Settings screen with all app preferences
@@ -30,6 +31,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final user = ref.watch(userDataProvider);
     final preferences = ref.watch(userPreferencesProvider);
+    final localPrefs = ref.watch(localLearningPreferencesProvider);
     final themeMode = ref.watch(themeModeProvider);
     final selectedLanguage = ref.watch(selectedLanguageProvider);
 
@@ -81,6 +83,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const Divider(height: 1),
 
+          // Learning Preferences Section
+          _buildSectionHeader(context, theme, l10n.learningPreferences),
+          _buildInterestsTile(theme, l10n, preferences, localPrefs),
+          const Divider(height: 1),
+          _buildDifficultySettingsTile(theme, l10n, preferences, localPrefs),
+          const Divider(height: 1),
+          _buildLearningDailyGoalTile(theme, l10n, preferences, localPrefs),
+          const Divider(height: 1),
+
           // Notifications Section
           _buildSectionHeader(context, theme, l10n.notifications),
           _buildSwitchTile(
@@ -104,8 +115,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     )
                 : null,
           ),
-          const Divider(height: 1),
-          _buildDailyGoalTile(theme, l10n, preferences),
           const Divider(height: 1),
 
           // Premium Section
@@ -260,17 +269,266 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildDailyGoalTile(
+  Widget _buildInterestsTile(
     ThemeData theme,
     AppLocalizations l10n,
-    UserPreferences preferences,
+    UserPreferences cloudPrefs,
+    LocalLearningPreferences localPrefs,
+  ) {
+    final interestNames = localPrefs.interests
+        .map((id) => _getInterestLabel(l10n, id))
+        .toList();
+    final subtitle = interestNames.isEmpty
+        ? l10n.noInterestsSelected
+        : interestNames.join(', ');
+
+    return ListTile(
+      leading: Icon(Icons.interests, color: theme.colorScheme.primary),
+      title: Text(l10n.yourInterests),
+      subtitle: Text(
+        subtitle,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => _showInterestsDialog(l10n, cloudPrefs, localPrefs),
+    );
+  }
+
+  Widget _buildDifficultySettingsTile(
+    ThemeData theme,
+    AppLocalizations l10n,
+    UserPreferences cloudPrefs,
+    LocalLearningPreferences localPrefs,
+  ) {
+    return ListTile(
+      leading: Icon(Icons.speed, color: theme.colorScheme.primary),
+      title: Text(l10n.quizDifficulty),
+      subtitle: Text(_getDifficultyLabel(l10n, localPrefs.difficulty)),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => _showDifficultyDialog(l10n, cloudPrefs, localPrefs),
+    );
+  }
+
+  Widget _buildLearningDailyGoalTile(
+    ThemeData theme,
+    AppLocalizations l10n,
+    UserPreferences cloudPrefs,
+    LocalLearningPreferences localPrefs,
   ) {
     return ListTile(
       leading: Icon(Icons.flag, color: theme.colorScheme.primary),
-      title: Text(l10n.dailyGoal),
-      subtitle: Text('${preferences.dailyGoalMinutes} ${l10n.minutesPerDay}'),
+      title: Text(l10n.dailyLearningGoal),
+      subtitle: Text(_getDailyGoalLabel(l10n, localPrefs.dailyGoal)),
       trailing: const Icon(Icons.chevron_right),
-      onTap: () => _showDailyGoalDialog(l10n, preferences),
+      onTap: () => _showLearningDailyGoalDialog(l10n, cloudPrefs, localPrefs),
+    );
+  }
+
+  String _getInterestLabel(AppLocalizations l10n, String id) {
+    switch (id) {
+      case 'flags':
+        return l10n.interestFlags;
+      case 'capitals':
+        return l10n.interestCapitals;
+      case 'culture':
+        return l10n.interestCulture;
+      case 'geography':
+        return l10n.interestGeography;
+      case 'languages':
+        return l10n.interestLanguages;
+      case 'history':
+        return l10n.interestHistory;
+      default:
+        return id;
+    }
+  }
+
+  String _getDifficultyLabel(AppLocalizations l10n, String difficulty) {
+    switch (difficulty) {
+      case 'easy':
+        return l10n.difficultyEasy;
+      case 'medium':
+        return l10n.difficultyMedium;
+      case 'hard':
+        return l10n.difficultyHard;
+      default:
+        return l10n.difficultyMedium;
+    }
+  }
+
+  String _getDailyGoalLabel(AppLocalizations l10n, String goal) {
+    switch (goal) {
+      case 'casual':
+        return l10n.goalCasual;
+      case 'regular':
+        return l10n.goalRegular;
+      case 'serious':
+        return l10n.goalSerious;
+      case 'intense':
+        return l10n.goalIntense;
+      default:
+        return l10n.goalCasual;
+    }
+  }
+
+  void _showInterestsDialog(
+    AppLocalizations l10n,
+    UserPreferences cloudPrefs,
+    LocalLearningPreferences localPrefs,
+  ) {
+    final interests = ['flags', 'capitals', 'culture', 'geography', 'languages', 'history'];
+    final selected = Set<String>.from(localPrefs.interests);
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text(l10n.selectYourInterests),
+          content: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: interests.map((interest) => FilterChip(
+              label: Text(_getInterestLabel(l10n, interest)),
+              selected: selected.contains(interest),
+              onSelected: (isSelected) => setState(() {
+                if (isSelected) {
+                  selected.add(interest);
+                } else {
+                  selected.remove(interest);
+                }
+              }),
+            )).toList(),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () async {
+                // Update local preferences
+                await ref.read(localLearningPreferencesProvider.notifier).savePreferences(
+                  interests: selected,
+                  difficulty: localPrefs.difficulty,
+                  dailyGoal: localPrefs.dailyGoal,
+                );
+
+                // Sync to cloud
+                final updatedCloudPrefs = cloudPrefs.copyWith(
+                  interests: selected.toList(),
+                );
+                _updatePreference(updatedCloudPrefs);
+
+                if (dialogContext.mounted) {
+                  Navigator.pop(dialogContext);
+                  _showPreferencesUpdatedSnackBar();
+                }
+              },
+              child: Text(l10n.save),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDifficultyDialog(
+    AppLocalizations l10n,
+    UserPreferences cloudPrefs,
+    LocalLearningPreferences localPrefs,
+  ) {
+    final difficulties = ['easy', 'medium', 'hard'];
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.quizDifficulty),
+        content: RadioGroup<String>(
+          groupValue: localPrefs.difficulty,
+          onChanged: (value) async {
+            if (value != null) {
+              // Update local preferences
+              await ref.read(localLearningPreferencesProvider.notifier).setDifficulty(value);
+
+              // Sync to cloud
+              final updatedCloudPrefs = cloudPrefs.copyWith(
+                difficultyLevel: value,
+              );
+              _updatePreference(updatedCloudPrefs);
+
+              if (dialogContext.mounted) {
+                Navigator.pop(dialogContext);
+                _showPreferencesUpdatedSnackBar();
+              }
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: difficulties.map((diff) {
+              return RadioListTile<String>(
+                title: Text(_getDifficultyLabel(l10n, diff)),
+                value: diff,
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLearningDailyGoalDialog(
+    AppLocalizations l10n,
+    UserPreferences cloudPrefs,
+    LocalLearningPreferences localPrefs,
+  ) {
+    final goals = ['casual', 'regular', 'serious', 'intense'];
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.dailyLearningGoal),
+        content: RadioGroup<String>(
+          groupValue: localPrefs.dailyGoal,
+          onChanged: (value) async {
+            if (value != null) {
+              // Update local preferences
+              await ref.read(localLearningPreferencesProvider.notifier).setDailyGoal(value);
+
+              // Get the minutes equivalent for cloud sync
+              final updatedLocalPrefs = ref.read(localLearningPreferencesProvider);
+              final updatedCloudPrefs = cloudPrefs.copyWith(
+                dailyGoalMinutes: updatedLocalPrefs.dailyGoalMinutes,
+              );
+              _updatePreference(updatedCloudPrefs);
+
+              if (dialogContext.mounted) {
+                Navigator.pop(dialogContext);
+                _showPreferencesUpdatedSnackBar();
+              }
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: goals.map((goal) {
+              return RadioListTile<String>(
+                title: Text(_getDailyGoalLabel(l10n, goal)),
+                value: goal,
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showPreferencesUpdatedSnackBar() {
+    final l10n = AppLocalizations.of(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n.preferencesUpdated),
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 
@@ -431,36 +689,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 value: 'ar',
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showDailyGoalDialog(AppLocalizations l10n, UserPreferences preferences) {
-    final goals = [5, 10, 15, 30, 60];
-    showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.dailyGoal),
-        content: RadioGroup<int>(
-          groupValue: preferences.dailyGoalMinutes,
-          onChanged: (value) {
-            if (value != null) {
-              _updatePreference(
-                preferences.copyWith(dailyGoalMinutes: value),
-              );
-              Navigator.pop(context);
-            }
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: goals.map((minutes) {
-              return RadioListTile<int>(
-                title: Text('$minutes ${l10n.minutesPerDay}'),
-                value: minutes,
-              );
-            }).toList(),
           ),
         ),
       ),

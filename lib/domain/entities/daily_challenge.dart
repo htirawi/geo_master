@@ -267,6 +267,35 @@ class DailyChallenge {
     this.metadata,
   });
 
+  factory DailyChallenge.fromJson(Map<String, dynamic> json) {
+    return DailyChallenge(
+      id: json['id'] as String,
+      date: DateTime.parse(json['date'] as String),
+      type: DailyChallengeType.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => DailyChallengeType.completeQuizzes,
+      ),
+      titleEn: json['titleEn'] as String,
+      titleAr: json['titleAr'] as String,
+      descriptionEn: json['descriptionEn'] as String,
+      descriptionAr: json['descriptionAr'] as String,
+      targetValue: json['targetValue'] as int,
+      xpReward: json['xpReward'] as int,
+      difficulty: ChallengeDifficulty.values.firstWhere(
+        (e) => e.name == json['difficulty'],
+        orElse: () => ChallengeDifficulty.medium,
+      ),
+      bonusXpForStreak: json['bonusXpForStreak'] as int? ?? 0,
+      theme: json['theme'] != null
+          ? ChallengeTheme.allThemes.firstWhere(
+              (t) => t.id == json['theme'],
+              orElse: () => ChallengeTheme.allThemes.first,
+            )
+          : null,
+      metadata: json['metadata'] as Map<String, dynamic>?,
+    );
+  }
+
   /// Unique identifier
   final String id;
 
@@ -393,35 +422,6 @@ class DailyChallenge {
     };
   }
 
-  factory DailyChallenge.fromJson(Map<String, dynamic> json) {
-    return DailyChallenge(
-      id: json['id'] as String,
-      date: DateTime.parse(json['date'] as String),
-      type: DailyChallengeType.values.firstWhere(
-        (e) => e.name == json['type'],
-        orElse: () => DailyChallengeType.completeQuizzes,
-      ),
-      titleEn: json['titleEn'] as String,
-      titleAr: json['titleAr'] as String,
-      descriptionEn: json['descriptionEn'] as String,
-      descriptionAr: json['descriptionAr'] as String,
-      targetValue: json['targetValue'] as int,
-      xpReward: json['xpReward'] as int,
-      difficulty: ChallengeDifficulty.values.firstWhere(
-        (e) => e.name == json['difficulty'],
-        orElse: () => ChallengeDifficulty.medium,
-      ),
-      bonusXpForStreak: json['bonusXpForStreak'] as int? ?? 0,
-      theme: json['theme'] != null
-          ? ChallengeTheme.allThemes.firstWhere(
-              (t) => t.id == json['theme'],
-              orElse: () => ChallengeTheme.allThemes.first,
-            )
-          : null,
-      metadata: json['metadata'] as Map<String, dynamic>?,
-    );
-  }
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -443,47 +443,6 @@ class ChallengeProgress {
     this.completedAt,
     this.xpAwarded = 0,
   });
-
-  final String challengeId;
-  final String userId;
-  final int currentValue;
-  final bool isCompleted;
-  final DateTime? completedAt;
-  final int xpAwarded;
-
-  double getProgressPercentage(int targetValue) {
-    if (targetValue <= 0) return 1.0;
-    return (currentValue / targetValue).clamp(0.0, 1.0);
-  }
-
-  ChallengeProgress copyWith({
-    String? challengeId,
-    String? newUserId,
-    int? currentValue,
-    bool? isCompleted,
-    DateTime? completedAt,
-    int? xpAwarded,
-  }) {
-    return ChallengeProgress(
-      challengeId: challengeId ?? this.challengeId,
-      userId: newUserId ?? this.userId,
-      currentValue: currentValue ?? this.currentValue,
-      isCompleted: isCompleted ?? this.isCompleted,
-      completedAt: completedAt ?? this.completedAt,
-      xpAwarded: xpAwarded ?? this.xpAwarded,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'challengeId': challengeId,
-      'userId': userId,
-      'currentValue': currentValue,
-      'isCompleted': isCompleted,
-      'completedAt': completedAt?.toIso8601String(),
-      'xpAwarded': xpAwarded,
-    };
-  }
 
   factory ChallengeProgress.fromJson(Map<String, dynamic> json) {
     return ChallengeProgress(
@@ -507,6 +466,47 @@ class ChallengeProgress {
       isCompleted: false,
     );
   }
+
+  final String challengeId;
+  final String userId;
+  final int currentValue;
+  final bool isCompleted;
+  final DateTime? completedAt;
+  final int xpAwarded;
+
+  double getProgressPercentage(int targetValue) {
+    if (targetValue <= 0) return 1.0;
+    return (currentValue / targetValue).clamp(0.0, 1.0);
+  }
+
+  ChallengeProgress copyWith({
+    String? challengeId,
+    String? newUserId,
+    int? currentValue,
+    bool? isCompleted,
+    DateTime? completedAt,
+    int? xpAwarded,
+  }) {
+    return ChallengeProgress(
+      challengeId: challengeId ?? this.challengeId,
+      userId: newUserId ?? userId,
+      currentValue: currentValue ?? this.currentValue,
+      isCompleted: isCompleted ?? this.isCompleted,
+      completedAt: completedAt ?? this.completedAt,
+      xpAwarded: xpAwarded ?? this.xpAwarded,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'challengeId': challengeId,
+      'userId': userId,
+      'currentValue': currentValue,
+      'isCompleted': isCompleted,
+      'completedAt': completedAt?.toIso8601String(),
+      'xpAwarded': xpAwarded,
+    };
+  }
 }
 
 /// User's daily challenge streak information
@@ -519,6 +519,29 @@ class ChallengeStreak {
     required this.lastCompletedDate,
     required this.totalChallengesCompleted,
   });
+
+  factory ChallengeStreak.fromJson(Map<String, dynamic> json) {
+    return ChallengeStreak(
+      userId: json['userId'] as String,
+      currentStreak: json['currentStreak'] as int? ?? 0,
+      longestStreak: json['longestStreak'] as int? ?? 0,
+      lastCompletedDate: json['lastCompletedDate'] != null
+          ? DateTime.parse(json['lastCompletedDate'] as String)
+          : null,
+      totalChallengesCompleted: json['totalChallengesCompleted'] as int? ?? 0,
+    );
+  }
+
+  /// Create initial streak for a new user
+  factory ChallengeStreak.initial(String userId) {
+    return ChallengeStreak(
+      userId: userId,
+      currentStreak: 0,
+      longestStreak: 0,
+      lastCompletedDate: null,
+      totalChallengesCompleted: 0,
+    );
+  }
 
   final String userId;
   final int currentStreak;
@@ -557,7 +580,7 @@ class ChallengeStreak {
     int? totalChallengesCompleted,
   }) {
     return ChallengeStreak(
-      userId: newUserId ?? this.userId,
+      userId: newUserId ?? userId,
       currentStreak: currentStreak ?? this.currentStreak,
       longestStreak: longestStreak ?? this.longestStreak,
       lastCompletedDate: lastCompletedDate ?? this.lastCompletedDate,
@@ -574,29 +597,6 @@ class ChallengeStreak {
       'lastCompletedDate': lastCompletedDate?.toIso8601String(),
       'totalChallengesCompleted': totalChallengesCompleted,
     };
-  }
-
-  factory ChallengeStreak.fromJson(Map<String, dynamic> json) {
-    return ChallengeStreak(
-      userId: json['userId'] as String,
-      currentStreak: json['currentStreak'] as int? ?? 0,
-      longestStreak: json['longestStreak'] as int? ?? 0,
-      lastCompletedDate: json['lastCompletedDate'] != null
-          ? DateTime.parse(json['lastCompletedDate'] as String)
-          : null,
-      totalChallengesCompleted: json['totalChallengesCompleted'] as int? ?? 0,
-    );
-  }
-
-  /// Create initial streak for a new user
-  factory ChallengeStreak.initial(String userId) {
-    return ChallengeStreak(
-      userId: userId,
-      currentStreak: 0,
-      longestStreak: 0,
-      lastCompletedDate: null,
-      totalChallengesCompleted: 0,
-    );
   }
 }
 
@@ -676,9 +676,9 @@ class DailyChallengeGenerator {
       DailyChallengeType.specificContinent =>
         '${difficultyPrefix}Continent Explorer',
       DailyChallengeType.speedChallenge =>
-        '${difficultyPrefix}Speed Demon - $target Quick Answers',
+        '$difficultyPrefix Speed Demon - $target Quick Answers',
       DailyChallengeType.noMistakes =>
-        '${difficultyPrefix}$target Correct in a Row',
+        '$difficultyPrefix$target Correct in a Row',
       DailyChallengeType.studyTime =>
         '${difficultyPrefix}Study for $target Minutes',
       DailyChallengeType.quizType => '${difficultyPrefix}Quiz Type Master',
@@ -699,24 +699,22 @@ class DailyChallengeGenerator {
 
     return switch (type) {
       DailyChallengeType.completeQuizzes =>
-        '${difficultyPrefix}أكمل $target اختبارات',
+        '$difficultyPrefixأكمل $target اختبارات',
       DailyChallengeType.perfectScore =>
-        '${difficultyPrefix}احصل على $target درجة كاملة',
+        '$difficultyPrefixاحصل على $target درجة كاملة',
       DailyChallengeType.learnCountries =>
-        '${difficultyPrefix}تعلم $target دول جديدة',
-      DailyChallengeType.specificContinent =>
-        '${difficultyPrefix}مستكشف القارات',
+        '$difficultyPrefixتعلم $target دول جديدة',
+      DailyChallengeType.specificContinent => '$difficultyPrefixمستكشف القارات',
       DailyChallengeType.speedChallenge =>
-        '${difficultyPrefix}تحدي السرعة - $target إجابات سريعة',
+        '$difficultyPrefix تحدي السرعة - $target إجابات سريعة',
       DailyChallengeType.noMistakes =>
-        '${difficultyPrefix}$target إجابات صحيحة متتالية',
+        '$difficultyPrefix$target إجابات صحيحة متتالية',
       DailyChallengeType.studyTime =>
-        '${difficultyPrefix}ادرس لمدة $target دقيقة',
-      DailyChallengeType.quizType => '${difficultyPrefix}أستاذ أنواع الاختبارات',
+        '$difficultyPrefixادرس لمدة $target دقيقة',
+      DailyChallengeType.quizType => '$difficultyPrefixأستاذ أنواع الاختبارات',
       DailyChallengeType.scoreThreshold =>
-        '${difficultyPrefix}احصل على $target% أو أعلى',
-      DailyChallengeType.practiceWeakArea =>
-        '${difficultyPrefix}حسّن نقاط ضعفك',
+        '$difficultyPrefixاحصل على $target% أو أعلى',
+      DailyChallengeType.practiceWeakArea => '$difficultyPrefixحسّن نقاط ضعفك',
     };
   }
 

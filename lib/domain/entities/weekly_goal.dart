@@ -182,6 +182,30 @@ class WeeklyGoal {
     this.currentValue = 0,
   });
 
+  factory WeeklyGoal.fromJson(Map<String, dynamic> json) {
+    return WeeklyGoal(
+      id: json['id'] as String,
+      type: WeeklyGoalType.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => WeeklyGoalType.totalXp,
+      ),
+      titleEn: json['titleEn'] as String,
+      titleAr: json['titleAr'] as String,
+      descriptionEn: json['descriptionEn'] as String,
+      descriptionAr: json['descriptionAr'] as String,
+      targetValue: json['targetValue'] as int,
+      currentValue: json['currentValue'] as int? ?? 0,
+      xpReward: json['xpReward'] as int,
+      weekStart: DateTime.parse(json['weekStart'] as String),
+      weekEnd: DateTime.parse(json['weekEnd'] as String),
+      difficulty: GoalDifficulty.values.firstWhere(
+        (e) => e.name == json['difficulty'],
+        orElse: () => GoalDifficulty.medium,
+      ),
+      isCustom: json['isCustom'] as bool? ?? false,
+    );
+  }
+
   /// Unique identifier
   final String id;
 
@@ -304,30 +328,6 @@ class WeeklyGoal {
       'difficulty': difficulty.name,
       'isCustom': isCustom,
     };
-  }
-
-  factory WeeklyGoal.fromJson(Map<String, dynamic> json) {
-    return WeeklyGoal(
-      id: json['id'] as String,
-      type: WeeklyGoalType.values.firstWhere(
-        (e) => e.name == json['type'],
-        orElse: () => WeeklyGoalType.totalXp,
-      ),
-      titleEn: json['titleEn'] as String,
-      titleAr: json['titleAr'] as String,
-      descriptionEn: json['descriptionEn'] as String,
-      descriptionAr: json['descriptionAr'] as String,
-      targetValue: json['targetValue'] as int,
-      currentValue: json['currentValue'] as int? ?? 0,
-      xpReward: json['xpReward'] as int,
-      weekStart: DateTime.parse(json['weekStart'] as String),
-      weekEnd: DateTime.parse(json['weekEnd'] as String),
-      difficulty: GoalDifficulty.values.firstWhere(
-        (e) => e.name == json['difficulty'],
-        orElse: () => GoalDifficulty.medium,
-      ),
-      isCustom: json['isCustom'] as bool? ?? false,
-    );
   }
 
   @override
@@ -559,6 +559,33 @@ class WeeklyGoalsProgress {
     required this.totalXpEarned,
   });
 
+  factory WeeklyGoalsProgress.fromJson(Map<String, dynamic> json) {
+    return WeeklyGoalsProgress(
+      userId: json['userId'] as String,
+      goals: (json['goals'] as List)
+          .map((g) => WeeklyGoal.fromJson(g as Map<String, dynamic>))
+          .toList(),
+      weekStart: DateTime.parse(json['weekStart'] as String),
+      totalGoalsCompleted: json['totalGoalsCompleted'] as int? ?? 0,
+      totalXpEarned: json['totalXpEarned'] as int? ?? 0,
+    );
+  }
+
+  factory WeeklyGoalsProgress.initial(String userId) {
+    final now = DateTime.now();
+    final daysFromMonday = now.weekday - DateTime.monday;
+    final weekStart =
+        DateTime(now.year, now.month, now.day).subtract(Duration(days: daysFromMonday));
+
+    return WeeklyGoalsProgress(
+      userId: userId,
+      goals: const [],
+      weekStart: weekStart,
+      totalGoalsCompleted: 0,
+      totalXpEarned: 0,
+    );
+  }
+
   final String userId;
   final List<WeeklyGoal> goals;
   final DateTime weekStart;
@@ -603,33 +630,6 @@ class WeeklyGoalsProgress {
       'totalGoalsCompleted': totalGoalsCompleted,
       'totalXpEarned': totalXpEarned,
     };
-  }
-
-  factory WeeklyGoalsProgress.fromJson(Map<String, dynamic> json) {
-    return WeeklyGoalsProgress(
-      userId: json['userId'] as String,
-      goals: (json['goals'] as List)
-          .map((g) => WeeklyGoal.fromJson(g as Map<String, dynamic>))
-          .toList(),
-      weekStart: DateTime.parse(json['weekStart'] as String),
-      totalGoalsCompleted: json['totalGoalsCompleted'] as int? ?? 0,
-      totalXpEarned: json['totalXpEarned'] as int? ?? 0,
-    );
-  }
-
-  factory WeeklyGoalsProgress.initial(String userId) {
-    final now = DateTime.now();
-    final daysFromMonday = now.weekday - DateTime.monday;
-    final weekStart =
-        DateTime(now.year, now.month, now.day).subtract(Duration(days: daysFromMonday));
-
-    return WeeklyGoalsProgress(
-      userId: userId,
-      goals: const [],
-      weekStart: weekStart,
-      totalGoalsCompleted: 0,
-      totalXpEarned: 0,
-    );
   }
 }
 

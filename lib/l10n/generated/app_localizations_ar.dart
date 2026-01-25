@@ -2528,4 +2528,31 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get target => 'الهدف';
+
+  @override
+  String get yourInterests => 'اهتماماتك';
+
+  @override
+  String get quizDifficulty => 'صعوبة الاختبار';
+
+  @override
+  String get dailyLearningGoal => 'هدف التعلم اليومي';
+
+  @override
+  String get preferencesUpdated => 'تم تحديث التفضيلات';
+
+  @override
+  String get syncingPreferences => 'جاري مزامنة التفضيلات...';
+
+  @override
+  String get noInterestsSelected => 'لم يتم اختيار اهتمامات';
+
+  @override
+  String get selectYourInterests => 'اختر اهتماماتك';
+
+  @override
+  String get recommendedForYou => 'موصى به لك';
+
+  @override
+  String get basedOnYourInterests => 'بناءً على اهتماماتك';
 }

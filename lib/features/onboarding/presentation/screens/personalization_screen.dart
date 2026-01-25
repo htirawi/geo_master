@@ -14,6 +14,7 @@ import '../../../../presentation/components/backgrounds/onboarding_background.da
 import '../../../../presentation/providers/onboarding_provider.dart';
 import '../../../../presentation/providers/user_preferences_provider.dart'
     show localLearningPreferencesProvider;
+import '../../../../presentation/providers/user_provider.dart';
 import '../../../../presentation/widgets/premium_button.dart';
 
 // Unique accent colors for each interest category
@@ -199,6 +200,21 @@ class _PersonalizationScreenState extends ConsumerState<PersonalizationScreen> {
             interests: _selectedInterests,
             difficulty: _selectedDifficulty,
             dailyGoal: _selectedGoal,
+          );
+
+      // Sync to cloud if user is authenticated
+      final currentPreferences = ref.read(userPreferencesProvider);
+      final localPrefs = ref.read(localLearningPreferencesProvider);
+
+      final updatedCloudPreferences = currentPreferences.copyWith(
+        interests: localPrefs.interests.toList(),
+        difficultyLevel: localPrefs.difficulty,
+        dailyGoalMinutes: localPrefs.dailyGoalMinutes,
+      );
+
+      // Update cloud preferences (will silently fail for anonymous users)
+      await ref.read(userProfileProvider.notifier).updatePreferences(
+            updatedCloudPreferences,
           );
 
       // Mark personalization as complete

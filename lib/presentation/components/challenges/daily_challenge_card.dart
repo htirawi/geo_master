@@ -84,7 +84,7 @@ class _DailyChallengeCardState extends ConsumerState<DailyChallengeCard>
     final reduceMotion = MediaQuery.of(context).disableAnimations;
 
     // Get progress (mock for now)
-    final progress = 0.0; // Would come from provider
+    const progress = 0.0; // Would come from provider
     final isCompleted = streak.completedToday;
 
     final cardGradient = LinearGradient(

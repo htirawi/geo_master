@@ -4909,6 +4909,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Target'**
   String get target;
+
+  /// Label for interests selection in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Your Interests'**
+  String get yourInterests;
+
+  /// Label for quiz difficulty setting
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz Difficulty'**
+  String get quizDifficulty;
+
+  /// Label for daily learning goal setting
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Learning Goal'**
+  String get dailyLearningGoal;
+
+  /// Confirmation message when preferences are saved
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences updated'**
+  String get preferencesUpdated;
+
+  /// Loading message while syncing preferences
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing preferences...'**
+  String get syncingPreferences;
+
+  /// Placeholder when no interests are selected
+  ///
+  /// In en, this message translates to:
+  /// **'No interests selected'**
+  String get noInterestsSelected;
+
+  /// Title for interests selection dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Select Your Interests'**
+  String get selectYourInterests;
+
+  /// Label for recommended content based on interests
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for You'**
+  String get recommendedForYou;
+
+  /// Subtitle for recommended content
+  ///
+  /// In en, this message translates to:
+  /// **'Based on your interests'**
+  String get basedOnYourInterests;
 }
 
 class _AppLocalizationsDelegate
