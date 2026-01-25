@@ -1851,7 +1851,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get performanceAnalysis => 'Performance Analysis';
 
   @override
-  String get strongAreas => 'Strong Areas';
+  String get strongAreas => 'Your Strengths';
 
   @override
   String get needsImprovement => 'Needs Improvement';
@@ -1995,4 +1995,542 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get levelGrandmaster => 'Grandmaster';
+
+  @override
+  String get levelLegend => 'Legend';
+
+  @override
+  String get levelMythic => 'Mythic';
+
+  @override
+  String get dailyChallengeTitle => 'Daily Challenge';
+
+  @override
+  String get dailyChallengeComplete => 'Challenge Complete!';
+
+  @override
+  String dailyChallengeStreak(int count) {
+    return 'Challenge Streak: $count';
+  }
+
+  @override
+  String dailyChallengeNextIn(String time) {
+    return 'Next challenge in $time';
+  }
+
+  @override
+  String dailyChallengeProgress(int current, int target) {
+    return '$current/$target';
+  }
+
+  @override
+  String challengeTypeCompleteQuizzes(int count) {
+    return 'Complete $count quizzes';
+  }
+
+  @override
+  String get challengeTypePerfectScore => 'Get a perfect score';
+
+  @override
+  String challengeTypeLearnCountries(int count) {
+    return 'Learn $count new countries';
+  }
+
+  @override
+  String challengeTypeSpeedChallenge(int count) {
+    return 'Answer $count questions quickly';
+  }
+
+  @override
+  String challengeTypeStudyTime(int minutes) {
+    return 'Study for $minutes minutes';
+  }
+
+  @override
+  String get challengeDifficultyEasy => 'Easy';
+
+  @override
+  String get challengeDifficultyMedium => 'Medium';
+
+  @override
+  String get challengeDifficultyHard => 'Hard';
+
+  @override
+  String get weeklyGoalsTitle => 'Weekly Goals';
+
+  @override
+  String weeklyGoalsProgress(int completed, int total) {
+    return '$completed/$total goals completed';
+  }
+
+  @override
+  String weeklyGoalXpReward(int xp) {
+    return '+$xp XP';
+  }
+
+  @override
+  String goalTypeEarnXp(int amount) {
+    return 'Earn $amount XP';
+  }
+
+  @override
+  String goalTypeCompleteQuizzes(int count) {
+    return 'Complete $count quizzes';
+  }
+
+  @override
+  String goalTypeLearnCountries(int count) {
+    return 'Learn $count countries';
+  }
+
+  @override
+  String goalTypePerfectScores(int count) {
+    return 'Get $count perfect scores';
+  }
+
+  @override
+  String goalTypeStudyDays(int count) {
+    return 'Study on $count days';
+  }
+
+  @override
+  String goalTypeChallenges(int count) {
+    return 'Complete $count daily challenges';
+  }
+
+  @override
+  String weekEndsIn(String time) {
+    return 'Week ends in $time';
+  }
+
+  @override
+  String get friendsTitle => 'Friends';
+
+  @override
+  String friendsCount(int count) {
+    return '$count friends';
+  }
+
+  @override
+  String get friendCodeLabel => 'Your Friend Code';
+
+  @override
+  String get friendCodeCopied => 'Friend code copied!';
+
+  @override
+  String get addFriendTitle => 'Add Friend';
+
+  @override
+  String get addFriendHint => 'Enter friend code';
+
+  @override
+  String get sendFriendRequest => 'Send Request';
+
+  @override
+  String get friendRequestSent => 'Friend request sent!';
+
+  @override
+  String get friendRequestsTitle => 'Friend Requests';
+
+  @override
+  String get acceptFriendRequest => 'Accept';
+
+  @override
+  String get declineFriendRequest => 'Decline';
+
+  @override
+  String get removeFriend => 'Remove Friend';
+
+  @override
+  String get removeFriendConfirm =>
+      'Are you sure you want to remove this friend?';
+
+  @override
+  String get noFriendsYet => 'No friends yet';
+
+  @override
+  String get friendOnline => 'Online';
+
+  @override
+  String get friendOffline => 'Offline';
+
+  @override
+  String get challengeFriend => 'Challenge';
+
+  @override
+  String get duelTitle => 'Duel';
+
+  @override
+  String get duelChallenge => 'Challenge to Duel';
+
+  @override
+  String get duelPending => 'Pending';
+
+  @override
+  String get duelInProgress => 'In Progress';
+
+  @override
+  String get duelCompleted => 'Completed';
+
+  @override
+  String get duelExpired => 'Expired';
+
+  @override
+  String get duelDeclined => 'Declined';
+
+  @override
+  String get duelWin => 'Victory!';
+
+  @override
+  String get duelLose => 'Defeat';
+
+  @override
+  String get duelDraw => 'Draw';
+
+  @override
+  String duelScore(int score) {
+    return 'Score: $score';
+  }
+
+  @override
+  String duelQuestions(int count) {
+    return '$count questions';
+  }
+
+  @override
+  String duelTimePerQuestion(int seconds) {
+    return '${seconds}s per question';
+  }
+
+  @override
+  String get duelAccept => 'Accept Challenge';
+
+  @override
+  String get duelDecline => 'Decline';
+
+  @override
+  String get duelConfigTitle => 'Configure Duel';
+
+  @override
+  String get duelTypeFlags => 'Flags';
+
+  @override
+  String get duelTypeCapitals => 'Capitals';
+
+  @override
+  String get duelTypeCountries => 'Countries';
+
+  @override
+  String get duelTypeMixed => 'Mixed';
+
+  @override
+  String get tournamentTitle => 'Tournament';
+
+  @override
+  String get tournamentActive => 'Active Tournament';
+
+  @override
+  String get tournamentUpcoming => 'Upcoming';
+
+  @override
+  String get tournamentCompleted => 'Completed';
+
+  @override
+  String get tournamentCancelled => 'Cancelled';
+
+  @override
+  String get tournamentJoin => 'Join Tournament';
+
+  @override
+  String get tournamentLeave => 'Leave';
+
+  @override
+  String tournamentParticipants(int count) {
+    return 'participants';
+  }
+
+  @override
+  String tournamentEndsIn(String time) {
+    return 'Ends in $time';
+  }
+
+  @override
+  String tournamentStartsIn(String time) {
+    return 'Starts in $time';
+  }
+
+  @override
+  String tournamentYourRank(int rank) {
+    return 'Your Rank: #$rank';
+  }
+
+  @override
+  String get tournamentPrizes => 'Prizes';
+
+  @override
+  String get tournamentWeekly => 'Weekly';
+
+  @override
+  String get tournamentMonthly => 'Monthly';
+
+  @override
+  String get tournamentContinent => 'Continent';
+
+  @override
+  String get tournamentSpecial => 'Special Event';
+
+  @override
+  String get statsTitle => 'Statistics';
+
+  @override
+  String get statsTotalXp => 'Total XP';
+
+  @override
+  String get statsLevel => 'Level';
+
+  @override
+  String get statsAccuracy => 'Accuracy';
+
+  @override
+  String get statsStreak => 'Current Streak';
+
+  @override
+  String get statsLongestStreak => 'Longest Streak';
+
+  @override
+  String get statsQuizzesCompleted => 'Quizzes Completed';
+
+  @override
+  String get statsPerfectScores => 'Perfect Scores';
+
+  @override
+  String get statsCountriesLearned => 'Countries Learned';
+
+  @override
+  String get statsStudyTime => 'Study Time';
+
+  @override
+  String get statsWeakAreas => 'Areas to Improve';
+
+  @override
+  String get statsStrongAreas => 'Your Strengths';
+
+  @override
+  String get statsActivityHistory => 'Activity History';
+
+  @override
+  String get statsAccuracyByContinent => 'Accuracy by Continent';
+
+  @override
+  String get statsAccuracyByQuizType => 'Accuracy by Quiz Type';
+
+  @override
+  String get subscriptionFree => 'Free';
+
+  @override
+  String get subscriptionBasic => 'Basic';
+
+  @override
+  String get subscriptionPro => 'Pro';
+
+  @override
+  String get subscriptionPremium => 'Premium';
+
+  @override
+  String get subscriptionUpgrade => 'Upgrade';
+
+  @override
+  String get featureUnlimitedQuizzes => 'Unlimited Quizzes';
+
+  @override
+  String get featureAdvancedStats => 'Advanced Stats';
+
+  @override
+  String get featureFriendsDuels => 'Friend Duels';
+
+  @override
+  String get featureCustomChallenges => 'Custom Challenges';
+
+  @override
+  String get featureExportStats => 'Export Stats';
+
+  @override
+  String get featureNoAds => 'No Ads';
+
+  @override
+  String get featurePrioritySupport => 'Priority Support';
+
+  @override
+  String get featureExclusiveAchievements => 'Exclusive Achievements';
+
+  @override
+  String get featureTournamentAccess => 'Tournament Access';
+
+  @override
+  String get featureOfflineMode => 'Offline Mode';
+
+  @override
+  String get limitReached => 'Limit reached';
+
+  @override
+  String get upgradeToUnlock => 'Upgrade to unlock';
+
+  @override
+  String get leaderboardGlobal => 'Global';
+
+  @override
+  String get leaderboardFriends => 'Friends';
+
+  @override
+  String get leaderboardWeekly => 'Weekly';
+
+  @override
+  String get leaderboardRegional => 'Regional';
+
+  @override
+  String get tournamentsTitle => 'Tournaments';
+
+  @override
+  String get tournamentSubtitle => 'Compete with explorers worldwide';
+
+  @override
+  String get tournamentLeaderboard => 'Leaderboard';
+
+  @override
+  String get tournamentRewards => 'Rewards';
+
+  @override
+  String get tournamentJoinNow => 'Join Now';
+
+  @override
+  String get tournamentJoined => 'Joined';
+
+  @override
+  String get tournamentRemaining => 'remaining';
+
+  @override
+  String get tournamentEnding => 'Ending soon';
+
+  @override
+  String get noActiveTournament => 'No active tournament';
+
+  @override
+  String get noUpcomingTournaments => 'No upcoming tournaments';
+
+  @override
+  String get noLeaderboardData => 'No leaderboard data yet';
+
+  @override
+  String get startsIn => 'Starts in';
+
+  @override
+  String get tournamentRegistered => 'Registered';
+
+  @override
+  String get tournamentRegister => 'Register';
+
+  @override
+  String get daysShort => 'd';
+
+  @override
+  String get hoursShort => 'h';
+
+  @override
+  String get minutesShort => 'm';
+
+  @override
+  String get daysLeft => 'days left';
+
+  @override
+  String get statsSubtitle => 'Track your learning progress';
+
+  @override
+  String get statsOverview => 'Overview';
+
+  @override
+  String get totalXp => 'Total XP';
+
+  @override
+  String get currentStreak => 'Streak';
+
+  @override
+  String get perfectScores => 'Perfect';
+
+  @override
+  String get activityHistory => 'Activity History';
+
+  @override
+  String get less => 'Less';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String get accuracyByCategory => 'Accuracy by Category';
+
+  @override
+  String get noDataYet => 'No data yet';
+
+  @override
+  String get quizTypeFlags => 'Flags';
+
+  @override
+  String get quizTypeCapitals => 'Capitals';
+
+  @override
+  String get quizTypeMaps => 'Maps';
+
+  @override
+  String get quizTypeMixed => 'Mixed';
+
+  @override
+  String get weakAreas => 'Areas to Improve';
+
+  @override
+  String get practice => 'Practice';
+
+  @override
+  String get countriesByContinent => 'Countries by Continent';
+
+  @override
+  String get continentAfrica => 'Africa';
+
+  @override
+  String get continentAsia => 'Asia';
+
+  @override
+  String get continentEurope => 'Europe';
+
+  @override
+  String get continentNorthAmerica => 'North America';
+
+  @override
+  String get continentSouthAmerica => 'South America';
+
+  @override
+  String get continentOceania => 'Oceania';
+
+  @override
+  String get weeklyGoalsSubtitle => 'Set and achieve your weekly targets';
+
+  @override
+  String get goalsCompleted => 'Completed';
+
+  @override
+  String get completionRate => 'Completion';
+
+  @override
+  String get noGoalsYet => 'No goals set';
+
+  @override
+  String get setWeeklyGoals => 'Set your weekly goals to track progress';
+
+  @override
+  String get addGoal => 'Add Goal';
+
+  @override
+  String get selectGoalType => 'Select Goal Type';
+
+  @override
+  String get target => 'Target';
 }

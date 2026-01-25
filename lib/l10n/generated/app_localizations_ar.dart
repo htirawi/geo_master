@@ -1991,4 +1991,541 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get levelGrandmaster => 'أسطورة';
+
+  @override
+  String get levelLegend => 'أسطوري';
+
+  @override
+  String get levelMythic => 'خرافي';
+
+  @override
+  String get dailyChallengeTitle => 'التحدي اليومي';
+
+  @override
+  String get dailyChallengeComplete => 'تم إكمال التحدي!';
+
+  @override
+  String dailyChallengeStreak(int count) {
+    return 'سلسلة التحديات: $count';
+  }
+
+  @override
+  String dailyChallengeNextIn(String time) {
+    return 'التحدي التالي في $time';
+  }
+
+  @override
+  String dailyChallengeProgress(int current, int target) {
+    return '$current/$target';
+  }
+
+  @override
+  String challengeTypeCompleteQuizzes(int count) {
+    return 'أكمل $count اختبارات';
+  }
+
+  @override
+  String get challengeTypePerfectScore => 'احصل على علامة كاملة';
+
+  @override
+  String challengeTypeLearnCountries(int count) {
+    return 'تعلم $count دول جديدة';
+  }
+
+  @override
+  String challengeTypeSpeedChallenge(int count) {
+    return 'أجب على $count أسئلة بسرعة';
+  }
+
+  @override
+  String challengeTypeStudyTime(int minutes) {
+    return 'ادرس لمدة $minutes دقيقة';
+  }
+
+  @override
+  String get challengeDifficultyEasy => 'سهل';
+
+  @override
+  String get challengeDifficultyMedium => 'متوسط';
+
+  @override
+  String get challengeDifficultyHard => 'صعب';
+
+  @override
+  String get weeklyGoalsTitle => 'الأهداف الأسبوعية';
+
+  @override
+  String weeklyGoalsProgress(int completed, int total) {
+    return '$completed/$total أهداف مكتملة';
+  }
+
+  @override
+  String weeklyGoalXpReward(int xp) {
+    return '+$xp نقطة';
+  }
+
+  @override
+  String goalTypeEarnXp(int amount) {
+    return 'اكسب $amount نقطة';
+  }
+
+  @override
+  String goalTypeCompleteQuizzes(int count) {
+    return 'أكمل $count اختبارات';
+  }
+
+  @override
+  String goalTypeLearnCountries(int count) {
+    return 'تعلم $count دول';
+  }
+
+  @override
+  String goalTypePerfectScores(int count) {
+    return 'احصل على $count علامات كاملة';
+  }
+
+  @override
+  String goalTypeStudyDays(int count) {
+    return 'ادرس $count أيام';
+  }
+
+  @override
+  String goalTypeChallenges(int count) {
+    return 'أكمل $count تحديات يومية';
+  }
+
+  @override
+  String weekEndsIn(String time) {
+    return 'ينتهي الأسبوع في $time';
+  }
+
+  @override
+  String get friendsTitle => 'الأصدقاء';
+
+  @override
+  String friendsCount(int count) {
+    return '$count أصدقاء';
+  }
+
+  @override
+  String get friendCodeLabel => 'رمز الصداقة الخاص بك';
+
+  @override
+  String get friendCodeCopied => 'تم نسخ رمز الصداقة!';
+
+  @override
+  String get addFriendTitle => 'إضافة صديق';
+
+  @override
+  String get addFriendHint => 'أدخل رمز الصداقة';
+
+  @override
+  String get sendFriendRequest => 'إرسال طلب';
+
+  @override
+  String get friendRequestSent => 'تم إرسال طلب الصداقة!';
+
+  @override
+  String get friendRequestsTitle => 'طلبات الصداقة';
+
+  @override
+  String get acceptFriendRequest => 'قبول';
+
+  @override
+  String get declineFriendRequest => 'رفض';
+
+  @override
+  String get removeFriend => 'إزالة صديق';
+
+  @override
+  String get removeFriendConfirm => 'هل أنت متأكد من إزالة هذا الصديق؟';
+
+  @override
+  String get noFriendsYet => 'لا يوجد أصدقاء بعد';
+
+  @override
+  String get friendOnline => 'متصل';
+
+  @override
+  String get friendOffline => 'غير متصل';
+
+  @override
+  String get challengeFriend => 'تحدي';
+
+  @override
+  String get duelTitle => 'مبارزة';
+
+  @override
+  String get duelChallenge => 'تحدي لمبارزة';
+
+  @override
+  String get duelPending => 'قيد الانتظار';
+
+  @override
+  String get duelInProgress => 'جاري';
+
+  @override
+  String get duelCompleted => 'مكتمل';
+
+  @override
+  String get duelExpired => 'منتهي الصلاحية';
+
+  @override
+  String get duelDeclined => 'مرفوض';
+
+  @override
+  String get duelWin => 'فوز!';
+
+  @override
+  String get duelLose => 'خسارة';
+
+  @override
+  String get duelDraw => 'تعادل';
+
+  @override
+  String duelScore(int score) {
+    return 'النتيجة: $score';
+  }
+
+  @override
+  String duelQuestions(int count) {
+    return '$count أسئلة';
+  }
+
+  @override
+  String duelTimePerQuestion(int seconds) {
+    return '$seconds ثانية لكل سؤال';
+  }
+
+  @override
+  String get duelAccept => 'قبول التحدي';
+
+  @override
+  String get duelDecline => 'رفض';
+
+  @override
+  String get duelConfigTitle => 'إعداد المبارزة';
+
+  @override
+  String get duelTypeFlags => 'الأعلام';
+
+  @override
+  String get duelTypeCapitals => 'العواصم';
+
+  @override
+  String get duelTypeCountries => 'الدول';
+
+  @override
+  String get duelTypeMixed => 'مختلط';
+
+  @override
+  String get tournamentTitle => 'البطولة';
+
+  @override
+  String get tournamentActive => 'بطولة نشطة';
+
+  @override
+  String get tournamentUpcoming => 'قادم';
+
+  @override
+  String get tournamentCompleted => 'مكتمل';
+
+  @override
+  String get tournamentCancelled => 'ملغى';
+
+  @override
+  String get tournamentJoin => 'انضم للبطولة';
+
+  @override
+  String get tournamentLeave => 'مغادرة';
+
+  @override
+  String tournamentParticipants(int count) {
+    return '$count مشاركين';
+  }
+
+  @override
+  String tournamentEndsIn(String time) {
+    return 'تنتهي في $time';
+  }
+
+  @override
+  String tournamentStartsIn(String time) {
+    return 'تبدأ في $time';
+  }
+
+  @override
+  String tournamentYourRank(int rank) {
+    return 'ترتيبك: #$rank';
+  }
+
+  @override
+  String get tournamentPrizes => 'الجوائز';
+
+  @override
+  String get tournamentWeekly => 'أسبوعي';
+
+  @override
+  String get tournamentMonthly => 'شهري';
+
+  @override
+  String get tournamentContinent => 'قارة';
+
+  @override
+  String get tournamentSpecial => 'حدث خاص';
+
+  @override
+  String get statsTitle => 'الإحصائيات';
+
+  @override
+  String get statsTotalXp => 'إجمالي النقاط';
+
+  @override
+  String get statsLevel => 'المستوى';
+
+  @override
+  String get statsAccuracy => 'الدقة';
+
+  @override
+  String get statsStreak => 'السلسلة الحالية';
+
+  @override
+  String get statsLongestStreak => 'أطول سلسلة';
+
+  @override
+  String get statsQuizzesCompleted => 'الاختبارات المكتملة';
+
+  @override
+  String get statsPerfectScores => 'العلامات الكاملة';
+
+  @override
+  String get statsCountriesLearned => 'الدول المتعلمة';
+
+  @override
+  String get statsStudyTime => 'وقت الدراسة';
+
+  @override
+  String get statsWeakAreas => 'مجالات للتحسين';
+
+  @override
+  String get statsStrongAreas => 'نقاط القوة';
+
+  @override
+  String get statsActivityHistory => 'سجل النشاط';
+
+  @override
+  String get statsAccuracyByContinent => 'الدقة حسب القارة';
+
+  @override
+  String get statsAccuracyByQuizType => 'الدقة حسب نوع الاختبار';
+
+  @override
+  String get subscriptionFree => 'مجاني';
+
+  @override
+  String get subscriptionBasic => 'أساسي';
+
+  @override
+  String get subscriptionPro => 'برو';
+
+  @override
+  String get subscriptionPremium => 'بريميوم';
+
+  @override
+  String get subscriptionUpgrade => 'ترقية';
+
+  @override
+  String get featureUnlimitedQuizzes => 'اختبارات غير محدودة';
+
+  @override
+  String get featureAdvancedStats => 'إحصائيات متقدمة';
+
+  @override
+  String get featureFriendsDuels => 'مبارزات الأصدقاء';
+
+  @override
+  String get featureCustomChallenges => 'تحديات مخصصة';
+
+  @override
+  String get featureExportStats => 'تصدير الإحصائيات';
+
+  @override
+  String get featureNoAds => 'بدون إعلانات';
+
+  @override
+  String get featurePrioritySupport => 'دعم أولوية';
+
+  @override
+  String get featureExclusiveAchievements => 'إنجازات حصرية';
+
+  @override
+  String get featureTournamentAccess => 'الوصول للبطولات';
+
+  @override
+  String get featureOfflineMode => 'وضع عدم الاتصال';
+
+  @override
+  String get limitReached => 'تم الوصول للحد';
+
+  @override
+  String get upgradeToUnlock => 'قم بالترقية للفتح';
+
+  @override
+  String get leaderboardGlobal => 'عالمي';
+
+  @override
+  String get leaderboardFriends => 'الأصدقاء';
+
+  @override
+  String get leaderboardWeekly => 'أسبوعي';
+
+  @override
+  String get leaderboardRegional => 'إقليمي';
+
+  @override
+  String get tournamentsTitle => 'البطولات';
+
+  @override
+  String get tournamentSubtitle => 'تنافس مع المستكشفين حول العالم';
+
+  @override
+  String get tournamentLeaderboard => 'لوحة المتصدرين';
+
+  @override
+  String get tournamentRewards => 'المكافآت';
+
+  @override
+  String get tournamentJoinNow => 'انضم الآن';
+
+  @override
+  String get tournamentJoined => 'مشترك';
+
+  @override
+  String get tournamentRemaining => 'متبقي';
+
+  @override
+  String get tournamentEnding => 'ينتهي قريباً';
+
+  @override
+  String get noActiveTournament => 'لا توجد بطولة نشطة';
+
+  @override
+  String get noUpcomingTournaments => 'لا توجد بطولات قادمة';
+
+  @override
+  String get noLeaderboardData => 'لا توجد بيانات في لوحة المتصدرين';
+
+  @override
+  String get startsIn => 'يبدأ في';
+
+  @override
+  String get tournamentRegistered => 'مسجل';
+
+  @override
+  String get tournamentRegister => 'تسجيل';
+
+  @override
+  String get daysShort => 'ي';
+
+  @override
+  String get hoursShort => 'س';
+
+  @override
+  String get minutesShort => 'د';
+
+  @override
+  String get daysLeft => 'أيام متبقية';
+
+  @override
+  String get statsSubtitle => 'تتبع تقدمك في التعلم';
+
+  @override
+  String get statsOverview => 'نظرة عامة';
+
+  @override
+  String get totalXp => 'إجمالي النقاط';
+
+  @override
+  String get currentStreak => 'السلسلة';
+
+  @override
+  String get perfectScores => 'كامل';
+
+  @override
+  String get activityHistory => 'سجل النشاط';
+
+  @override
+  String get less => 'أقل';
+
+  @override
+  String get more => 'أكثر';
+
+  @override
+  String get accuracyByCategory => 'الدقة حسب الفئة';
+
+  @override
+  String get noDataYet => 'لا توجد بيانات بعد';
+
+  @override
+  String get quizTypeFlags => 'الأعلام';
+
+  @override
+  String get quizTypeCapitals => 'العواصم';
+
+  @override
+  String get quizTypeMaps => 'الخرائط';
+
+  @override
+  String get quizTypeMixed => 'مختلط';
+
+  @override
+  String get weakAreas => 'مجالات للتحسين';
+
+  @override
+  String get practice => 'تدريب';
+
+  @override
+  String get countriesByContinent => 'الدول حسب القارة';
+
+  @override
+  String get continentAfrica => 'أفريقيا';
+
+  @override
+  String get continentAsia => 'آسيا';
+
+  @override
+  String get continentEurope => 'أوروبا';
+
+  @override
+  String get continentNorthAmerica => 'أمريكا الشمالية';
+
+  @override
+  String get continentSouthAmerica => 'أمريكا الجنوبية';
+
+  @override
+  String get continentOceania => 'أوقيانوسيا';
+
+  @override
+  String get weeklyGoalsSubtitle => 'حدد وحقق أهدافك الأسبوعية';
+
+  @override
+  String get goalsCompleted => 'مكتمل';
+
+  @override
+  String get completionRate => 'نسبة الإكمال';
+
+  @override
+  String get noGoalsYet => 'لا توجد أهداف';
+
+  @override
+  String get setWeeklyGoals => 'حدد أهدافك الأسبوعية لتتبع التقدم';
+
+  @override
+  String get addGoal => 'إضافة هدف';
+
+  @override
+  String get selectGoalType => 'اختر نوع الهدف';
+
+  @override
+  String get target => 'الهدف';
 }

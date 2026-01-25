@@ -37,6 +37,12 @@ abstract final class Routes {
   // Gamification routes
   static const String achievements = '/achievements';
   static const String leaderboard = '/leaderboard';
+  static const String tournaments = '/tournaments';
+  static const String statsDashboard = '/stats-dashboard';
+
+  // Social routes
+  static const String friends = '/friends';
+  static const String weeklyGoals = '/weekly-goals';
 
   // Settings routes
   static const String settings = '/settings';
@@ -94,6 +100,10 @@ abstract final class RouteNames {
   static const String aiTutor = 'aiTutor';
   static const String achievements = 'achievements';
   static const String leaderboard = 'leaderboard';
+  static const String tournaments = 'tournaments';
+  static const String statsDashboard = 'statsDashboard';
+  static const String friends = 'friends';
+  static const String weeklyGoals = 'weeklyGoals';
   static const String settings = 'settings';
   static const String subscription = 'subscription';
   static const String paywall = 'paywall';

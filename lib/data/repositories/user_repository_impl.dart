@@ -386,6 +386,8 @@ class UserRepositoryImpl implements IUserRepository {
 
               case AchievementCategory.social:
               case AchievementCategory.special:
+              case AchievementCategory.challenge:
+              case AchievementCategory.hidden:
                 // These require special handling
                 break;
             }

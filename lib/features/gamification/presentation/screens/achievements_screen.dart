@@ -625,6 +625,10 @@ class _AchievementCard extends StatelessWidget {
         return 0; // Social features not yet implemented
       case AchievementCategory.special:
         return 0; // Special achievements have custom requirements
+      case AchievementCategory.challenge:
+        return 0; // Challenge achievements based on daily challenges
+      case AchievementCategory.hidden:
+        return 0; // Hidden achievements have secret requirements
     }
   }
 
@@ -642,6 +646,10 @@ class _AchievementCard extends StatelessWidget {
         return Icons.people;
       case AchievementCategory.special:
         return Icons.star;
+      case AchievementCategory.challenge:
+        return Icons.flag;
+      case AchievementCategory.hidden:
+        return Icons.help_outline;
     }
   }
 

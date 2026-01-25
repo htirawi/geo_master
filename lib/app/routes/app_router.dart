@@ -13,6 +13,10 @@ import '../../features/country_explorer/presentation/screens/country_detail_tabb
 import '../../features/country_explorer/presentation/screens/country_explorer_screen.dart';
 import '../../features/gamification/presentation/screens/achievements_screen.dart';
 import '../../features/gamification/presentation/screens/leaderboard_screen.dart';
+import '../../features/goals/presentation/screens/weekly_goals_screen.dart';
+import '../../features/social/presentation/screens/friends_screen.dart';
+import '../../features/stats/presentation/screens/stats_dashboard_screen.dart';
+import '../../features/tournament/presentation/screens/tournament_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/legal/presentation/screens/privacy_policy_screen.dart';
 import '../../features/legal/presentation/screens/terms_of_service_screen.dart';
@@ -311,6 +315,42 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: RouteNames.leaderboard,
         pageBuilder: (context, state) => SlideUpTransitionPage(
           child: const LeaderboardScreen(),
+        ),
+      ),
+
+      // Tournament screen
+      GoRoute(
+        path: Routes.tournaments,
+        name: RouteNames.tournaments,
+        pageBuilder: (context, state) => SlideUpTransitionPage(
+          child: const TournamentScreen(),
+        ),
+      ),
+
+      // Stats dashboard screen
+      GoRoute(
+        path: Routes.statsDashboard,
+        name: RouteNames.statsDashboard,
+        pageBuilder: (context, state) => SlideUpTransitionPage(
+          child: const StatsDashboardScreen(),
+        ),
+      ),
+
+      // Friends screen
+      GoRoute(
+        path: Routes.friends,
+        name: RouteNames.friends,
+        pageBuilder: (context, state) => SlideUpTransitionPage(
+          child: const FriendsScreen(),
+        ),
+      ),
+
+      // Weekly goals screen
+      GoRoute(
+        path: Routes.weeklyGoals,
+        name: RouteNames.weeklyGoals,
+        pageBuilder: (context, state) => SlideUpTransitionPage(
+          child: const WeeklyGoalsScreen(),
         ),
       ),
 

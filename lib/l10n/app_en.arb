@@ -1342,5 +1342,605 @@
   "levelGrandmaster": "Grandmaster",
   "@levelGrandmaster": {
     "description": "Explorer level 6 title"
-  }
+  },
+  "levelLegend": "Legend",
+  "@levelLegend": {
+    "description": "Explorer level 7 title"
+  },
+  "levelMythic": "Mythic",
+  "@levelMythic": {
+    "description": "Explorer level 8 title"
+  },
+
+  "dailyChallengeTitle": "Daily Challenge",
+  "@dailyChallengeTitle": {
+    "description": "Daily challenge section title"
+  },
+  "dailyChallengeComplete": "Challenge Complete!",
+  "@dailyChallengeComplete": {
+    "description": "Challenge completed message"
+  },
+  "dailyChallengeStreak": "Challenge Streak: {count}",
+  "@dailyChallengeStreak": {
+    "description": "Challenge streak counter",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "dailyChallengeNextIn": "Next challenge in {time}",
+  "@dailyChallengeNextIn": {
+    "description": "Time until next challenge",
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "dailyChallengeProgress": "{current}/{target}",
+  "@dailyChallengeProgress": {
+    "description": "Challenge progress",
+    "placeholders": {
+      "current": {"type": "int"},
+      "target": {"type": "int"}
+    }
+  },
+  "challengeTypeCompleteQuizzes": "Complete {count} quizzes",
+  "@challengeTypeCompleteQuizzes": {
+    "description": "Complete quizzes challenge",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "challengeTypePerfectScore": "Get a perfect score",
+  "@challengeTypePerfectScore": {
+    "description": "Perfect score challenge"
+  },
+  "challengeTypeLearnCountries": "Learn {count} new countries",
+  "@challengeTypeLearnCountries": {
+    "description": "Learn countries challenge",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "challengeTypeSpeedChallenge": "Answer {count} questions quickly",
+  "@challengeTypeSpeedChallenge": {
+    "description": "Speed challenge",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "challengeTypeStudyTime": "Study for {minutes} minutes",
+  "@challengeTypeStudyTime": {
+    "description": "Study time challenge",
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  "challengeDifficultyEasy": "Easy",
+  "@challengeDifficultyEasy": {
+    "description": "Easy difficulty"
+  },
+  "challengeDifficultyMedium": "Medium",
+  "@challengeDifficultyMedium": {
+    "description": "Medium difficulty"
+  },
+  "challengeDifficultyHard": "Hard",
+  "@challengeDifficultyHard": {
+    "description": "Hard difficulty"
+  },
+
+  "weeklyGoalsTitle": "Weekly Goals",
+  "@weeklyGoalsTitle": {
+    "description": "Weekly goals section title"
+  },
+  "weeklyGoalsProgress": "{completed}/{total} goals completed",
+  "@weeklyGoalsProgress": {
+    "description": "Weekly goals progress",
+    "placeholders": {
+      "completed": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "weeklyGoalXpReward": "+{xp} XP",
+  "@weeklyGoalXpReward": {
+    "description": "XP reward for goal",
+    "placeholders": {
+      "xp": {"type": "int"}
+    }
+  },
+  "goalTypeEarnXp": "Earn {amount} XP",
+  "@goalTypeEarnXp": {
+    "description": "Earn XP goal",
+    "placeholders": {
+      "amount": {"type": "int"}
+    }
+  },
+  "goalTypeCompleteQuizzes": "Complete {count} quizzes",
+  "@goalTypeCompleteQuizzes": {
+    "description": "Complete quizzes goal",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "goalTypeLearnCountries": "Learn {count} countries",
+  "@goalTypeLearnCountries": {
+    "description": "Learn countries goal",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "goalTypePerfectScores": "Get {count} perfect scores",
+  "@goalTypePerfectScores": {
+    "description": "Perfect scores goal",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "goalTypeStudyDays": "Study on {count} days",
+  "@goalTypeStudyDays": {
+    "description": "Study days goal",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "goalTypeChallenges": "Complete {count} daily challenges",
+  "@goalTypeChallenges": {
+    "description": "Complete challenges goal",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "weekEndsIn": "Week ends in {time}",
+  "@weekEndsIn": {
+    "description": "Time remaining in week",
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+
+  "friendsTitle": "Friends",
+  "@friendsTitle": {
+    "description": "Friends section title"
+  },
+  "friendsCount": "{count} friends",
+  "@friendsCount": {
+    "description": "Number of friends",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "friendCodeLabel": "Your Friend Code",
+  "@friendCodeLabel": {
+    "description": "Friend code label"
+  },
+  "friendCodeCopied": "Friend code copied!",
+  "@friendCodeCopied": {
+    "description": "Friend code copied confirmation"
+  },
+  "addFriendTitle": "Add Friend",
+  "@addFriendTitle": {
+    "description": "Add friend dialog title"
+  },
+  "addFriendHint": "Enter friend code",
+  "@addFriendHint": {
+    "description": "Friend code input hint"
+  },
+  "sendFriendRequest": "Send Request",
+  "@sendFriendRequest": {
+    "description": "Send friend request button"
+  },
+  "friendRequestSent": "Friend request sent!",
+  "@friendRequestSent": {
+    "description": "Friend request sent confirmation"
+  },
+  "friendRequestsTitle": "Friend Requests",
+  "@friendRequestsTitle": {
+    "description": "Friend requests section title"
+  },
+  "acceptFriendRequest": "Accept",
+  "@acceptFriendRequest": {
+    "description": "Accept friend request button"
+  },
+  "declineFriendRequest": "Decline",
+  "@declineFriendRequest": {
+    "description": "Decline friend request button"
+  },
+  "removeFriend": "Remove Friend",
+  "@removeFriend": {
+    "description": "Remove friend button"
+  },
+  "removeFriendConfirm": "Are you sure you want to remove this friend?",
+  "@removeFriendConfirm": {
+    "description": "Remove friend confirmation"
+  },
+  "noFriendsYet": "No friends yet",
+  "@noFriendsYet": {
+    "description": "Empty friends message"
+  },
+  "friendOnline": "Online",
+  "@friendOnline": {
+    "description": "Friend online status"
+  },
+  "friendOffline": "Offline",
+  "@friendOffline": {
+    "description": "Friend offline status"
+  },
+  "challengeFriend": "Challenge",
+  "@challengeFriend": {
+    "description": "Challenge friend button"
+  },
+
+  "duelTitle": "Duel",
+  "@duelTitle": {
+    "description": "Duel section title"
+  },
+  "duelChallenge": "Challenge to Duel",
+  "@duelChallenge": {
+    "description": "Challenge to duel button"
+  },
+  "duelPending": "Pending",
+  "@duelPending": {
+    "description": "Duel pending status"
+  },
+  "duelInProgress": "In Progress",
+  "@duelInProgress": {
+    "description": "Duel in progress status"
+  },
+  "duelCompleted": "Completed",
+  "@duelCompleted": {
+    "description": "Duel completed status"
+  },
+  "duelExpired": "Expired",
+  "@duelExpired": {
+    "description": "Duel expired status"
+  },
+  "duelDeclined": "Declined",
+  "@duelDeclined": {
+    "description": "Duel declined status"
+  },
+  "duelWin": "Victory!",
+  "@duelWin": {
+    "description": "Duel win message"
+  },
+  "duelLose": "Defeat",
+  "@duelLose": {
+    "description": "Duel lose message"
+  },
+  "duelDraw": "Draw",
+  "@duelDraw": {
+    "description": "Duel draw message"
+  },
+  "duelScore": "Score: {score}",
+  "@duelScore": {
+    "description": "Duel score display",
+    "placeholders": {
+      "score": {"type": "int"}
+    }
+  },
+  "duelQuestions": "{count} questions",
+  "@duelQuestions": {
+    "description": "Number of duel questions",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "duelTimePerQuestion": "{seconds}s per question",
+  "@duelTimePerQuestion": {
+    "description": "Time per question in duel",
+    "placeholders": {
+      "seconds": {"type": "int"}
+    }
+  },
+  "duelAccept": "Accept Challenge",
+  "@duelAccept": {
+    "description": "Accept duel button"
+  },
+  "duelDecline": "Decline",
+  "@duelDecline": {
+    "description": "Decline duel button"
+  },
+  "duelConfigTitle": "Configure Duel",
+  "@duelConfigTitle": {
+    "description": "Duel configuration title"
+  },
+  "duelTypeFlags": "Flags",
+  "@duelTypeFlags": {
+    "description": "Duel type: flags"
+  },
+  "duelTypeCapitals": "Capitals",
+  "@duelTypeCapitals": {
+    "description": "Duel type: capitals"
+  },
+  "duelTypeCountries": "Countries",
+  "@duelTypeCountries": {
+    "description": "Duel type: countries"
+  },
+  "duelTypeMixed": "Mixed",
+  "@duelTypeMixed": {
+    "description": "Duel type: mixed"
+  },
+
+  "tournamentTitle": "Tournament",
+  "@tournamentTitle": {
+    "description": "Tournament section title"
+  },
+  "tournamentActive": "Active Tournament",
+  "@tournamentActive": {
+    "description": "Active tournament label"
+  },
+  "tournamentUpcoming": "Upcoming",
+  "@tournamentUpcoming": {
+    "description": "Upcoming tournament status"
+  },
+  "tournamentCompleted": "Completed",
+  "@tournamentCompleted": {
+    "description": "Completed tournament status"
+  },
+  "tournamentCancelled": "Cancelled",
+  "@tournamentCancelled": {
+    "description": "Cancelled tournament status"
+  },
+  "tournamentJoin": "Join Tournament",
+  "@tournamentJoin": {
+    "description": "Join tournament button"
+  },
+  "tournamentLeave": "Leave",
+  "@tournamentLeave": {
+    "description": "Leave tournament button"
+  },
+  "tournamentParticipants": "{count} participants",
+  "@tournamentParticipants": {
+    "description": "Tournament participant count",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "tournamentEndsIn": "Ends in {time}",
+  "@tournamentEndsIn": {
+    "description": "Tournament end time",
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "tournamentStartsIn": "Starts in {time}",
+  "@tournamentStartsIn": {
+    "description": "Tournament start time",
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "tournamentYourRank": "Your Rank: #{rank}",
+  "@tournamentYourRank": {
+    "description": "User's tournament rank",
+    "placeholders": {
+      "rank": {"type": "int"}
+    }
+  },
+  "tournamentPrizes": "Prizes",
+  "@tournamentPrizes": {
+    "description": "Tournament prizes label"
+  },
+  "tournamentWeekly": "Weekly",
+  "@tournamentWeekly": {
+    "description": "Weekly tournament type"
+  },
+  "tournamentMonthly": "Monthly",
+  "@tournamentMonthly": {
+    "description": "Monthly tournament type"
+  },
+  "tournamentContinent": "Continent",
+  "@tournamentContinent": {
+    "description": "Continent tournament type"
+  },
+  "tournamentSpecial": "Special Event",
+  "@tournamentSpecial": {
+    "description": "Special tournament type"
+  },
+
+  "statsTitle": "Statistics",
+  "@statsTitle": {
+    "description": "Statistics section title"
+  },
+  "statsTotalXp": "Total XP",
+  "@statsTotalXp": {
+    "description": "Total XP stat label"
+  },
+  "statsLevel": "Level",
+  "@statsLevel": {
+    "description": "Level stat label"
+  },
+  "statsAccuracy": "Accuracy",
+  "@statsAccuracy": {
+    "description": "Accuracy stat label"
+  },
+  "statsStreak": "Current Streak",
+  "@statsStreak": {
+    "description": "Current streak stat label"
+  },
+  "statsLongestStreak": "Longest Streak",
+  "@statsLongestStreak": {
+    "description": "Longest streak stat label"
+  },
+  "statsQuizzesCompleted": "Quizzes Completed",
+  "@statsQuizzesCompleted": {
+    "description": "Quizzes completed stat label"
+  },
+  "statsPerfectScores": "Perfect Scores",
+  "@statsPerfectScores": {
+    "description": "Perfect scores stat label"
+  },
+  "statsCountriesLearned": "Countries Learned",
+  "@statsCountriesLearned": {
+    "description": "Countries learned stat label"
+  },
+  "statsStudyTime": "Study Time",
+  "@statsStudyTime": {
+    "description": "Study time stat label"
+  },
+  "statsWeakAreas": "Areas to Improve",
+  "@statsWeakAreas": {
+    "description": "Weak areas section title"
+  },
+  "statsStrongAreas": "Your Strengths",
+  "@statsStrongAreas": {
+    "description": "Strong areas section title"
+  },
+  "statsActivityHistory": "Activity History",
+  "@statsActivityHistory": {
+    "description": "Activity history section title"
+  },
+  "statsAccuracyByContinent": "Accuracy by Continent",
+  "@statsAccuracyByContinent": {
+    "description": "Accuracy by continent chart title"
+  },
+  "statsAccuracyByQuizType": "Accuracy by Quiz Type",
+  "@statsAccuracyByQuizType": {
+    "description": "Accuracy by quiz type chart title"
+  },
+
+  "subscriptionFree": "Free",
+  "@subscriptionFree": {
+    "description": "Free subscription tier"
+  },
+  "subscriptionBasic": "Basic",
+  "@subscriptionBasic": {
+    "description": "Basic subscription tier"
+  },
+  "subscriptionPro": "Pro",
+  "@subscriptionPro": {
+    "description": "Pro subscription tier"
+  },
+  "subscriptionPremium": "Premium",
+  "@subscriptionPremium": {
+    "description": "Premium subscription tier"
+  },
+  "subscriptionUpgrade": "Upgrade",
+  "@subscriptionUpgrade": {
+    "description": "Upgrade subscription button"
+  },
+  "featureUnlimitedQuizzes": "Unlimited Quizzes",
+  "@featureUnlimitedQuizzes": {
+    "description": "Unlimited quizzes feature"
+  },
+  "featureAdvancedStats": "Advanced Stats",
+  "@featureAdvancedStats": {
+    "description": "Advanced stats feature"
+  },
+  "featureFriendsDuels": "Friend Duels",
+  "@featureFriendsDuels": {
+    "description": "Friend duels feature"
+  },
+  "featureCustomChallenges": "Custom Challenges",
+  "@featureCustomChallenges": {
+    "description": "Custom challenges feature"
+  },
+  "featureExportStats": "Export Stats",
+  "@featureExportStats": {
+    "description": "Export stats feature"
+  },
+  "featureNoAds": "No Ads",
+  "@featureNoAds": {
+    "description": "No ads feature"
+  },
+  "featurePrioritySupport": "Priority Support",
+  "@featurePrioritySupport": {
+    "description": "Priority support feature"
+  },
+  "featureExclusiveAchievements": "Exclusive Achievements",
+  "@featureExclusiveAchievements": {
+    "description": "Exclusive achievements feature"
+  },
+  "featureTournamentAccess": "Tournament Access",
+  "@featureTournamentAccess": {
+    "description": "Tournament access feature"
+  },
+  "featureOfflineMode": "Offline Mode",
+  "@featureOfflineMode": {
+    "description": "Offline mode feature"
+  },
+  "limitReached": "Limit reached",
+  "@limitReached": {
+    "description": "Feature limit reached message"
+  },
+  "upgradeToUnlock": "Upgrade to unlock",
+  "@upgradeToUnlock": {
+    "description": "Upgrade to unlock message"
+  },
+
+  "leaderboardGlobal": "Global",
+  "@leaderboardGlobal": {
+    "description": "Global leaderboard tab"
+  },
+  "leaderboardFriends": "Friends",
+  "@leaderboardFriends": {
+    "description": "Friends leaderboard tab"
+  },
+  "leaderboardWeekly": "Weekly",
+  "@leaderboardWeekly": {
+    "description": "Weekly leaderboard tab"
+  },
+  "leaderboardRegional": "Regional",
+  "@leaderboardRegional": {
+    "description": "Regional leaderboard tab"
+  },
+
+  "tournamentsTitle": "Tournaments",
+  "tournamentSubtitle": "Compete with explorers worldwide",
+  "tournamentLeaderboard": "Leaderboard",
+  "tournamentRewards": "Rewards",
+  "tournamentJoinNow": "Join Now",
+  "tournamentJoined": "Joined",
+  "tournamentParticipants": "participants",
+  "tournamentRemaining": "remaining",
+  "tournamentEnding": "Ending soon",
+  "noActiveTournament": "No active tournament",
+  "noUpcomingTournaments": "No upcoming tournaments",
+  "noLeaderboardData": "No leaderboard data yet",
+  "startsIn": "Starts in",
+  "tournamentRegistered": "Registered",
+  "tournamentRegister": "Register",
+  "rank": "Rank",
+  "level": "Level",
+
+  "daysShort": "d",
+  "hoursShort": "h",
+  "minutesShort": "m",
+  "daysLeft": "days left",
+
+  "statsSubtitle": "Track your learning progress",
+  "statsOverview": "Overview",
+  "totalXp": "Total XP",
+  "currentStreak": "Streak",
+  "accuracy": "Accuracy",
+  "quizzesCompleted": "Quizzes",
+  "perfectScores": "Perfect",
+  "activityHistory": "Activity History",
+  "less": "Less",
+  "more": "More",
+  "accuracyByCategory": "Accuracy by Category",
+  "noDataYet": "No data yet",
+  "quizTypeFlags": "Flags",
+  "quizTypeCapitals": "Capitals",
+  "quizTypeMaps": "Maps",
+  "quizTypeMixed": "Mixed",
+  "weakAreas": "Areas to Improve",
+  "strongAreas": "Your Strengths",
+  "practice": "Practice",
+  "countriesByContinent": "Countries by Continent",
+  "continentAfrica": "Africa",
+  "continentAsia": "Asia",
+  "continentEurope": "Europe",
+  "continentNorthAmerica": "North America",
+  "continentSouthAmerica": "South America",
+  "continentOceania": "Oceania",
+
+  "weeklyGoalsSubtitle": "Set and achieve your weekly targets",
+  "goalsCompleted": "Completed",
+  "xpEarned": "XP Earned",
+  "completionRate": "Completion",
+  "noGoalsYet": "No goals set",
+  "setWeeklyGoals": "Set your weekly goals to track progress",
+  "addGoal": "Add Goal",
+  "selectDifficulty": "Select Difficulty",
+  "selectGoalType": "Select Goal Type",
+  "target": "Target",
+  "customGoal": "Custom"
 }

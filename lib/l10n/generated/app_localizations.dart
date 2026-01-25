@@ -3659,7 +3659,7 @@ abstract class AppLocalizations {
   /// Strong areas section title
   ///
   /// In en, this message translates to:
-  /// **'Strong Areas'**
+  /// **'Your Strengths'**
   String get strongAreas;
 
   /// Weak areas section title
@@ -3931,6 +3931,984 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Grandmaster'**
   String get levelGrandmaster;
+
+  /// Explorer level 7 title
+  ///
+  /// In en, this message translates to:
+  /// **'Legend'**
+  String get levelLegend;
+
+  /// Explorer level 8 title
+  ///
+  /// In en, this message translates to:
+  /// **'Mythic'**
+  String get levelMythic;
+
+  /// Daily challenge section title
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Challenge'**
+  String get dailyChallengeTitle;
+
+  /// Challenge completed message
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge Complete!'**
+  String get dailyChallengeComplete;
+
+  /// Challenge streak counter
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge Streak: {count}'**
+  String dailyChallengeStreak(int count);
+
+  /// Time until next challenge
+  ///
+  /// In en, this message translates to:
+  /// **'Next challenge in {time}'**
+  String dailyChallengeNextIn(String time);
+
+  /// Challenge progress
+  ///
+  /// In en, this message translates to:
+  /// **'{current}/{target}'**
+  String dailyChallengeProgress(int current, int target);
+
+  /// Complete quizzes challenge
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {count} quizzes'**
+  String challengeTypeCompleteQuizzes(int count);
+
+  /// Perfect score challenge
+  ///
+  /// In en, this message translates to:
+  /// **'Get a perfect score'**
+  String get challengeTypePerfectScore;
+
+  /// Learn countries challenge
+  ///
+  /// In en, this message translates to:
+  /// **'Learn {count} new countries'**
+  String challengeTypeLearnCountries(int count);
+
+  /// Speed challenge
+  ///
+  /// In en, this message translates to:
+  /// **'Answer {count} questions quickly'**
+  String challengeTypeSpeedChallenge(int count);
+
+  /// Study time challenge
+  ///
+  /// In en, this message translates to:
+  /// **'Study for {minutes} minutes'**
+  String challengeTypeStudyTime(int minutes);
+
+  /// Easy difficulty
+  ///
+  /// In en, this message translates to:
+  /// **'Easy'**
+  String get challengeDifficultyEasy;
+
+  /// Medium difficulty
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get challengeDifficultyMedium;
+
+  /// Hard difficulty
+  ///
+  /// In en, this message translates to:
+  /// **'Hard'**
+  String get challengeDifficultyHard;
+
+  /// Weekly goals section title
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Goals'**
+  String get weeklyGoalsTitle;
+
+  /// Weekly goals progress
+  ///
+  /// In en, this message translates to:
+  /// **'{completed}/{total} goals completed'**
+  String weeklyGoalsProgress(int completed, int total);
+
+  /// XP reward for goal
+  ///
+  /// In en, this message translates to:
+  /// **'+{xp} XP'**
+  String weeklyGoalXpReward(int xp);
+
+  /// Earn XP goal
+  ///
+  /// In en, this message translates to:
+  /// **'Earn {amount} XP'**
+  String goalTypeEarnXp(int amount);
+
+  /// Complete quizzes goal
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {count} quizzes'**
+  String goalTypeCompleteQuizzes(int count);
+
+  /// Learn countries goal
+  ///
+  /// In en, this message translates to:
+  /// **'Learn {count} countries'**
+  String goalTypeLearnCountries(int count);
+
+  /// Perfect scores goal
+  ///
+  /// In en, this message translates to:
+  /// **'Get {count} perfect scores'**
+  String goalTypePerfectScores(int count);
+
+  /// Study days goal
+  ///
+  /// In en, this message translates to:
+  /// **'Study on {count} days'**
+  String goalTypeStudyDays(int count);
+
+  /// Complete challenges goal
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {count} daily challenges'**
+  String goalTypeChallenges(int count);
+
+  /// Time remaining in week
+  ///
+  /// In en, this message translates to:
+  /// **'Week ends in {time}'**
+  String weekEndsIn(String time);
+
+  /// Friends section title
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get friendsTitle;
+
+  /// Number of friends
+  ///
+  /// In en, this message translates to:
+  /// **'{count} friends'**
+  String friendsCount(int count);
+
+  /// Friend code label
+  ///
+  /// In en, this message translates to:
+  /// **'Your Friend Code'**
+  String get friendCodeLabel;
+
+  /// Friend code copied confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Friend code copied!'**
+  String get friendCodeCopied;
+
+  /// Add friend dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Add Friend'**
+  String get addFriendTitle;
+
+  /// Friend code input hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter friend code'**
+  String get addFriendHint;
+
+  /// Send friend request button
+  ///
+  /// In en, this message translates to:
+  /// **'Send Request'**
+  String get sendFriendRequest;
+
+  /// Friend request sent confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Friend request sent!'**
+  String get friendRequestSent;
+
+  /// Friend requests section title
+  ///
+  /// In en, this message translates to:
+  /// **'Friend Requests'**
+  String get friendRequestsTitle;
+
+  /// Accept friend request button
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get acceptFriendRequest;
+
+  /// Decline friend request button
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get declineFriendRequest;
+
+  /// Remove friend button
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Friend'**
+  String get removeFriend;
+
+  /// Remove friend confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove this friend?'**
+  String get removeFriendConfirm;
+
+  /// Empty friends message
+  ///
+  /// In en, this message translates to:
+  /// **'No friends yet'**
+  String get noFriendsYet;
+
+  /// Friend online status
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get friendOnline;
+
+  /// Friend offline status
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get friendOffline;
+
+  /// Challenge friend button
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge'**
+  String get challengeFriend;
+
+  /// Duel section title
+  ///
+  /// In en, this message translates to:
+  /// **'Duel'**
+  String get duelTitle;
+
+  /// Challenge to duel button
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge to Duel'**
+  String get duelChallenge;
+
+  /// Duel pending status
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get duelPending;
+
+  /// Duel in progress status
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get duelInProgress;
+
+  /// Duel completed status
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get duelCompleted;
+
+  /// Duel expired status
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get duelExpired;
+
+  /// Duel declined status
+  ///
+  /// In en, this message translates to:
+  /// **'Declined'**
+  String get duelDeclined;
+
+  /// Duel win message
+  ///
+  /// In en, this message translates to:
+  /// **'Victory!'**
+  String get duelWin;
+
+  /// Duel lose message
+  ///
+  /// In en, this message translates to:
+  /// **'Defeat'**
+  String get duelLose;
+
+  /// Duel draw message
+  ///
+  /// In en, this message translates to:
+  /// **'Draw'**
+  String get duelDraw;
+
+  /// Duel score display
+  ///
+  /// In en, this message translates to:
+  /// **'Score: {score}'**
+  String duelScore(int score);
+
+  /// Number of duel questions
+  ///
+  /// In en, this message translates to:
+  /// **'{count} questions'**
+  String duelQuestions(int count);
+
+  /// Time per question in duel
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds}s per question'**
+  String duelTimePerQuestion(int seconds);
+
+  /// Accept duel button
+  ///
+  /// In en, this message translates to:
+  /// **'Accept Challenge'**
+  String get duelAccept;
+
+  /// Decline duel button
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get duelDecline;
+
+  /// Duel configuration title
+  ///
+  /// In en, this message translates to:
+  /// **'Configure Duel'**
+  String get duelConfigTitle;
+
+  /// Duel type: flags
+  ///
+  /// In en, this message translates to:
+  /// **'Flags'**
+  String get duelTypeFlags;
+
+  /// Duel type: capitals
+  ///
+  /// In en, this message translates to:
+  /// **'Capitals'**
+  String get duelTypeCapitals;
+
+  /// Duel type: countries
+  ///
+  /// In en, this message translates to:
+  /// **'Countries'**
+  String get duelTypeCountries;
+
+  /// Duel type: mixed
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed'**
+  String get duelTypeMixed;
+
+  /// Tournament section title
+  ///
+  /// In en, this message translates to:
+  /// **'Tournament'**
+  String get tournamentTitle;
+
+  /// Active tournament label
+  ///
+  /// In en, this message translates to:
+  /// **'Active Tournament'**
+  String get tournamentActive;
+
+  /// Upcoming tournament status
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get tournamentUpcoming;
+
+  /// Completed tournament status
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get tournamentCompleted;
+
+  /// Cancelled tournament status
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get tournamentCancelled;
+
+  /// Join tournament button
+  ///
+  /// In en, this message translates to:
+  /// **'Join Tournament'**
+  String get tournamentJoin;
+
+  /// Leave tournament button
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get tournamentLeave;
+
+  /// Tournament participant count
+  ///
+  /// In en, this message translates to:
+  /// **'participants'**
+  String tournamentParticipants(int count);
+
+  /// Tournament end time
+  ///
+  /// In en, this message translates to:
+  /// **'Ends in {time}'**
+  String tournamentEndsIn(String time);
+
+  /// Tournament start time
+  ///
+  /// In en, this message translates to:
+  /// **'Starts in {time}'**
+  String tournamentStartsIn(String time);
+
+  /// User's tournament rank
+  ///
+  /// In en, this message translates to:
+  /// **'Your Rank: #{rank}'**
+  String tournamentYourRank(int rank);
+
+  /// Tournament prizes label
+  ///
+  /// In en, this message translates to:
+  /// **'Prizes'**
+  String get tournamentPrizes;
+
+  /// Weekly tournament type
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get tournamentWeekly;
+
+  /// Monthly tournament type
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get tournamentMonthly;
+
+  /// Continent tournament type
+  ///
+  /// In en, this message translates to:
+  /// **'Continent'**
+  String get tournamentContinent;
+
+  /// Special tournament type
+  ///
+  /// In en, this message translates to:
+  /// **'Special Event'**
+  String get tournamentSpecial;
+
+  /// Statistics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statsTitle;
+
+  /// Total XP stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Total XP'**
+  String get statsTotalXp;
+
+  /// Level stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get statsLevel;
+
+  /// Accuracy stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy'**
+  String get statsAccuracy;
+
+  /// Current streak stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Current Streak'**
+  String get statsStreak;
+
+  /// Longest streak stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Longest Streak'**
+  String get statsLongestStreak;
+
+  /// Quizzes completed stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Quizzes Completed'**
+  String get statsQuizzesCompleted;
+
+  /// Perfect scores stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Scores'**
+  String get statsPerfectScores;
+
+  /// Countries learned stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Countries Learned'**
+  String get statsCountriesLearned;
+
+  /// Study time stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Study Time'**
+  String get statsStudyTime;
+
+  /// Weak areas section title
+  ///
+  /// In en, this message translates to:
+  /// **'Areas to Improve'**
+  String get statsWeakAreas;
+
+  /// Strong areas section title
+  ///
+  /// In en, this message translates to:
+  /// **'Your Strengths'**
+  String get statsStrongAreas;
+
+  /// Activity history section title
+  ///
+  /// In en, this message translates to:
+  /// **'Activity History'**
+  String get statsActivityHistory;
+
+  /// Accuracy by continent chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy by Continent'**
+  String get statsAccuracyByContinent;
+
+  /// Accuracy by quiz type chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy by Quiz Type'**
+  String get statsAccuracyByQuizType;
+
+  /// Free subscription tier
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get subscriptionFree;
+
+  /// Basic subscription tier
+  ///
+  /// In en, this message translates to:
+  /// **'Basic'**
+  String get subscriptionBasic;
+
+  /// Pro subscription tier
+  ///
+  /// In en, this message translates to:
+  /// **'Pro'**
+  String get subscriptionPro;
+
+  /// Premium subscription tier
+  ///
+  /// In en, this message translates to:
+  /// **'Premium'**
+  String get subscriptionPremium;
+
+  /// Upgrade subscription button
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade'**
+  String get subscriptionUpgrade;
+
+  /// Unlimited quizzes feature
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited Quizzes'**
+  String get featureUnlimitedQuizzes;
+
+  /// Advanced stats feature
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Stats'**
+  String get featureAdvancedStats;
+
+  /// Friend duels feature
+  ///
+  /// In en, this message translates to:
+  /// **'Friend Duels'**
+  String get featureFriendsDuels;
+
+  /// Custom challenges feature
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Challenges'**
+  String get featureCustomChallenges;
+
+  /// Export stats feature
+  ///
+  /// In en, this message translates to:
+  /// **'Export Stats'**
+  String get featureExportStats;
+
+  /// No ads feature
+  ///
+  /// In en, this message translates to:
+  /// **'No Ads'**
+  String get featureNoAds;
+
+  /// Priority support feature
+  ///
+  /// In en, this message translates to:
+  /// **'Priority Support'**
+  String get featurePrioritySupport;
+
+  /// Exclusive achievements feature
+  ///
+  /// In en, this message translates to:
+  /// **'Exclusive Achievements'**
+  String get featureExclusiveAchievements;
+
+  /// Tournament access feature
+  ///
+  /// In en, this message translates to:
+  /// **'Tournament Access'**
+  String get featureTournamentAccess;
+
+  /// Offline mode feature
+  ///
+  /// In en, this message translates to:
+  /// **'Offline Mode'**
+  String get featureOfflineMode;
+
+  /// Feature limit reached message
+  ///
+  /// In en, this message translates to:
+  /// **'Limit reached'**
+  String get limitReached;
+
+  /// Upgrade to unlock message
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to unlock'**
+  String get upgradeToUnlock;
+
+  /// Global leaderboard tab
+  ///
+  /// In en, this message translates to:
+  /// **'Global'**
+  String get leaderboardGlobal;
+
+  /// Friends leaderboard tab
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get leaderboardFriends;
+
+  /// Weekly leaderboard tab
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get leaderboardWeekly;
+
+  /// Regional leaderboard tab
+  ///
+  /// In en, this message translates to:
+  /// **'Regional'**
+  String get leaderboardRegional;
+
+  /// No description provided for @tournamentsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tournaments'**
+  String get tournamentsTitle;
+
+  /// No description provided for @tournamentSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Compete with explorers worldwide'**
+  String get tournamentSubtitle;
+
+  /// No description provided for @tournamentLeaderboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard'**
+  String get tournamentLeaderboard;
+
+  /// No description provided for @tournamentRewards.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards'**
+  String get tournamentRewards;
+
+  /// No description provided for @tournamentJoinNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Now'**
+  String get tournamentJoinNow;
+
+  /// No description provided for @tournamentJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined'**
+  String get tournamentJoined;
+
+  /// No description provided for @tournamentRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'remaining'**
+  String get tournamentRemaining;
+
+  /// No description provided for @tournamentEnding.
+  ///
+  /// In en, this message translates to:
+  /// **'Ending soon'**
+  String get tournamentEnding;
+
+  /// No description provided for @noActiveTournament.
+  ///
+  /// In en, this message translates to:
+  /// **'No active tournament'**
+  String get noActiveTournament;
+
+  /// No description provided for @noUpcomingTournaments.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming tournaments'**
+  String get noUpcomingTournaments;
+
+  /// No description provided for @noLeaderboardData.
+  ///
+  /// In en, this message translates to:
+  /// **'No leaderboard data yet'**
+  String get noLeaderboardData;
+
+  /// No description provided for @startsIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts in'**
+  String get startsIn;
+
+  /// No description provided for @tournamentRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered'**
+  String get tournamentRegistered;
+
+  /// No description provided for @tournamentRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get tournamentRegister;
+
+  /// No description provided for @daysShort.
+  ///
+  /// In en, this message translates to:
+  /// **'d'**
+  String get daysShort;
+
+  /// No description provided for @hoursShort.
+  ///
+  /// In en, this message translates to:
+  /// **'h'**
+  String get hoursShort;
+
+  /// No description provided for @minutesShort.
+  ///
+  /// In en, this message translates to:
+  /// **'m'**
+  String get minutesShort;
+
+  /// No description provided for @daysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'days left'**
+  String get daysLeft;
+
+  /// No description provided for @statsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your learning progress'**
+  String get statsSubtitle;
+
+  /// No description provided for @statsOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get statsOverview;
+
+  /// No description provided for @totalXp.
+  ///
+  /// In en, this message translates to:
+  /// **'Total XP'**
+  String get totalXp;
+
+  /// No description provided for @currentStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get currentStreak;
+
+  /// No description provided for @perfectScores.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect'**
+  String get perfectScores;
+
+  /// No description provided for @activityHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity History'**
+  String get activityHistory;
+
+  /// No description provided for @less.
+  ///
+  /// In en, this message translates to:
+  /// **'Less'**
+  String get less;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
+
+  /// No description provided for @accuracyByCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy by Category'**
+  String get accuracyByCategory;
+
+  /// No description provided for @noDataYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No data yet'**
+  String get noDataYet;
+
+  /// No description provided for @quizTypeFlags.
+  ///
+  /// In en, this message translates to:
+  /// **'Flags'**
+  String get quizTypeFlags;
+
+  /// No description provided for @quizTypeCapitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Capitals'**
+  String get quizTypeCapitals;
+
+  /// No description provided for @quizTypeMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Maps'**
+  String get quizTypeMaps;
+
+  /// No description provided for @quizTypeMixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed'**
+  String get quizTypeMixed;
+
+  /// No description provided for @weakAreas.
+  ///
+  /// In en, this message translates to:
+  /// **'Areas to Improve'**
+  String get weakAreas;
+
+  /// No description provided for @practice.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice'**
+  String get practice;
+
+  /// No description provided for @countriesByContinent.
+  ///
+  /// In en, this message translates to:
+  /// **'Countries by Continent'**
+  String get countriesByContinent;
+
+  /// No description provided for @continentAfrica.
+  ///
+  /// In en, this message translates to:
+  /// **'Africa'**
+  String get continentAfrica;
+
+  /// No description provided for @continentAsia.
+  ///
+  /// In en, this message translates to:
+  /// **'Asia'**
+  String get continentAsia;
+
+  /// No description provided for @continentEurope.
+  ///
+  /// In en, this message translates to:
+  /// **'Europe'**
+  String get continentEurope;
+
+  /// No description provided for @continentNorthAmerica.
+  ///
+  /// In en, this message translates to:
+  /// **'North America'**
+  String get continentNorthAmerica;
+
+  /// No description provided for @continentSouthAmerica.
+  ///
+  /// In en, this message translates to:
+  /// **'South America'**
+  String get continentSouthAmerica;
+
+  /// No description provided for @continentOceania.
+  ///
+  /// In en, this message translates to:
+  /// **'Oceania'**
+  String get continentOceania;
+
+  /// No description provided for @weeklyGoalsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set and achieve your weekly targets'**
+  String get weeklyGoalsSubtitle;
+
+  /// No description provided for @goalsCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get goalsCompleted;
+
+  /// No description provided for @completionRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion'**
+  String get completionRate;
+
+  /// No description provided for @noGoalsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No goals set'**
+  String get noGoalsYet;
+
+  /// No description provided for @setWeeklyGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your weekly goals to track progress'**
+  String get setWeeklyGoals;
+
+  /// No description provided for @addGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Goal'**
+  String get addGoal;
+
+  /// No description provided for @selectGoalType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Goal Type'**
+  String get selectGoalType;
+
+  /// No description provided for @target.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get target;
 }
 
 class _AppLocalizationsDelegate

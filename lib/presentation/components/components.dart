@@ -10,6 +10,9 @@ export 'backgrounds/onboarding_background.dart';
 export 'buttons/explorer_button.dart';
 // Cards
 export 'cards/explorer_card.dart';
+// Challenges
+export 'challenges/daily_challenge_card.dart';
+export 'challenges/goal_progress_card.dart';
 export 'cards/selection_card.dart';
 export 'cards/stat_card.dart';
 export 'feedback/explorer_empty_state.dart';
